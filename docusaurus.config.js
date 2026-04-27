@@ -32,6 +32,7 @@ const config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+  trailingSlash: false,
 
   customFields: {
         copyright1: `© ${new Date().getFullYear()} The Scouting Units of American Legion Post 331, Scouting America`,
