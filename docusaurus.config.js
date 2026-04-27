@@ -136,7 +136,7 @@ const config = {
             items: [
               {
                 label: 'Documents',
-                to: '/troop-docs/helpful-links',
+                to: '/troop-docs/general-info/helpful-links',
               },
             ],
           },

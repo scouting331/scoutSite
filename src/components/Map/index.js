@@ -1,26 +1,27 @@
 import React from 'react';
-import L from 'leaflet';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 
-const troopIcon = new L.Icon ({
+function Map() {
+  const L = require('leaflet');
+  const { MapContainer, TileLayer, Marker, Popup } = require('react-leaflet');
+  require('leaflet/dist/leaflet.css');
+
+  const troopIcon = new L.Icon ({
     iconUrl: '/img/map-marker/troop-marker.png',
     iconRetinaUrl: '/img/map-marker/troop-marker.png',
     iconSize: [23, 35], // width, height in pixels
     iconAnchor: [17, 35], // point of icon that corresponds to marker's location
     popupAnchor: [0, -35], // point from which popup should open relative to iconAnchor
-});
+  });
 
-const cubIcon = new L.Icon ({
+  const cubIcon = new L.Icon ({
     iconUrl: '/img/map-marker/cub-marker.png',
     iconRetinaUrl: '/img/map-marker/cub-marker.png',
     iconSize: [23, 35], // width, height in pixels
     iconAnchor: [17, 35], // point of icon that corresponds to marker's location
     popupAnchor: [0, -35], // point from which popup should open relative to iconAnchor
-});
-
-function Map() {
+  });
+  
   return (
     <MapContainer center={[39.83398, -86.38716]} zoom={14} style={{ height: '400px', width: '100%' }}>
       <TileLayer
