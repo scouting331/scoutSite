@@ -33,12 +33,6 @@ const config = {
     locales: ['en'],
   },
   trailingSlash: false,
-  stylesheets: [
-    {
-      href: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-      type: 'text/css',
-    },
-  ],
 
   customFields: {
         copyright1: `© ${new Date().getFullYear()} The Scouting Units of American Legion Post 331, Scouting America`,
@@ -96,7 +90,6 @@ const config = {
         sidebarPath: './sidebarsCookbook.js',
       },
     ],
-    '@react-leaflet/docusaurus-plugin',
   ],
 
   themeConfig:
