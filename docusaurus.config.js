@@ -40,6 +40,7 @@ const config = {
         navbarSubtitle: 'Troop 303, Troop 331, Crew 303 and Pack 303',
   },
 
+
   presets: [
     [
       'classic',
