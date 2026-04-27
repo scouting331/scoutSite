@@ -1,6 +1,6 @@
 import React from 'react';
 import Layout from '@theme/Layout';
-import Map from '@site/src/components/Map'
+import MapWrapper from '@site/src/components/Map'
 
 export default function JoinUs() {
   return (
@@ -50,7 +50,7 @@ export default function JoinUs() {
                     </address>
                 </div>
                 <div style={{ flex: '1', minWidth: '300px' }}>
-                    <Map />
+                    <MapWrapper />
                 </div>
             </div>
         </section>
