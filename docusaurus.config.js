@@ -10,6 +10,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /* @type {import('@docusaurus/types').Config} */
 const config = {
+
   title: 'The Scouting Units of American Legion Post 331',
   tagline: 'Scouting America Units Troop 303, Troop 331, Crew 303, and Pack 303 of Brownsburg, Indiana',
   favicon: 'img/favicon.png',
@@ -23,15 +24,14 @@ const config = {
   url: 'https://scouting331.github.io',
   baseUrl: '/scoutSite/',
 
-  organizationName: 'scouting331', // Usually your GitHub org/user name.
-  projectName: 'scoutSite', // Usually your repo name.
-
   onBrokenLinks: 'warn',
   onBrokenAnchors: 'ignore',
+
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
   },
+  
   trailingSlash: false,
 
   customFields: {
@@ -39,7 +39,6 @@ const config = {
         copyright2: `All Rights Reserved`,
         navbarSubtitle: 'Troop 303, Troop 331, Crew 303 and Pack 303',
   },
-
 
   presets: [
     [
@@ -101,8 +100,7 @@ const config = {
       },
       announcementBar: {
         id: 'demo_announcement',
-        content: 'WEBSITE STILL HEAVILY UNDER CONSTRUCTION!',
-        backgroundColor: '#7CB342',
+        content: 'WEBSITE STILL HEAVILY UNDER CONSTRUCTION!',        backgroundColor: '#7CB342',
         textColor: '#FFF',
         isCloseable: false,
       },

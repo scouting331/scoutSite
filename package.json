@@ -26,7 +26,6 @@
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@fortawesome/react-fontawesome": "^3.3.1",
     "@mdx-js/react": "^3.0.0",
-    "@react-leaflet/docusaurus-plugin": "^1.0.1",
     "clsx": "^2.0.0",
     "leaflet": "^1.9.4",
     "prism-react-renderer": "^2.3.0",
