@@ -1,14 +1,9 @@
-// @ts-check
-// `@type` JSDoc annotations allow editor autocompletion and type checking
-// (when paired with `@ts-check`).
-// There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
 import {themes as prismThemes} from 'prism-react-renderer';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-/* @type {import('@docusaurus/types').Config} */
 const config = {
 
   title: 'The Scouting Units of American Legion Post 331',
@@ -37,7 +32,6 @@ const config = {
   customFields: {
         copyright1: `© ${new Date().getFullYear()} The Scouting Units of American Legion Post 331, Scouting America`,
         copyright2: `All Rights Reserved`,
-        navbarSubtitle: 'Troop 303, Troop 331, Crew 303 and Pack 303',
   },
 
   presets: [
@@ -46,8 +40,8 @@ const config = {
       ({
         docs: {
           sidebarPath: './sidebarsDocs.js',
-          path: 'troop-docs',
-          routeBasePath: 'troop-docs',
+          path: 'unit-docs',
+          routeBasePath: 'unit-docs',
         },
         blog: {
           showReadingTime: true,
@@ -108,10 +102,21 @@ const config = {
       navbar: {
         title: 'Scouting America',
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo_white.png',
+          alt: 'Scouting America Units',
+          src: 'img/all-units-logo.png',
         },
         items: [
+          {
+            type: 'dropdown',
+            label: 'Unit Sites',
+            position: 'right',
+            items: [
+              { label: 'Troop 303', to: '/unit-docs/troop-303' },
+              { label: 'Troop 331', to: '/unit-docs/troop-331' },
+              { label: 'Crew 303', to: '/unit-docs/crew-303' },
+              { label: 'Pack 303', to: '/unit-docs/pack-303'}
+            ]
+          },
           {
             to: '/blog', 
             label: 'Blog', 
@@ -135,7 +140,7 @@ const config = {
             items: [
               {
                 label: 'Documents',
-                to: '/troop-docs/helpful-links',
+                to: '/unit-docs/helpful-links',
               },
             ],
           },
