@@ -101,7 +101,7 @@ const config = {
       },
       announcementBar: {
         id: 'demo_announcement',
-        content: 'Welcome to our new website!',
+        content: 'WEBSITE STILL HEAVILY UNDER CONSTRUCTION!',
         backgroundColor: '#7CB342',
         textColor: '#FFF',
         isCloseable: false,
