@@ -20,8 +20,8 @@ const config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
-  baseUrl: '/',
+  url: 'https://scouting331.github.io',
+  baseUrl: '/scoutSite/',
 
   organizationName: 'scouting331', // Usually your GitHub org/user name.
   projectName: 'scoutSite', // Usually your repo name.
@@ -136,7 +136,7 @@ const config = {
             items: [
               {
                 label: 'Documents',
-                to: '/troop-docs/general-info/helpful-links',
+                to: '/troop-docs/helpful-links',
               },
             ],
           },
