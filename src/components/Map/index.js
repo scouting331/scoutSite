@@ -29,10 +29,18 @@ function Map() {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       <Marker position={[39.84048, -86.387]} icon={troopIcon}>
-        <Popup>American Legion Post 331<br />Troop 303<br />Troop 331<br />Crew 303</Popup>
+        <Popup>
+          <h1>American Legion Post 331</h1>
+          Troop 303<br />
+          Troop 331<br />
+          Crew 303
+        </Popup>
       </Marker>
       <Marker position={[39.82795329321996, -86.38975014166927]} icon={cubIcon}>
-        <Popup>Eagle Elementary School<br />Pack 303</Popup>
+        <Popup>
+          Eagle Elementary School<br />
+          Pack 303
+        </Popup>
       </Marker>
     </MapContainer>
   );
