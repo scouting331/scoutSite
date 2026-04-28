@@ -32,12 +32,14 @@ const config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+  trailingSlash: false,
 
   customFields: {
         copyright1: `© ${new Date().getFullYear()} The Scouting Units of American Legion Post 331, Scouting America`,
         copyright2: `All Rights Reserved`,
         navbarSubtitle: 'Troop 303, Troop 331, Crew 303 and Pack 303',
   },
+
 
   presets: [
     [
@@ -88,7 +90,6 @@ const config = {
         sidebarPath: './sidebarsCookbook.js',
       },
     ],
-    '@react-leaflet/docusaurus-plugin',
   ],
 
   themeConfig:
@@ -135,7 +136,7 @@ const config = {
             items: [
               {
                 label: 'Documents',
-                to: '/troop-docs/helpful-links',
+                to: '/troop-docs/general-info/helpful-links',
               },
             ],
           },
