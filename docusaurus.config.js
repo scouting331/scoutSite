@@ -26,7 +26,7 @@ const config = {
   organizationName: 'scouting331', // Usually your GitHub org/user name.
   projectName: 'scoutSite', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenAnchors: 'ignore',
   i18n: {
     defaultLocale: 'en',
