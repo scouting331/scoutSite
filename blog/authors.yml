@@ -1,14 +1,6 @@
-gavin-m:
-  name: Gavin M
-  title: Eagle Scout, Troop Guide
-
 ben-s:
   name: Benjamin S
   title: Assistant Scoutmaster, Committee Member
   image_url: https://github.com/shoverbj.png
   page:
-    permalink: '/all-ben-s-articles'
-
-chris-k:
-  name: Chris K
-  title: Troop 303 Scoutmaster
+    permalink: '/ben-s'

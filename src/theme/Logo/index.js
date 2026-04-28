@@ -29,7 +29,6 @@ function LogoThemedImage({logo, alt, imageClassName}) {
 }
 export default function Logo(props) {
   const {siteConfig} = useDocusaurusContext();
-  const {navbarSubtitle} = siteConfig.customFields;
   const {
     siteConfig: {title},
   } = useDocusaurusContext();
@@ -55,11 +54,6 @@ export default function Logo(props) {
           alt={alt}
           imageClassName={imageClassName}
         />
-      )}
-      {navbarTitle != null && (
-        <div className="navbar-title-container">
-          <span className={titleClassName}><h5>{navbarTitle}</h5><h6 class="mb-0">{navbarSubtitle}</h6></span>
-        </div>
       )}
     </Link>
   );

@@ -6,7 +6,7 @@ const FeatureList = [
   {
     title: 'Troop 303',
     Jpg: require('@site/static/img/feature-cards/troop303.jpg').default,
-    Link: '/troop-docs/troop-303',
+    Link: '/unit-docs/troop-303',
     description: (
       <>
         The Legendary Troop 303 is the boys scout troop. Some more info, lorem ipsum. Lots more to be said.
@@ -16,7 +16,7 @@ const FeatureList = [
   {
     title: 'Troop 331',
     Jpg: require('@site/static/img/feature-cards/troop331.jpg').default,
-    Link: '/troop-docs/troop-331',
+    Link: '/unit-docs/troop-331',
     description: (
       <>
         Troop 331 is the girls scout troop. Founded the day girls troops were allowed to be formed, lorem ipsum.
@@ -26,7 +26,7 @@ const FeatureList = [
   {
     title: 'Crew 303',
     Jpg: require('@site/static/img/feature-cards/crew303.jpg').default,
-    Link: '/troop-docs/crew-303',
+    Link: '/unit-docs/crew-303',
     description: (
       <>
         Crew 303 is the coed high adventure group. If adventure is what your looking for, this is the group!
@@ -36,7 +36,7 @@ const FeatureList = [
   {
     title: 'Pack 303',
     Jpg: require('@site/static/img/feature-cards/pack303.jpg').default,
-    Link: '/troop-docs/pack-303',
+    Link: '/unit-docs/pack-303',
     description: (
       <>
         Pack 303 is the coed group for children in grades K-5. An introduction to Scouting's principles and adventure, lorem ipsum.
