@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 const FeatureList = [
   {
     title: 'Troop 303',
-    Png: require('@site/static/img/feature-cards/troop303.png').default,
+    Jpg: require('@site/static/img/feature-cards/troop303.jpg').default,
     Link: '/troop-docs/troop-303',
     description: (
       <>
@@ -15,7 +15,7 @@ const FeatureList = [
   },
   {
     title: 'Troop 331',
-    Png: require('@site/static/img/feature-cards/troop331.png').default,
+    Jpg: require('@site/static/img/feature-cards/troop331.jpg').default,
     Link: '/troop-docs/troop-331',
     description: (
       <>
@@ -25,7 +25,7 @@ const FeatureList = [
   },
   {
     title: 'Crew 303',
-    Png: require('@site/static/img/feature-cards/crew303.png').default,
+    Jpg: require('@site/static/img/feature-cards/crew303.jpg').default,
     Link: '/troop-docs/crew-303',
     description: (
       <>
@@ -35,7 +35,7 @@ const FeatureList = [
   },
   {
     title: 'Pack 303',
-    Png: require('@site/static/img/feature-cards/pack303.png').default,
+    Jpg: require('@site/static/img/feature-cards/pack303.jpg').default,
     Link: '/troop-docs/pack-303',
     description: (
       <>
@@ -45,12 +45,12 @@ const FeatureList = [
   },
 ];
 
-function Feature({Png, Link, title, description}) {
+function Feature({Jpg, Link, title, description}) {
   return (
     <div className={clsx('col col--3')}>
       <div className="text--center">
         <a href={Link}>
-          <img src={Png} className={styles.featurePng} alt="title" />
+          <img src={Jpg} className={styles.featureJpg} alt="title" />
         </a>
       </div>
       <div className="text--center padding-horiz--md">
