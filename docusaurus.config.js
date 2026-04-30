@@ -19,7 +19,7 @@ const config = {
   url: 'https://scouting331.github.io',
   baseUrl: '/scoutSite/',
 
-  onBrokenLinks: 'warn',
+  onBrokenLinks: 'throw',
   onBrokenAnchors: 'ignore',
 
   i18n: {
@@ -69,6 +69,10 @@ const config = {
             return items.filter((item) => !item.url.includes('/page/'));
           },
         },
+        //gtag: {
+        //  trackingID: 'G-XXXXXXXXX',
+        //  anonymizeIP: true,
+        //},
       }),
     ],
   ],
@@ -87,6 +91,7 @@ const config = {
 
   themeConfig:
     ({
+      image: 'img/favicon.png',
       colorMode: {
         respectPrefersColorScheme: true,
         disableSwitch: true,
@@ -136,42 +141,38 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Learn',
+            title: 'Quick Links',
             items: [
               {
                 label: 'Documents',
-                to: '/unit-docs/helpful-links',
+                to: '/unit-docs/general-info'
               },
+              {
+                label: 'Blog',
+                to: '/blog'
+              }
             ],
           },
           {
-            title: 'Scouting Links',
-            items: [
-              {
-                label: 'Scouting America',
-                to: 'https://www.souting.org/',
-              },
-              {
-                label: 'Crossroads of America Council',
-                to: 'https://www.joinscoutsin.org/',
-              },
-              {
-                label: 'Five Creeks District',
-                to: 'https://www.5creeks.org/',
-              },
-            ],
-          },
-          {
-            title: 'Connect',
+            title: 'Social Media',
             items: [
               {
                 html: `
                   <a href="https://www.facebook.com/groups/114681931900039/" target=_blank rel="noreferrer noopener" aria-label="Facebook">
                     <i class="fa-brands fa-facebook fa-2xl footer__link-logo"></i>
                   </a>
+                  <a href="https://www.facebook.com/groups/177465650239377" target=_blank rel="noreferrer noopener" aria-label="Facebook">
+                    <i class="fa-brands fa-facebook fa-2xl footer__link-logo"></i>
+                  </a>
+                  <a href="https://www.facebook.com/groups/441282630057267" target=_blank rel="noreferrer noopener" aria-label="Facebook">
+                    <i class="fa-brands fa-facebook fa-2xl footer__link-logo"></i>
+                  </a>
                   `,
               },
             ],
+          },
+          {
+            title: 'Contact Us',
           },
         ],
       },
@@ -195,6 +196,7 @@ const config = {
       "@docusaurus/theme-mermaid",
     ],
     markdown: {
+      format: 'mdx',
       mermaid: true,
       emoji: true,
       hooks: {

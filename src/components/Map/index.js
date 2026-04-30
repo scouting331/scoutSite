@@ -1,5 +1,8 @@
 import React from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
+import troop_icon from '/img/map-marker/troop-marker.png';
+import cub_icon from '/img/map-marker/cub-marker.png';
+import Heading from '@theme/Heading';
 
 function Map() {
   const L = require('leaflet');
@@ -7,19 +10,17 @@ function Map() {
   require('leaflet/dist/leaflet.css');
 
   const troopIcon = new L.Icon ({
-    iconUrl: '/img/map-marker/troop-marker.png',
-    iconRetinaUrl: '/img/map-marker/troop-marker.png',
-    iconSize: [23, 35], // width, height in pixels
-    iconAnchor: [17, 35], // point of icon that corresponds to marker's location
-    popupAnchor: [0, -35], // point from which popup should open relative to iconAnchor
+    iconUrl: troop_icon,
+    iconSize: [46, 70], // width, height in pixels
+    iconAnchor: [23, 70], // point of icon that corresponds to marker's location
+    popupAnchor: [0, -70], // point from which popup should open relative to iconAnchor
   });
 
   const cubIcon = new L.Icon ({
-    iconUrl: '/img/map-marker/cub-marker.png',
-    iconRetinaUrl: '/img/map-marker/cub-marker.png',
-    iconSize: [23, 35], // width, height in pixels
-    iconAnchor: [17, 35], // point of icon that corresponds to marker's location
-    popupAnchor: [0, -35], // point from which popup should open relative to iconAnchor
+    iconUrl: cub_icon,
+    iconSize: [46, 70], // width, height in pixels
+    iconAnchor: [23, 70], // point of icon that corresponds to marker's location
+    popupAnchor: [0, -70], // point from which popup should open relative to iconAnchor
   });
   
   return (
@@ -30,16 +31,20 @@ function Map() {
       />
       <Marker position={[39.84048, -86.387]} icon={troopIcon}>
         <Popup>
-          <h1>American Legion Post 331</h1>
-          Troop 303<br />
-          Troop 331<br />
-          Crew 303
+          <Heading as='h4'>American Legion Post 331</Heading>
+          <ul>
+            <li>Troop 303</li>
+            <li>Troop 331</li>
+            <li>Crew 303</li>
+          </ul>
         </Popup>
       </Marker>
       <Marker position={[39.82795329321996, -86.38975014166927]} icon={cubIcon}>
         <Popup>
-          Eagle Elementary School<br />
-          Pack 303
+          <Heading as='h4'>Eagle Elementary School</Heading>
+          <ul>
+            <li>Pack 303</li>
+          </ul>
         </Popup>
       </Marker>
     </MapContainer>
