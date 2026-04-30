@@ -1,0 +1,8 @@
+{
+  "label": "Dessert",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "Something sweet to finish off the day"
+  }
+}
