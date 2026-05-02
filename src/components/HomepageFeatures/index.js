@@ -1,62 +1,62 @@
-import clsx from 'clsx';
-import styles from './styles.module.css';
-import Link from '@docusaurus/Link';
-import Heading from '@theme/Heading';
+import clsx from "clsx";
+import styles from "./styles.module.css";
+import Link from "@docusaurus/Link";
+import Heading from "@theme/Heading";
 
 const FeatureList = [
   {
-    title: 'Troop 303',
-    Jpg: require('@site/static/img/feature-cards/troop303.jpg').default,
-    UnitSite: '/unit-docs/troop-303',
+    title: "Troop 303",
+    Jpg: require("@site/static/img/feature-cards/troop303.jpg").default,
+    UnitSite: "/unit-docs/troop-303",
     description: (
       <>
-        The Legendary Troop 303 is the boys scout troop. Some more info, lorem ipsum. Lots more to be said.
+        Serving young men ages 11–17 on their journey to Eagle Scout and beyond.
       </>
     ),
   },
   {
-    title: 'Troop 331',
-    Jpg: require('@site/static/img/feature-cards/troop331.jpg').default,
-    UnitSite: '/unit-docs/troop-331',
+    title: "Troop 331",
+    Jpg: require("@site/static/img/feature-cards/troop331.jpg").default,
+    UnitSite: "/unit-docs/troop-331",
     description: (
       <>
-        Troop 331 is the girls scout troop. Founded the day girls troops were allowed to be formed, lorem ipsum.
+        Providing adventure, leadership, and service opportunities for girls ages 11–17.
       </>
     ),
   },
   {
-    title: 'Crew 303',
-    Jpg: require('@site/static/img/feature-cards/crew303.jpg').default,
-    UnitSite: '/unit-docs/crew-303',
+    title: "Crew 303",
+    Jpg: require("@site/static/img/feature-cards/crew303.jpg").default,
+    UnitSite: "/unit-docs/crew-303",
     description: (
       <>
-        Crew 303 is the coed high adventure group. If adventure is what your looking for, this is the group!
+        High adventure, leadership, and service opportunities for young men and women ages 14–20.
       </>
     ),
   },
   {
-    title: 'Pack 303',
-    Jpg: require('@site/static/img/feature-cards/pack303.jpg').default,
-    UnitSite: '/unit-docs/pack-303',
+    title: "Pack 303",
+    Jpg: require("@site/static/img/feature-cards/pack303.jpg").default,
+    UnitSite: "/unit-docs/pack-303",
     description: (
       <>
-        Pack 303 is the coed group for children in grades K-5. An introduction to Scouting's principles and adventure, lorem ipsum.
+        Starting the journey of Scouting with fun and adventure for boys and girls in grades K–5.
       </>
     ),
   },
 ];
 
-function Feature({Jpg, UnitSite, title, description}) {
+function Feature({ Jpg, UnitSite, title, description }) {
   return (
-    <div className={clsx('col col--3')}>
+    <div className={clsx("col col--3")}>
       <div className="text--center">
-        <Link to={UnitSite}>
+        <Link to={UnitSite} className={styles.imageContainer}>
           <img src={Jpg} className={styles.featureJpg} alt={title} />
+          <div className={styles.overlayContent}>
+            <Heading as="h3" className={styles.overlayHeading}>{title}</Heading>
+            <p className={styles.overlayDescription}>{description}</p>
+          </div>
         </Link>
-      </div>
-      <div className="text--center padding-horiz--md">
-        <Heading as="h3">{title}</Heading>
-        <p>{description}</p>
       </div>
     </div>
   );
@@ -65,18 +65,19 @@ function Feature({Jpg, UnitSite, title, description}) {
 export default function HomepageFeatures() {
   return (
     <>
-    <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-      <Heading as='h1'>Our Scouting Units</Heading>
-    </div>
-    <section className={styles.features}>
-      <div className="container">
-        <div className="row">
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
-          ))}
-        </div>
+      {" "}
+      <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        <Heading as="h1">Scouting Units</Heading>
       </div>
-    </section>
+      <section className={styles.features}>
+        <div className="container">
+          <div className="row">
+            {FeatureList.map((props, idx) => (
+              <Feature key={idx} {...props} />
+            ))}
+          </div>
+        </div>
+      </section>
     </>
   );
 }

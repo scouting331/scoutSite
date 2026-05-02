@@ -1,17 +1,17 @@
-@import "fontawesome.min.css"; 
+@import "fontawesome.min.css";
 @import "brands.min.css";
-@import "solid.min.css"; 
+@import "solid.min.css";
 @import "~slick-carousel/slick/slick.css";
-@import "~slick-carousel/slick/slick-theme.css"; 
+@import "~slick-carousel/slick/slick-theme.css";
 @import "leaflet/dist/leaflet.css";
 
 /* You can override the default Infima variables here. */
 :root {
   /* Colors */
   --ifm-color-primary: #003366;
-  --ifm-color-secondary: #9AB3D5;
+  --ifm-color-secondary: #9ab3d5;
   --ifm-font-color-base: #444545;
-  --ifm-color-white: #FFFFFF;
+  --ifm-color-white: #ffffff;
   --ifm-color-gray-0: #858787;
   --ifm-color-gray-100: #858787;
   --ifm-color-gray-200: #858787;
@@ -24,10 +24,9 @@
   --ifm-color-gray-900: #232528;
   --ifm-color-gray-1000: #232528;
   --ifm-hover-overlay: rgba(255, 255, 255, 0.66);
-  --ifm-card-background-color: #FFFFFF;
-  --ifm-dropdown-background-color: #FFFFFF;
-  --ifm-hover-overlay: rgba(200,200,200,0.66);
-  
+  --ifm-card-background-color: #ffffff;
+  --ifm-dropdown-background-color: #ffffff;
+  --ifm-hover-overlay: rgba(200, 200, 200, 0.66);
   --ifm-font-family-base: Arial, Helvetica, sans-serif;
   --ifm-navbar-height: 70px;
 }
@@ -39,13 +38,10 @@ html {
 
 body {
   position: relative;
-  padding-left: 0px;
-  padding-bottom: 0px;
-  padding-right: 0px;
-  padding-top: 0px;
+  padding: 0px;
   line-height: 24px;
   color: #333;
-  background-color: #FFF;
+  background-color: #fff;
 }
 
 #__docusaurus {
@@ -53,29 +49,21 @@ body {
 }
 
 .leaflet-container {
-  /* This confirms that the map is always behind the navbar */
   z-index: 1;
 }
 
 iframe {
   z-index: 1;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 20px;
+  margin: auto auto 20px;
 }
 
 .dropdown__link--active {
   color: var(--ifm-color-primary);
 }
 
-.dropdown__link:hover {
-  background-color: var(--);
-}
-
 .navbar {
   background-color: var(--ifm-color-primary);
-  /* This confirms the navbar is always the top layer when scrolling */
   z-index: 1000;
 }
 
@@ -89,37 +77,18 @@ iframe {
   order: 0;
 }
 
-.navbar__title, h5, h6 {
-  font-family: 'Times New Roman', Times, serif;
-  margin-bottom: 0;
-}
-
-h5 {
-  font-size: medium;
-}
-
-h6 {
-  font-size: smaller;
-}
-
-.navbar-title-container {
-  padding-bottom: 8px;
-}
-
-.navbar-subtitle {
-  font-size: 14px;
+a:hover .svg-inline--fa,
+a:hover i.fa,
+a:hover i.fas,
+a:hover i.fab {
+  text-decoration: none !important;
+  display: inline-block; /* Helps prevent ghost underlines */
 }
 
 .navbar__toggle {
   position: relative;
-  padding-right: 10px;
-  margin-bottom: 0px;
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
-  padding-left: 0px;
-  padding-bottom: 0px;
-  padding-top: 0px;
+  margin: 0px;
+  padding: 0px 10px 0px 0px;
   line-height: normal;
   vertical-align: baseline;
   color: #333;
@@ -147,20 +116,14 @@ h6 {
 }
 
 .navbar__logo img {
-  padding-left: 15px;
-  padding-right: 11px;
+  padding: auto 15px;
 }
 
-.navbar__brand, .navbar__title {
+.navbar__brand,
+.navbar__title {
   position: relative;
-  margin-bottom: 0px;
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
-  padding-left: 0px;
-  padding-bottom: 0px;
-  padding-right: 0px;
-  padding-top: 0px;
+  margin: 0px;
+  padding: 0px;
   line-height: normal;
   vertical-align: baseline;
   color: #333;
@@ -177,8 +140,7 @@ h6 {
 
 .navbar__link {
   position: relative;
-  padding-bottom: 13px;
-  padding-top: 13px;
+  padding: 13px auto;
   font-size: 16px;
   font-weight: 600;
   line-height: 20px;
@@ -198,7 +160,9 @@ h6 {
   transition: 0.4s;
 }
 
-.navbar__brand:hover, .navbar__link:hover, .navbar__toggle:hover {
+.navbar__brand:hover,
+.navbar__link:hover,
+.navbar__toggle:hover {
   color: rgba(255, 255, 255, 0.66);
 }
 
@@ -216,59 +180,46 @@ h6 {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  padding-bottom: 0px;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top: 0px;
+  padding: 0px;
 }
 
 .hero img {
   width: 100%;
   height: 600px;
   object-fit: cover;
-  filter: brightness(65%);
+  filter: brightness(75%);
 }
 
-.slick-slider {
+.slick-slider,
+.slick-list {
   width: 100%;
 }
 
-.slick-list {
-  width: 100%
+.hero__title,
+.hero__subtitle {
+  margin: 0px 0px 30px;
+  color: var(--ifm-color-white);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  width: 100%;
+
 }
 
 .hero__title {
-  margin-bottom: 30px;
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
   font-size: 40px;
   font-weight: 900;
   line-height: 40px;
-  color: var(--ifm-color-white);
 }
 
 .hero__subtitle {
-  margin-bottom: 30px;
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
   font-size: 16px;
   font-weight: 400;
   line-height: 22.4px;
-  color: var(--ifm-color-white);
 }
 
 .button {
   flex-basis: auto;
-  margin-bottom: 0px;
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-right: 0px;
-  padding-left: 30px;
-  padding-bottom: 15px;
-  padding-right: 30px;
-  padding-top: 15px;
+  margin: 0px;
+  padding: 15px 30px;
   min-height: 47px;
   overflow-x: visible;
   overflow-y: visible;
@@ -283,8 +234,8 @@ h6 {
   white-space-collapse: collapse;
   word-spacing: 0px;
   color: var(--ifm-color-white);
-  background-color: #E21D38;
-  border-bottom-color: #E21D38;
+  background-color: #e21d38;
+  border-bottom-color: #e21d38;
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-image-outset: 0;
@@ -292,13 +243,13 @@ h6 {
   border-image-slice: 100%;
   border-image-source: none;
   border-image-width: 1;
-  border-left-color: #E21D38;
+  border-left-color: #e21d38;
   border-left-style: solid;
   border-left-width: 1px;
-  border-right-color: #E21D38;
+  border-right-color: #e21d38;
   border-right-style: solid;
   border-right-width: 1px;
-  border-top-color: #E21D38;
+  border-top-color: #e21d38;
   border-top-style: solid;
   border-top-width: 1px;
   transition-property: all;
@@ -310,10 +261,7 @@ footer {
   color: #333;
   background-color: var(--ifm-color-secondary);
   line-height: 24px;
-  padding-top: 12px;
-  padding-bottom: 24px;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding: 12px 16px 24px;
 }
 
 .footer__links {
@@ -322,14 +270,8 @@ footer {
   flex-basis: auto;
   flex-grow: 0;
   flex-shrink: 1;
-  padding-bottom: 64.5938px;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top: 64.5938px;
-  margin-bottom: 0px;
-  margin-top: 0px;
-  margin-right: 0px;
-  margin-left: 0px;
+  padding: 25px 0px;
+  margin: 0px;
   background-color: var(--ifm-color-secondary);
   order: 0;
   max-width: 1024px;
@@ -345,10 +287,7 @@ footer {
   font-size: 24px;
   font-weight: 900;
   color: var(--ifm-color-primary);
-  margin-bottom: 20px;
-  margin-top: 0px;
-  margin-right: 0px;
-  margin-left: 0px;
+  margin: 0px 0px 20px;
   line-height: 24px;
 }
 
@@ -359,31 +298,49 @@ footer {
   font-weight: 400;
 }
 
-.footer__link-item {
+.footer__item {
   color: var(--ifm-color-white);
-  transition: 0.4s;
   font-weight: 600;
-  text-decoration-line: none;
   font-size: 16px;
   line-height: 20px;
   margin-bottom: 8px;
 }
 
-.footer__link-item:hover {
+.footer__logo {
+  color: var(--ifm-color-white);
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: inline-block;
+  margin-top: 0px;
+}
+
+.footer__link-item {
+  color: var(--ifm-color-white);
+  transition: 0.4s;
+  font-weight: 600;
+  text-decoration: none !important;
+  font-size: 16px;
+  line-height: 20px;
+  margin-bottom: 8px;
+}
+
+.footer__link-item:hover,
+.footer__link-item:hover i,
+.footer__link-item:hover svg,
+.footer__link-logo:hover,
+.footer__link-logo:hover i,
+.footer__link-logo:hover svg {
   color: rgba(255, 255, 255, 0.66);
+  text-decoration: none !important;
 }
 
 .footer__link-logo {
   color: var(--ifm-color-white);
   transition: 0.4s;
   font-weight: 600;
-  text-decoration-line: none;
+  text-decoration: none !important;
   margin-bottom: 8px;
-}
-
-
-.footer__link-logo:hover {
-  color: rgba(255, 255, 255, 0.66);
+  display: inline-block;
 }
 
 .footer-bottom {
@@ -391,7 +348,7 @@ footer {
   min-height: 20vh;
   width: 100%;
   background-color: var(--ifm-color-secondary);
-  background-image: url('../../static/img/footer_adventure.png');
+  background-image: url("../../static/img/footer_adventure.png");
   background-size: cover;
   background-position: bottom;
   background-repeat: no-repeat;
@@ -410,11 +367,14 @@ footer {
   background-color: rgba(0, 0, 0, 0);
 }
 
-table, th, td {
+table,
+th,
+td {
   border: none;
   border-collapse: collapse;
 }
 
-.margin-top--md, .docusaurus-mt-lg {
+.margin-top--md,
+.docusaurus-mt-lg {
   background-color: var(--ifm-color-white);
 }

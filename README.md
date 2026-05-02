@@ -29,7 +29,8 @@ documents is as simple as adding the new markdown file to the folder in
 ### Blog
 
 These are also all markdown files. Blog files shall be named
-"Y-M-D-blog_title.mdx". Tags can be added to associate it with a particular unit.
+"Y-M-D-blog_title.mdx". Tags can be added to associate it with a particular
+unit.
 
 ## List of TODOs
 
