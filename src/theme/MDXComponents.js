@@ -12,7 +12,7 @@ library.add(fab, fas); // Add all icons to the library so you can use them witho
 export default {
   // Re-use the default mapping
   ...MDXComponents,
-  FAIcon: FontAwesomeIcon, // Make the FontAwesomeIcon component available in MDX as <icon />.
+  FAIcon: FontAwesomeIcon, // Make the FontAwesomeIcon component available in MDX as <FAIcon />.
   Columns,
   Column,
 };
