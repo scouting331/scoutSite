@@ -28,7 +28,6 @@ function LogoThemedImage({ logo, alt, imageClassName }) {
   );
 }
 export default function Logo(props) {
-  const { siteConfig } = useDocusaurusContext();
   const {
     siteConfig: { title },
   } = useDocusaurusContext();
