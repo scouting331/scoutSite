@@ -1,7 +1,6 @@
 // Import the original mapper
 import MDXComponents from "@theme-original/MDXComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Import the FontAwesomeIcon component.
-import { library } from "@fortawesome/fontawesome-svg-core"; // Import the library component.
 //import { faFacebook, faYoutube, faInstagram } from "@fortawesome/free-brands-svg-icons"; // Import all brands icons.
 //import { faAt, faLocationDot } from "@fortawesome/free-solid-svg-icons"; // Import all solid icons.
 import Columns from "@site/src/components/Columns";
