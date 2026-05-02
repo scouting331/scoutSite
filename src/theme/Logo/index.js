@@ -42,11 +42,21 @@ export default function Logo(props) {
   // Use logo alt text if provided (including empty string),
   // and provide a sensible fallback otherwise.
   const alt = logo?.alt ?? fallbackAlt;
+  const opensInNewTab = logo?.target === "_blank";
+  const accessibleLogoName =
+    (typeof logo?.alt === "string" && logo.alt.trim()) ||
+    navbarTitle ||
+    title ||
+    "Home";
+  const newTabAriaLabel = opensInNewTab
+    ? `${accessibleLogoName} (opens in a new tab)`
+    : undefined;
   return (
     <Link
       to={logoLink}
       {...propsRest}
       {...(logo?.target && { target: logo.target })}
+      {...(newTabAriaLabel && { "aria-label": newTabAriaLabel })}
     >
       {logo && (
         <LogoThemedImage
