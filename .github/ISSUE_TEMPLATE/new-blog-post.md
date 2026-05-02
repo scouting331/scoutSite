@@ -1,10 +1,7 @@
 ---
 name: New Blog Post
 about: Add a new post to the blog
-title: ''
+title: ""
 labels: blog
 assignees: shoverbj
-
 ---
-
-

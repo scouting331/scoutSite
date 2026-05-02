@@ -38,14 +38,11 @@
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.0",
-    "@docusaurus/types": "^3.10.0"
+    "@docusaurus/types": "^3.10.0",
+    "prettier": "^3.8.3"
   },
   "browserslist": {
-    "production": [
-      ">0.5%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.5%", "not dead", "not op_mini all"],
     "development": [
       "last 3 chrome version",
       "last 3 firefox version",
@@ -54,5 +51,37 @@
   },
   "engines": {
     "node": ">=20.0"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "overrides": [
+      {
+        "files": ["*.md", "*.mdx"],
+        "options": {
+          "parser": "markdown",
+          "proseWrap": "always",
+          "printWidth": 80
+        }
+      },
+      {
+        "files": ["*.json"],
+        "options": {
+          "parser": "json"
+        }
+      },
+      {
+        "files": ["*.js"],
+        "options": {
+          "parser": "babel"
+        }
+      },
+      {
+        "files": ["*.css"],
+        "options": {
+          "parser": "css"
+        }
+      }
+    ],
+    "endOfLine": "lf"
   }
 }

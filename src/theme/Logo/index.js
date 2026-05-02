@@ -1,10 +1,10 @@
-import React from 'react';
-import Link from '@docusaurus/Link';
-import useBaseUrl from '@docusaurus/useBaseUrl';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import {useThemeConfig} from '@docusaurus/theme-common';
-import ThemedImage from '@theme/ThemedImage';
-function LogoThemedImage({logo, alt, imageClassName}) {
+import React from "react";
+import Link from "@docusaurus/Link";
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import { useThemeConfig } from "@docusaurus/theme-common";
+import ThemedImage from "@theme/ThemedImage";
+function LogoThemedImage({ logo, alt, imageClassName }) {
   const sources = {
     light: useBaseUrl(logo.src),
     dark: useBaseUrl(logo.srcDark || logo.src),
@@ -28,18 +28,18 @@ function LogoThemedImage({logo, alt, imageClassName}) {
   );
 }
 export default function Logo(props) {
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext();
   const {
-    siteConfig: {title},
+    siteConfig: { title },
   } = useDocusaurusContext();
   const {
-    navbar: {title: navbarTitle, logo},
+    navbar: { title: navbarTitle, logo },
   } = useThemeConfig();
-  const {imageClassName, titleClassName, ...propsRest} = props;
-  const logoLink = useBaseUrl(logo?.href || '/');
+  const { imageClassName, titleClassName, ...propsRest } = props;
+  const logoLink = useBaseUrl(logo?.href || "/");
   // If visible title is shown, fallback alt text should be
   // an empty string to mark the logo as decorative.
-  const fallbackAlt = navbarTitle ? '' : title;
+  const fallbackAlt = navbarTitle ? "" : title;
   // Use logo alt text if provided (including empty string),
   // and provide a sensible fallback otherwise.
   const alt = logo?.alt ?? fallbackAlt;
@@ -47,7 +47,8 @@ export default function Logo(props) {
     <Link
       to={logoLink}
       {...propsRest}
-      {...(logo?.target && {target: logo.target})}>
+      {...(logo?.target && { target: logo.target })}
+    >
       {logo && (
         <LogoThemedImage
           logo={logo}
