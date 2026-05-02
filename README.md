@@ -38,9 +38,6 @@ unit.
 
 ### Homepage TODOs
 
-- [ ] Determine what links should be in navbar
-- [ ] Better formatting of navbar Title
-- [ ] Blurbs for each unit below feature cards
 - [ ] Fill out calendar with all units
   - [ ] Determine best display template
 - [ ] Determine best pictures
@@ -50,7 +47,6 @@ unit.
 ### Join Us Page TODOs
 
 - [ ] Layout improvement
-- [ ] Markers on map (may need actual domain before this can be fixed)
 
 ### Docs pages TODOs
 
