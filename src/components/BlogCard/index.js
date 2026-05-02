@@ -1,4 +1,3 @@
-import recentPosts from "@site/.docusaurus/recent-posts.json";
 import React from "react";
 import Link from '@docusaurus/Link';
 import clsx from "clsx";
