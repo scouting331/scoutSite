@@ -4,3 +4,9 @@ ben-s:
   image_url: https://github.com/shoverbj.png
   page:
     permalink: '/ben-s'
+
+jd-d:
+  name: JD D
+  title: Assistant Scoutmaster
+  page:
+    permalink: '/jd-d'
