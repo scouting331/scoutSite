@@ -18,6 +18,7 @@ function BlogCard({ permalink, title, date, authors, tags, frontmatter }) {
         ? `/img/blog-covers/${frontmatter.cover_image}`
         : defaultBlogHeader
   );
+  const fallbackAuthorImageUrl = useBaseUrl('/img/favicon.png');
 
   return (
     <div className={clsx("col col--3 margin-bottom--lg")}>
@@ -38,8 +39,8 @@ function BlogCard({ permalink, title, date, authors, tags, frontmatter }) {
           <h3 className={styles.cardTitle}>{title}</h3>
 
           <div className={styles.cardMeta}>
-            {tags.slice(0, 3).map((tag, idx) => (
-              <span key={idx} className={styles.tagPill}>
+            {tags.slice(0, 3).map((tag) => (
+              <span key={tag.permalink || tag.label} className={styles.tagPill}>
                 {tag.label}
               </span>
             ))}
@@ -50,8 +51,8 @@ function BlogCard({ permalink, title, date, authors, tags, frontmatter }) {
             <div className={styles.authorStack}>
               {authors.map((author, idx) => (
                 <img 
-                  key={idx}
-                  src={author.imageURL || 'img/favicon.png'} 
+                  key={author.id || author.name || `${author.imageURL || 'author'}-${idx}`}
+                  src={author.imageURL || fallbackAuthorImageUrl} 
                   alt={author.name} 
                   className={styles.authorAvatar}
                   title={author.name}
