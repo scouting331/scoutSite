@@ -7,11 +7,12 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
+    "deploy": "npm run build && wrangler deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
-    "write-heading-ids": "docusaurus write-heading-ids"
+    "write-heading-ids": "docusaurus write-heading-ids",
+    "preview": "npm run build && wrangler dev"
   },
   "dependencies": {
     "@docusaurus/core": "^3.10.0",
@@ -39,10 +40,15 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.0",
     "@docusaurus/types": "^3.10.0",
-    "prettier": "^3.8.3"
+    "prettier": "^3.8.3",
+    "wrangler": "^4.93.1"
   },
   "browserslist": {
-    "production": [">0.5%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 3 chrome version",
       "last 3 firefox version",
@@ -56,7 +62,10 @@
     "tabWidth": 2,
     "overrides": [
       {
-        "files": ["*.md", "*.mdx"],
+        "files": [
+          "*.md",
+          "*.mdx"
+        ],
         "options": {
           "parser": "markdown",
           "proseWrap": "always",
@@ -64,19 +73,25 @@
         }
       },
       {
-        "files": ["*.json"],
+        "files": [
+          "*.json"
+        ],
         "options": {
           "parser": "json"
         }
       },
       {
-        "files": ["*.js"],
+        "files": [
+          "*.js"
+        ],
         "options": {
           "parser": "babel"
         }
       },
       {
-        "files": ["*.css"],
+        "files": [
+          "*.css"
+        ],
         "options": {
           "parser": "css"
         }
