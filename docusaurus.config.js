@@ -16,8 +16,8 @@ const config = {
   },
 
   // Set the production url of your site here
-  url: "https://scouting331.github.io",
-  baseUrl: "/scoutSite/",
+  url: "https://brownsburgscouts.org",
+  baseUrl: "/",
 
   onBrokenLinks: "throw",
   onBrokenAnchors: "ignore",
