@@ -4,6 +4,29 @@ description: Our Leadership Structure
 sidebar_position: 3
 ---
 
+```mermaid
+---
+config:
+  flowchart:
+    curve: stepBefore
+---
+
+flowchart TB
+  style sm fill:#D6CEBD, stroke:#000
+  style spl fill:#9AB3D5, stroke:#000
+
+  click sm "#Scoutmaster"
+  click spl "#Senior Patrol Leader"
+
+  sm["Scoutmaster"]
+  spl["Senior Patrol Leader"]
+  aspl1["Assistant Senior Patrol Leader 1"]
+  aspl2["Assistant Senior Patrol Leader 2"]
+  sm --> spl
+  spl --> aspl1
+  spl --> aspl2
+```
+
 ## Adult Leadership
 
 ### Scoutmaster
