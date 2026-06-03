@@ -230,7 +230,7 @@ const config = {
             },
             {
               html: `
-                <a href="mailto:example@email.com?subject=Website%20Inquiry" style="font-style: normal" class="footer__link-item">
+                <a href="mailto:scoutingunits331@gmail.com?subject=Website%20Inquiry" style="font-style: normal" class="footer__link-item">
                   <div style="display: flex; align-items: flex-start; gap: 8px;">
                     <i class="fa-solid fa-at footer__link-logo" aria-hidden="true"></i>
                     Email Us
