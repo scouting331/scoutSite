@@ -159,7 +159,7 @@ const config = {
           items: [
             {
               label: "Documents",
-              to: "/unit-docs/general-info",
+                  target="_blank" rel="noreferrer noopener" 
             },
             {
               label: "Blog",
@@ -170,7 +170,7 @@ const config = {
         {
           title: "Social Media",
           items: [
-            {
+                  target="_blank" rel="noreferrer noopener" 
               html: `
                 <a href="https://www.youtube.com/@Scouting331" 
                   target=_blank rel="noreferrer noopener" 
@@ -181,7 +181,7 @@ const config = {
                 </a>
                 `
             },
-            {
+                  target="_blank" rel="noreferrer noopener" 
               html: `
                 <a href="https://www.facebook.com/groups/114681931900039" 
                   target=_blank rel="noreferrer noopener" 
@@ -192,7 +192,7 @@ const config = {
                 </a>
                 `
             },
-            {
+                  target="_blank" rel="noreferrer noopener" 
               html: `
                 <a href="https://www.facebook.com/groups/177465650239377" 
                   target=_blank rel="noreferrer noopener" 
@@ -203,7 +203,7 @@ const config = {
                 </a>
                 `
             },
-            {
+                  target="_blank" rel="noreferrer noopener" 
               html: `
                 <a href="https://www.facebook.com/groups/441282630057267" 
                   target=_blank rel="noreferrer noopener" 
