@@ -208,6 +208,26 @@ a:hover i.fab {
   transition: all 0.2s ease;
 }
 
+/* 2. Mobile Mode (Screens 996px and smaller) */
+@media (max-width: 996px) {
+  /* HIDE the button completely from the horizontal top bar */
+  .navbar__inner .button {
+    display: none !important;
+  }
+  
+  /* SHOW and optimize the button inside the mobile drawer menu */
+  .navbar-sidebar__items .button {
+    display: flex !important;       /* Forces it to show back up in the drawer */
+    justify-content: center !important; /* Perfect horizontal text centering */
+    align-items: center !important;     /* Perfect vertical text centering */
+    text-align: center !important;      /* Fallback fallback alignment */
+    white-space: normal;                /* Allows text to wrap safely on tiny screens */
+    width: calc(100% - 32px);           /* Spans the full width of the drawer with side margins */
+    margin: 20px auto;                  /* Adds clean spacing above and below the button */
+    padding: 14px 20px;                 /* Comfortable tap target size for thumbs */
+  }
+}
+
 footer {
   color: var(--ifm-color-gray-1000);
   background-color: var(--ifm-color-secondary);
