@@ -5,101 +5,109 @@
 @import "~slick-carousel/slick/slick-theme.css";
 @import "leaflet/dist/leaflet.css";
 
-/* You can override the default Infima variables here. */
+/* Infima variables overrides. */
 :root {
-  /* Colors */
-  --ifm-color-primary: #003366;
-  --ifm-color-secondary: #9ab3d5;
-  --ifm-font-color-base: #444545;
-  --ifm-color-white: #ffffff;
-  --ifm-color-gray-0: #858787;
-  --ifm-color-gray-100: #858787;
-  --ifm-color-gray-200: #858787;
-  --ifm-color-gray-300: #858787;
-  --ifm-color-gray-400: #515354;
-  --ifm-color-gray-500: #515354;
-  --ifm-color-gray-600: #515354;
-  --ifm-color-gray-700: #232528;
-  --ifm-color-gray-800: #232528;
-  --ifm-color-gray-900: #232528;
-  --ifm-color-gray-1000: #232528;
+  /* Official Scouting America Colors */
+  --scouting-america-red: #CE1126;
+  --scouting-america-blue: #003F87;
+  --scouting-america-pale-blue: #9AB3D5;
+  --scouting-america-dark-blue: #003366;
+  --scouting-america-tan: #D6CEBD;
+  --scouting-america-light-tan: #E9E9E4;
+  --scouting-america-dark-tan: #AD9D7B;
+  --scouting-america-gray: #515354;
+  --scouting-america-pale-gray: #858787;
+  --scouting-america-dark-gray: #232528;
+  --scouting-america-white: #FFFFFF;
+  --cub-scouts-gold: #FDC116;
+  --cub-scouts-blue: #003F87;
+  --scouts-bsa-tan: #D6CEBD;
+  --scouts-bsa-red: #CE1126;
+  --scouts-bsa-olive: #243E2C;
+  --venturing-green: #006B3F;
+  --venturing-yellow: #FCD116;
+  --sea-scouts-yellow: #FFCC00;
+  --sea-scouts-dark-blue: #003366;
+  --sea-scouts-light-blue: #9AB3D5;
+
+  --scouting-america-fonts: Arial, Helvetica, sans-serif;
+  --announcement-bar: #7CB342;
+
+  --global-box-shadow: 
+    0 10px 25px -5px rgba(0, 0, 0, 0.1), 
+    0 8px 10px -6px rgba(0, 0, 0, 0.05);
+
+  /* Theme Core UI Maps */
+  --ifm-color-primary: var(--scouting-america-dark-blue);
+  --ifm-color-secondary: var(--scouting-america-pale-blue);
+  --ifm-font-color-base: var(--scouting-america-gray);
+  --ifm-color-white: var(--scouting-america-white);
+
+  /* Consolidated Grays */
+  --ifm-color-gray-0: var(--scouting-america-pale-gray);
+  --ifm-color-gray-100: var(--scouting-america-pale-gray);
+  --ifm-color-gray-200: var(--scouting-america-pale-gray);
+  --ifm-color-gray-300: var(--scouting-america-pale-gray);
+  --ifm-color-gray-400: var(--scouting-america-gray);
+  --ifm-color-gray-500: var(--scouting-america-gray);
+  --ifm-color-gray-600: var(--scouting-america-gray);
+  --ifm-color-gray-700: var(--scouting-america-dark-gray);
+  --ifm-color-gray-800: var(--scouting-america-dark-gray);
+  --ifm-color-gray-900: var(--scouting-america-dark-gray);
+  --ifm-color-gray-1000: var(--scouting-america-dark-gray);
+  --ifm-color-black: #000000;
+  
   --ifm-hover-overlay: rgba(255, 255, 255, 0.66);
-  --ifm-card-background-color: #ffffff;
-  --ifm-dropdown-background-color: #ffffff;
-  --ifm-hover-overlay: rgba(200, 200, 200, 0.66);
-  --ifm-font-family-base: Arial, Helvetica, sans-serif;
+  --ifm-card-background-color: var(--scouting-america-white);
+  --ifm-dropdown-background-color: var(--scouting-america-white);
+  --ifm-font-family-base: var(--scouting-america-fonts);
   --ifm-navbar-height: 70px;
+
 }
 
 html {
-  line-height: 18.4px;
   scroll-behavior: smooth;
 }
 
 body {
-  position: relative;
-  padding: 0px;
-  line-height: 24px;
-  color: #333;
-  background-color: #fff;
+  color: var(--ifm-color-gray-1000);
+  background-color: var(--ifm-color-white);
 }
 
-#__docusaurus {
-  display: block;
-}
-
-.leaflet-container {
+.leaflet-container, iframe {
   z-index: 1;
 }
 
 iframe {
-  z-index: 1;
   display: block;
-  margin: auto auto 20px;
+  margin: 0 auto 20px;
 }
 
 .dropdown__link--active {
   color: var(--ifm-color-primary);
 }
 
-.navbar {
-  background-color: var(--ifm-color-primary);
-  z-index: 1000;
-}
-
-.navbar__inner {
-  position: relative;
-  align-self: auto;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  min-height: 1px;
-  order: 0;
-}
-
-a:hover .svg-inline--fa,
-a:hover i.fa,
-a:hover i.fas,
-a:hover i.fab {
-  text-decoration: none !important;
-  display: inline-block; /* Helps prevent ghost underlines */
-}
-
-.navbar__toggle {
-  position: relative;
-  margin: 0px;
-  padding: 0px 10px 0px 0px;
-  line-height: normal;
-  vertical-align: baseline;
-  color: #333;
-  background-attachment: scroll;
-  background-clip: border-box;
+/* Typography styles shared by Navbar elements */
+.navbar__brand,
+.navbar__title,
+.navbar__toggle,
+.navbar__link {
   font-size: 16px;
   font-weight: 600;
   line-height: 20px;
   color: var(--ifm-color-white);
-  transition: 0.4s;
-  text-decoration-line: none;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.4s ease;
+}
+
+.navbar__brand,
+.navbar__title {
+  font-weight: 400;
+}
+
+.navbar__toggle {
+  padding-right: 10px;
 }
 
 .navbar-sidebar {
@@ -112,75 +120,36 @@ a:hover i.fab {
 
 .navbar__logo {
   height: 55px;
-  width: 100%;
+  width: auto;
 }
 
 .navbar__logo img {
-  padding: auto 15px;
+  padding: 0 15px;
 }
 
-.navbar__brand,
-.navbar__title {
-  position: relative;
-  margin: 0px;
-  padding: 0px;
-  line-height: normal;
-  vertical-align: baseline;
-  color: #333;
-  background-attachment: scroll;
-  background-clip: border-box;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 20px;
-  color: var(--ifm-color-white);
-  transition: 0.4s;
-  text-decoration-line: none;
-  text-transform: uppercase;
-}
-
-.navbar__link {
-  position: relative;
-  padding: 13px auto;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 20px;
-  text-decoration-color: var(--ifm-color-white);
-  text-decoration-line: none;
-  text-decoration-style: solid;
-  text-decoration-thickness: auto;
-  text-transform: uppercase;
-  text-wrap-mode: nowrap;
-  white-space-collapse: collapse;
-  vertical-align: baseline;
-  color: #333;
-  background-color: rgba(0, 0, 0, 0);
-  background-attachment: scroll;
-  background-clip: border-box;
-  color: var(--ifm-color-white);
-  transition: 0.4s;
+.navbar {
+  background-color: var(--ifm-color-primary);
+  z-index: 1000;
 }
 
 .navbar__brand:hover,
 .navbar__link:hover,
 .navbar__toggle:hover {
-  color: rgba(255, 255, 255, 0.66);
+  color: var(--ifm-hover-overlay);
 }
 
-.overlay-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 10;
+a:hover .svg-inline--fa,
+a:hover i.fa,
+a:hover i.fas,
+a:hover i.fab {
+  text-decoration: none !important;
+  display: inline-block;
 }
 
+/* Hero Section Styling */
 .hero {
   position: relative;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  padding: 0px;
+  padding: 0;
 }
 
 .hero img {
@@ -190,6 +159,16 @@ a:hover i.fab {
   filter: brightness(75%);
 }
 
+.overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+  width: 90%; /* Keeps text from clipping layout edges */
+}
+
 .slick-slider,
 .slick-list {
   width: 100%;
@@ -197,152 +176,96 @@ a:hover i.fab {
 
 .hero__title,
 .hero__subtitle {
-  margin: 0px 0px 30px;
+  margin: 0 0 30px;
   color: var(--ifm-color-white);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-  width: 100%;
-
 }
 
 .hero__title {
   font-size: 40px;
   font-weight: 900;
-  line-height: 40px;
+  line-height: 1.1;
 }
 
 .hero__subtitle {
   font-size: 16px;
   font-weight: 400;
-  line-height: 22.4px;
+  line-height: 1.4;
 }
 
+/* Primary Call to Action Button */
 .button {
-  flex-basis: auto;
-  margin: 0px;
+  display: inline-block;
   padding: 15px 30px;
-  min-height: 47px;
-  overflow-x: visible;
-  overflow-y: visible;
   font-size: 16px;
   font-weight: 600;
-  letter-spacing: normal;
-  line-height: 16px;
-  text-align: center;
-  text-indent: 0px;
   text-transform: uppercase;
-  text-wrap-mode: nowrap;
-  white-space-collapse: collapse;
-  word-spacing: 0px;
+  white-space: nowrap;
   color: var(--ifm-color-white);
-  background-color: #e21d38;
-  border-bottom-color: #e21d38;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  border-image-outset: 0;
-  border-image-repeat: stretch;
-  border-image-slice: 100%;
-  border-image-source: none;
-  border-image-width: 1;
-  border-left-color: #e21d38;
-  border-left-style: solid;
-  border-left-width: 1px;
-  border-right-color: #e21d38;
-  border-right-style: solid;
-  border-right-width: 1px;
-  border-top-color: #e21d38;
-  border-top-style: solid;
-  border-top-width: 1px;
-  transition-property: all;
-  transition-timing-function: ease;
-  border-radius: 0px;
+  background-color: var(--scouting-america-red);
+  border: 1px solid var(--scouting-america-red);
+  border-radius: 0;
+  transition: all 0.2s ease;
 }
 
 footer {
-  color: #333;
+  color: var(--ifm-color-gray-1000);
   background-color: var(--ifm-color-secondary);
-  line-height: 24px;
+  line-height: 1.5;
   padding: 12px 16px 24px;
 }
 
 .footer__links {
-  position: relative;
-  align-self: auto;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  padding: 25px 0px;
-  margin: 0px;
-  background-color: var(--ifm-color-secondary);
-  order: 0;
+  padding: 25px 0;
   max-width: 1024px;
+  margin: 0 auto; /* Smoothly centers the links container */
 }
-
-.footer__col {
-  position: relative;
-  align-self: auto;
-  min-height: 1px;
-}
-
 .footer__title {
   font-size: 24px;
   font-weight: 900;
   color: var(--ifm-color-primary);
-  margin: 0px 0px 20px;
-  line-height: 24px;
+  margin-bottom: 20px;
+  line-height: 1.2;
 }
 
 .footer__items {
-  position: relative;
-  margin-bottom: 0px;
   font-size: 16px;
   font-weight: 400;
 }
 
-.footer__item {
+.footer__item,
+.footer__logo,
+.footer__link-item,
+.footer__link-logo {
   color: var(--ifm-color-white);
   font-weight: 600;
   font-size: 16px;
-  line-height: 20px;
   margin-bottom: 8px;
+  line-height: 1.25;
 }
 
-.footer__logo {
-  color: var(--ifm-color-white);
-  font-weight: 600;
-  margin-bottom: 8px;
+.footer__logo,
+.footer__link-logo {
   display: inline-block;
-  margin-top: 0px;
 }
 
 .footer__link-item {
-  color: var(--ifm-color-white);
-  transition: 0.4s;
-  font-weight: 600;
   text-decoration: none !important;
-  font-size: 16px;
-  line-height: 20px;
-  margin-bottom: 8px;
+  transition: color 0.4s ease;
 }
 
+/* Combined interactive hover states using root variable token */
 .footer__link-item:hover,
 .footer__link-item:hover i,
 .footer__link-item:hover svg,
 .footer__link-logo:hover,
 .footer__link-logo:hover i,
 .footer__link-logo:hover svg {
-  color: rgba(255, 255, 255, 0.66);
+  color: var(--ifm-hover-overlay);
   text-decoration: none !important;
 }
 
-.footer__link-logo {
-  color: var(--ifm-color-white);
-  transition: 0.4s;
-  font-weight: 600;
-  text-decoration: none !important;
-  margin-bottom: 8px;
-  display: inline-block;
-}
-
+/* Custom Scouting Adventure Graphic Strip */
 .footer-bottom {
   display: block;
   min-height: 20vh;
@@ -359,22 +282,19 @@ footer {
   background-color: var(--ifm-color-primary);
   font-size: 12px;
   font-weight: 400;
-  line-height: 18px;
+  padding: 10px 0; /* Prevents text from jamming against edges */
+  line-height: 1.5;
   text-align: center;
 }
 
-.theme-doc-footer {
-  background-color: rgba(0, 0, 0, 0);
+.theme-doc-footer,
+article footer {
+  background-color: transparent;
 }
 
 table,
 th,
 td {
-  border: none;
+  border: none !important;
   border-collapse: collapse;
-}
-
-.margin-top--md,
-.docusaurus-mt-lg {
-  background-color: var(--ifm-color-white);
 }

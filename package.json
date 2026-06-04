@@ -12,16 +12,17 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "preview": "npm run build && wrangler dev"
+    "preview": "npm run build && wrangler dev",
+
+    "tools:setup": "pip install -r scripts/requirements.txt",
+    "tools:image-processor": "python scripts/image_processor"
   },
   "dependencies": {
     "@docusaurus/core": "^3.10.0",
     "@docusaurus/faster": "^3.10.0",
-    "@docusaurus/plugin-google-gtag": "^3.10.0",
     "@docusaurus/plugin-sitemap": "^3.10.0",
     "@docusaurus/preset-classic": "^3.10.0",
     "@docusaurus/theme-mermaid": "^3.10.0",
-    "@easyops-cn/docusaurus-search-local": "^0.55.1",
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
     "@fortawesome/free-brands-svg-icons": "^7.2.0",
     "@fortawesome/free-regular-svg-icons": "^7.2.0",
