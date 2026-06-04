@@ -44,9 +44,19 @@ const formatDate = (isoString) => {
  * @param {Object} props.frontmatter - Unprocessed raw frontmatter fields containing configuration like custom cover images.
  */
 function BlogCard({ permalink, title, date, authors, tags }) {
-  // Resolved path: permalink "/blog/campout" maps to "static/blog/campout/cover.webp"
-  const resolvedCoverUrl = useBaseUrl(`img/${permalink}/cover.webp`);
   const fallbackDefaultImage = useBaseUrl('img/blog/default-blog-cover.webp');
+  
+  // 1. Strip trailing slashes and get the folder name from permalink
+  const cleanPath = permalink.replace(/^\/|\/$/g, ''); 
+  
+  let resolvedCoverUrl;
+  try {
+    // 2. Webpack looks inside the static folder during compile time
+    resolvedCoverUrl = require(`@site/static/img/${cleanPath}/cover.webp`).default;
+  } catch (err) {
+    // 3. If file doesn't exist, it instantly uses the fallback at build time
+    resolvedCoverUrl = fallbackDefaultImage;
+  }
 
   return (
     <div className={clsx("col col--3 margin-bottom--lg")}>
@@ -56,12 +66,7 @@ function BlogCard({ permalink, title, date, authors, tags }) {
           <img 
             src={resolvedCoverUrl} 
             alt={title} 
-            className={styles.cardImage} 
-            onError={(e) => {
-              // 2. Safe layout backup step if the web asset does not exist
-              e.currentTarget.onerror = null; // Stops infinite replacement rendering bugs
-              e.currentTarget.src = fallbackDefaultImage;
-            }}
+            className={styles.cardImage}
           />
         </div>
 
