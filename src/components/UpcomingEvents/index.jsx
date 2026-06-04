@@ -28,7 +28,7 @@ export default function UpcomingEvents({}) {
         style={{ border: 0 }} 
         width="100%" 
         height="600" 
-        frameborder="0" 
+        frameBorder="0" 
         scrolling="no"
       ></iframe>
     </div>
