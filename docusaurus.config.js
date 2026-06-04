@@ -112,13 +112,13 @@ const config = {
       disableSwitch: true,
       defaultMode: "light",
     },
-    announcementBar: {
-      id: "demo_announcement",
-      content: "WEBSITE STILL HEAVILY UNDER CONSTRUCTION!",
-      backgroundColor: "var(--announcement-bar)",
-      textColor: "var(--scouting-america-white)",
-      isCloseable: false,
-    },
+    // announcementBar: {
+    //   id: "new_website",
+    //   content: "Welcome to our new website! Please poke around and if something could be improved, contact the webmaster.",
+    //   backgroundColor: "var(--announcement-bar)",
+    //   textColor: "var(--scouting-america-white)",
+    //   isCloseable: true,
+    // },
     navbar: {
       title: "Scouting America",
       logo: {
