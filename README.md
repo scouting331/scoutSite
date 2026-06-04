@@ -28,8 +28,7 @@ documents is as simple as adding the new markdown file to the folder in
 
 ### Blog
 
-These are also all markdown files. Blog files shall be named
-"Y-M-D-blog_title.mdx". Tags can be added to associate it with a particular
+These are also all markdown files. Tags can be added to associate it with a particular
 unit.
 
 ## List of TODOs
@@ -39,21 +38,9 @@ unit.
 ### Homepage TODOs
 
 - [ ] Determine what links should be in navbar
-- [ ] Better formatting of navbar Title
-- [ ] Blurbs for each unit below feature cards
-- [ ] Fill out calendar with all units
-  - [ ] Determine best display template
 - [ ] Determine best pictures
-- [ ] Work on footer links and information
-  - [ ] Should there be a link to our 501(c)(3)?
-
-### Join Us Page TODOs
-
-- [ ] Layout improvement
-- [ ] Markers on map (may need actual domain before this can be fixed)
 
 ### Docs pages TODOs
 
-- [ ] About page content for all units
 - [ ] Collect content for all units that they want displayed
 - [ ] Determine organization (what docs should be in general category)

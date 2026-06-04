@@ -1,3 +1,13 @@
+# /**
+#  * @file tags.yml
+#  * @description Data registry configuration file defining the global taxonomy for the blog engine.
+#  * Maps active Scouting units to custom taxonomy routing channels, localized label markers, 
+#  * and description strings used by the system feed generator.
+#  * 
+#  * @environment YAML Data Configuration Schema
+#  * @see {@link https://docusaurus.io | Docusaurus Blog Tags Documentation}
+#  */
+
 troop-303:
   label: Troop 303
   permalink: /troop-303
