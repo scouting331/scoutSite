@@ -1,9 +1,27 @@
-// See: https://docusaurus.io/docs/api/docusaurus-config
+/**
+ * @file docusaurus.config.js
+ * @description Master Node.js configuration schema engine for the American Legion Post 331 Scouting website.
+ * Declares localized metadata paths, custom theme configurations, multi-instance plugin documentation paths 
+ * (Standard Docs + Cookbooks), custom localized sitemap filtration schemes, and third-party tracking scripts.
+ * 
+ * @environment Node.js (Build-time compilation script)
+ * @see {@link https://docusaurus.io/docs/api/docusaurus-config | Docusaurus Configuration API Documentation}
+ */
 
 import { themes as prismThemes } from "prism-react-renderer";
 
-// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
-
+/**
+ * Global configuration data schema structure for Docusaurus system operations.
+ * 
+ * @type {import('@docusaurus/types').Config}
+ * @property {string} title - Primary core website branding text headline.
+ * @property {string} tagline - SEO and card fallback metadata summary description block.
+ * @property {Object} future - Flag registry optimizing compatibility properties with modern up-stream tools.
+ * @property {Object} customFields - Storage object injecting custom corporate legal copyright labels into the runtime environment.
+ * @property {Array<Array<string|Object>>} presets - Classic Docusaurus preset bundle setups handling theme layouts and core document paths.
+ * @property {Array<Array<string|Object>>} plugins - Custom multi-instance document routes and isolated post processors parsing recent content folders.
+ * @property {import('@docusaurus/types').ThemeConfig} themeConfig - The master styling architecture setting default light-modes, banners, nav bars, and HTML social links.
+ */
 const config = {
   title: "The Scouting Units of American Legion Post 331",
   tagline:
@@ -59,10 +77,6 @@ const config = {
             return items.filter((item) => !item.url.includes("/page/"));
           },
         },
-        //gtag: {
-        //  trackingID: 'G-XXXXXXXXX',
-        //  anonymizeIP: true,
-        //},
       },
     ],
   ],
@@ -101,8 +115,8 @@ const config = {
     announcementBar: {
       id: "demo_announcement",
       content: "WEBSITE STILL HEAVILY UNDER CONSTRUCTION!",
-      backgroundColor: "#7CB342",
-      textColor: "#FFF",
+      backgroundColor: "var(--announcement-bar)",
+      textColor: "var(--scouting-america-white)",
       isCloseable: false,
     },
     navbar: {

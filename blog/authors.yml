@@ -1,12 +1,30 @@
+# /**
+#  * @file authors.yml
+#  * @description Registry of authorized blog post authors.
+#  * Used by the Docusaurus blog engine to generate author profile badges, bio pages, 
+#  * and link individual scout posts to their respective creators.
+#  * 
+#  * Required Schema Attributes:
+#  *   - name: Distinct public display name for the leader.
+#  *   - title: Registered committee roles, unit titles, or leadership ranks.
+#  *   - page: Boolean flag mapping profile system sub-routes (`true` activates dedicated author index).
+#  * 
+#  * Optional Schema Attributes:
+#  *   - image_url: Remote path string pointing to avatar images (e.g., GitHub profile avatars).
+#  *   - url: Web address link to an external personal portfolio or professional landing profile.
+#  *   - email: Direct mailbox address endpoint for personal messaging inquiries.
+#  * 
+#  * @environment YAML Data Configuration Schema
+#  * @see {@link https://docusaurus.io | Docusaurus Blog Authors Documentation}
+#  */
+
 ben-s:
   name: Benjamin S
   title: Assistant Scoutmaster, Committee Member
   image_url: https://github.com/shoverbj.png
-  page:
-    permalink: '/ben-s'
+  page: true
 
 jd-d:
   name: JD D
   title: Assistant Scoutmaster
-  page:
-    permalink: '/jd-d'
+  page: true
