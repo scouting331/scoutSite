@@ -57,11 +57,7 @@ const config = {
       "classic",
       {
         blog: false,
-        docs: {
-          sidebarPath: "./sidebarsDocs.js",
-          path: "unit-docs",
-          routeBasePath: "unit-docs",
-        },
+        docs: false,
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -89,6 +85,15 @@ const config = {
         path: "cookbook",
         routeBasePath: "cookbook",
         sidebarPath: "./sidebarsCookbook.js",
+      },
+    ],
+    [
+      "@docusaurus/plugin-content-docs",
+      {
+        id: "unit-docs",
+        path: "unit-docs",
+        routeBasePath: "unit-docs",
+        sidebarPath: ".sidebarDocs.js",
       },
     ],
     [
@@ -131,10 +136,10 @@ const config = {
           label: "Unit Sites",
           position: "right",
           items: [
-            { label: "Troop 303", to: "/unit-docs/troop-303" },
-            { label: "Troop 331", to: "/unit-docs/troop-331" },
-            { label: "Crew 303", to: "/unit-docs/crew-303" },
-            { label: "Pack 303", to: "/unit-docs/pack-303" },
+            { label: "Troop 303", to: "/troop-303" },
+            { label: "Troop 331", to: "/troop-331" },
+            { label: "Crew 303", to: "/crew-303" },
+            { label: "Pack 303", to: "/pack-303" },
           ],
         },
         {
@@ -159,7 +164,7 @@ const config = {
           items: [
             {
               label: "Documents",
-              to: "/unit-docs/general-info",
+              to: "/unit-docs/general-docs",
             },
             {
               label: "Blog",
