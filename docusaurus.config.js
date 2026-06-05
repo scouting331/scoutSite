@@ -84,7 +84,7 @@ const config = {
         id: "cookbook",
         path: "cookbook",
         routeBasePath: "cookbook",
-        sidebarPath: "./sidebarsCookbook.js",
+        sidebarPath: "./sidebarCookbook.js",
       },
     ],
     [
@@ -93,7 +93,7 @@ const config = {
         id: "unit-docs",
         path: "unit-docs",
         routeBasePath: "unit-docs",
-        sidebarPath: ".sidebarDocs.js",
+        sidebarPath: "./sidebarDocs.js",
       },
     ],
     [
