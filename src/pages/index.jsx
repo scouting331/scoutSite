@@ -17,9 +17,9 @@
 import Layout from "@theme/Layout";
 import HomepageFeatures from "@site/src/components/HomepageFeatures";
 import UpcomingEvents from "@site/src/components/UpcomingEvents";
-import HeroCarousel from "../components/HeroCarousel/HeroCarousel";
+import HeroCarousel from "@site/src/components/HeroCarousel";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-import HomepageBlogCards from "../components/BlogCard";
+import HomepageBlogCards from "@site/src/components/BlogCard";
 
 /**
  * Renders the master homepage structure wrapped within the global Docusaurus layout framework.
