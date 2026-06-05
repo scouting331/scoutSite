@@ -60,8 +60,7 @@ async function blogPluginEnhanced(...pluginArgs) {
       fs.mkdirSync(dir, {
         recursive: true, // Avoid error if directory already exists.
       });
-      const fd = fs.openSync(`${dir}/recent-posts.json`, "w");
-      fs.writeSync(fd, JSON.stringify(recentPosts));
+      fs.writeFileSync(`${dir}/recent-posts.json`, JSON.stringify(recentPosts));
 
       return blogPluginInstance.contentLoaded(data);
     },
