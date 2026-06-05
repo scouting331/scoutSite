@@ -72,15 +72,15 @@ export default function HeroCarousel() {
     >
       <div>
         <HeroText />
-        <img src="img\carousel\hero1.jpg" />
+        <img src="img/carousel/hero1.jpg" />
       </div>
       <div>
         <HeroText />
-        <img src="img\carousel\hero2.jpg" />
+        <img src="img/carousel/hero2.jpg" />
       </div>
       <div>
         <HeroText />
-        <img src="img\carousel\hero3.jpg" />
+        <img src="img/carousel/hero3.jpg" />
       </div>
     </Slider>
   );
