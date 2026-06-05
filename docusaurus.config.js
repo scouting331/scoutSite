@@ -170,6 +170,10 @@ const config = {
               label: "Blog",
               to: "/blog",
             },
+            {
+              label: "Helpful Links",
+              to: "/unit-docs/general-docs/helpful-links"
+            },
           ],
         },
         {
@@ -178,7 +182,7 @@ const config = {
             {
               html: `
                 <a href="https://www.youtube.com/@Scouting331" 
-                  target=_blank rel="noreferrer noopener" 
+                  target="_blank" rel="noreferrer noopener" 
                   aria-label="YouTube Channel"
                   class="footer__link-item">
                   <i class="fa-brands fa-youtube footer__link-logo" aria-hidden="true"></i>
@@ -189,7 +193,7 @@ const config = {
             {
               html: `
                 <a href="https://www.facebook.com/groups/114681931900039" 
-                  target=_blank rel="noreferrer noopener" 
+                  target="_blank" rel="noreferrer noopener" 
                   aria-label="Troop 303 Facebook Page"
                   class="footer__link-item">
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
@@ -200,7 +204,7 @@ const config = {
             {
               html: `
                 <a href="https://www.facebook.com/groups/177465650239377" 
-                  target=_blank rel="noreferrer noopener" 
+                  target="_blank" rel="noreferrer noopener" 
                   aria-label="Troop 331 Facebook Page"
                   class="footer__link-item">
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
@@ -211,7 +215,7 @@ const config = {
             {
               html: `
                 <a href="https://www.facebook.com/groups/441282630057267" 
-                  target=_blank rel="noreferrer noopener" 
+                  target="_blank" rel="noreferrer noopener" 
                   aria-label="Pack 303 Facebook Page"
                   class="footer__link-item">
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
@@ -222,7 +226,7 @@ const config = {
             {
               html: `
                 <a href="https://www.instagram.com/venturecrew.303" 
-                  target=_blank rel="noreferrer noopener" 
+                  target="_blank" rel="noreferrer noopener" 
                   aria-label="Venture Crew 303 Instagram Page"
                   class="footer__link-item">
                   <i class="fa-brands fa-instagram footer__link-logo" aria-hidden="true"></i>
