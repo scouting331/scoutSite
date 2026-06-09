@@ -13,9 +13,9 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "preview": "npm run build && wrangler dev",
-
     "tools:setup": "pip install -r scripts/requirements.txt",
-    "tools:image-processor": "python scripts/image_processor"
+    "tools:image-processor": "python scripts/image_processor",
+    "spellcheck": "cspell \"{blog,cookbook,unit-docs,static,src/pages}/**/*.{md,mdx,csv}\""
   },
   "dependencies": {
     "@docusaurus/core": "^3.10.0",
@@ -30,6 +30,7 @@
     "@fortawesome/react-fontawesome": "^3.3.1",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
+    "csv-parse": "^6.2.1",
     "leaflet": "^1.9.4",
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.0",
     "@docusaurus/types": "^3.10.0",
+    "cspell": "^10.0.1",
     "prettier": "^3.8.3",
     "wrangler": "^4.98.0"
   },
@@ -101,5 +103,30 @@
       }
     ],
     "endOfLine": "lf"
+  },
+  "cspell": {
+    "version": "0.2",
+    "language": "en-US",
+    "dictionaryDefinitions": [
+      {
+        "name": "scout-dictionary",
+        "path": ".github/.scout-dictionary",
+        "addWords": true
+      }
+    ],
+    "dictionaries": [
+      "scout-dictionary"
+    ],
+    "allowCompoundWords": true,
+    "caseSensitive": false,
+    "minWordLength": 2,
+    "ignoreRegExpList": [
+      "HTML-tag",
+      "HTML-attribute",
+      "Inline-Code",
+      "require\\.context\\([^)]*\\)",
+      "youtubeId=\"[A-Za-z0-9_-]+\"",
+      "class(Name)?=\\\"[^\\\"]+\\\""
+    ]
   }
 }

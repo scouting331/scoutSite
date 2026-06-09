@@ -1,0 +1,361 @@
+{
+    "adultLeadership": {
+        "scoutmaster": {
+            "title": "Scoutmaster",
+            "name": "Chris Koczan",
+            "description": "The Scoutmaster is the adult responsible for working directly with the Scouts providing direction, coaching, and support.",
+            "img": "/img/unit-docs/troop-303/leadership/sm.png"
+        },
+        "assistantScoutmaster": {
+            "title": "Assistant Scoutmaster",
+            "name" : [
+                "Benjamin Shover",
+                "Paul Burgeson",
+                "Jeff McConnell",
+                "Josh Hunt",
+                "Greg Butts",
+                "JD Darland"
+            ],
+            "description": "Assistant Scoutmasters work directly alongside the Scoutmaster to deliver the program, serving as key mentors and advisors to the youth leaders.",
+            "img": "/img/unit-docs/troop-303/leadership/asm.png"
+        },
+        "charterdOrgRep": {
+            "title": "Chartered Organization Representative",
+            "name": "Erich Schumann",
+            "description": "Serves as the liaison between the Troop and our Chartered Organization, ensuring mutual alignment and policy compliance.",
+            "img": "/img/unit-docs/troop-303/leadership/cor.png"
+        },
+        "committeeChair": {
+            "title": "Troop Committee Chair",
+            "name": "Christopher Beasley",
+            "description": "Top adult administrator who recruits adult leaders, presides over committee meetings, and approves troop policies.",
+            "img": "/img/unit-docs/troop-303/leadership/cc.png"
+        },
+        "membershipChair": {
+            "title": "Membership Chair",
+            "name": "JD Darland",
+            "description": "Manages the onboarding of new Webelos, transfers, and older youth while assisting families with registration paperwork.",
+            "img": "/img/unit-docs/troop-303/leadership/committee.png"
+        },
+        "treasurer": {
+            "title": "Treasurer",
+            "name": "Jon Zimmerman",
+            "description": "Manages all troop finances, tracks individual scout accounts, processes payments, and maintains the annual operating budget.",
+            "img": "/img/unit-docs/troop-303/leadership/committee.png"
+        },
+        "advancementCoordinator": {
+            "title": "Advancement Chair",
+            "name": "Sharin White",
+            "description": "Maintains troop advancement records, schedules Boards of Review, and orders badges and awards for Courts of Honor.",
+            "img": "/img/unit-docs/troop-303/leadership/committee.png"
+        },
+        "activityChair": {
+            "title": "Outdoors/Activity Chair",
+            "name": "",
+            "description": "Secures reservations, permits, and logistics for campouts, high-adventure trips, and special troop events.",
+            "img": "/img/unit-docs/troop-303/leadership/committee.png"
+        },
+        "chaplain": {
+            "title": "Chaplain",
+            "name": "Christopher Beasley",
+            "description": "Provides spiritual leadership, ensures a nonsectarian spiritual component at campouts, and guides scouts working on religious emblems.",
+            "img": "/img/unit-docs/troop-303/leadership/committee.png"
+        },
+        "communications": {
+            "title": "Communications",
+            "name": "",
+            "description": "Manages troop newsletters, announcements, email listservs, and outbound marketing materials.",
+            "img": "/img/unit-docs/troop-303/leadership/committee.png"
+        },
+        "trainingChair": {
+            "title": "Training Chair",
+            "name": "",
+            "description": "Tracks youth and adult training records to ensure 100% compliance with Youth Protection Training (YPT) and outdoor safety courses.",
+            "img": "/img/unit-docs/troop-303/leadership/committee.png"
+        },
+        "equipmentCoordinator": {
+            "title": "Equipment Coordinator",
+            "name": "",
+            "description": "Manages the troop storage shed and trailer, tracking inventory and assisting the Youth Quartermaster with maintenance.",
+            "img": "/img/unit-docs/troop-303/leadership/committee.png"
+        },
+        "fundraisingChair": {
+            "title": "Fundraising Chair",
+            "name": "",
+            "description": "Organizes community fundraising events and builds opportunities for scouts to earn money toward their summer camp activities.",
+            "img": "/img/unit-docs/troop-303/leadership/committee.png"
+        },
+        "popcornKernel": {
+            "title": "Popcorn Kernel",
+            "name": "Nicole Eber",
+            "description": "Manages the annual popcorn distribution campaign, inventory logistics, prize coordination, and order compliance tracking.",
+            "img": "/img/unit-docs/troop-303/leadership/committee.png"
+        },
+        "committeeMember": {
+            "title": "Committee Member",
+            "name": [
+                "Lisa Barnard",
+                "Chris Leppert",
+                "Mark Janson",
+                "Christy Yoder",
+                "Mark Flandermeyer",
+                "Jeffrey McConnell",
+                "Benjamin Shover",
+                "Daniel Spencer",
+                "Brandon White",
+                "Paul Burgeson"
+            ],
+            "description": "Member-at-large",
+            "img": "/img/unit-docs/troop-303/leadership/committee.png"
+        }
+    },
+    "scoutLeadership": {
+        "seniorPatrolLeader": {
+            "title": "Senior Patrol Leader",
+            "scout": {
+                "name": "Everett Z",
+                "rank": "Life"
+            },
+            "description": "The top youth leader of the troop. Appoints youth staff, runs troop meetings, chairs the Patrol Leaders' Council (PLC), and coordinates the yearly program calendar.",
+            "img": "/img/unit-docs/troop-303/leadership/spl.png",
+            "mentoredBy": "Scoutmaster"
+        },
+        "assistantSeniorPatrolLeader": {
+            "title": "Assistant Senior Patrol Leader",
+            "scout": [
+                {
+                    "name": "Aiden D",
+                    "rank": "Life"
+                },
+                {
+                    "name": "Caleb W",
+                    "rank": "Life"
+                }
+            ],
+            "description": "Lends operational assistance to the SPL and acts as troop leader when the SPL is absent. Directly oversees appointed support staff and patrol coordination.",
+            "img": "/img/unit-docs/troop-303/leadership/aspl.png",
+            "mentoredBy": "Assistant Scoutmaster"
+        },
+        "troopGuide": {
+            "title": "Troop Guide",
+            "scout": {
+                "name": "Gavin M",
+                "rank": "Eagle"
+            },
+            "description": "An experienced older Scout who mentors and guides the newest patrol of Scouts through their first year of transition into the troop.",
+            "img": "/img/unit-docs/troop-303/leadership/troop-guide.png",
+            "mentoredBy": "Assistant Scoutmaster of Youngest Patrol"
+        },
+        "patrolLeader": {
+            "title": "Patrol Leader",
+            "scout": [
+                {
+                    "name": "Myles S",
+                    "rank": "Star"
+                },
+                {
+                    "name": "Owen D",
+                    "rank": "Scout"
+                },
+                {
+                    "name": "Jayden F",
+                    "rank": "Scout"
+                },
+                {
+                    "name": "Jackson G",
+                    "rank": "Life"
+                }
+            ],
+            "description": "Elected by their peers, a Patrol Leader represents their patrol at PLC meetings, coordinates campouts, delegates tasks, and encourages member advancement.",
+            "img": "/img/unit-docs/troop-303/leadership/pl.png",
+            "mentoredBy": "Assistant Scoutmaster"
+        },
+        "instructor": {
+            "title": "Instructor",
+            "scout": {
+                "name": "",
+                "rank": ""
+            },
+            "description": "An older, highly proficient Scout who teaches specific outdoor skills, rank requirements, or merit badge material to younger peers.",
+            "img": "/img/unit-docs/troop-303/leadership/instructor.png",
+            "mentoredBy": "Scoutmaster"
+        },
+        "denChief": {
+            "title": "Den Chief",
+            "scout": {
+                "name": "",
+                "rank": ""
+            },
+            "description": "A Scout who works directly with a local Cub Scout Pack, assisting Den Leaders and acting as a bridge to recruit future Scouts.",
+            "img": "/img/unit-docs/troop-303/leadership/den-chief.png",
+            "mentoredBy": "Scoutmaster"
+        },
+        "juniorASM": {
+            "title": "Junior Assistant Scoutmaster",
+            "scout": {
+                "name": "",
+                "rank": ""
+            },
+            "description": "A Scout at least 16 years old who functions essentially as an adult leader, providing specialized mentorship under the Scoutmaster's supervision.",
+            "img": "/img/unit-docs/troop-303/leadership/jasm.png",
+            "mentoredBy": "Scoutmaster"
+        },
+        "quartermaster": {
+            "title": "Quartermaster",
+            "scout": [
+                {
+                    "name": "Lucas M",
+                    "rank": "Star"
+                },
+                {
+                    "name": "Gage Z",
+                    "rank": "Star"
+                },
+                {
+                    "name": "Brogan W",
+                    "rank": "Life"
+                }
+            ],
+            "description": "Maintains troop gear, coordinates trailer pack outs for trips, and issues equipment during campouts.",
+            "img": "/img/unit-docs/troop-303/leadership/quartermaster.png",
+            "mentoredBy": "Equipment Chair"
+        },
+        "historian": {
+            "title": "Historian",
+            "scout": {
+                "name": "Dylan D",
+                "rank": "First Class"
+            },
+            "description": "Captures photos and videos during troop outings and maintains the troop archive or newsletter content.",
+            "img": "/img/unit-docs/troop-303/leadership/historian.png",
+            "mentoredBy": "Communication Chair"
+        },
+        "scribe": {
+            "title": "Scribe",
+            "scout": {
+                "name": "Jackson S",
+                "rank": "First Class"
+            },
+            "description": "The youth secretary who takes minutes at PLC meetings, tracks attendance logs, and assists leadership with recordkeeping.",
+            "img": "/img/unit-docs/troop-303/leadership/scribe.png",
+            "mentoredBy": ""
+        },
+        "bugler": {
+            "title": "Bugler",
+            "scout": {
+                "name": "Foster B",
+                "rank": "Life"
+            },
+            "description": "Plays assembly, reveille, and taps calls at troop meetings and morning/evening flag ceremonies on campouts.",
+            "img": "/img/unit-docs/troop-303/leadership/bugler.png",
+            "mentoredBy": ""
+        },
+        "chaplainAide": {
+            "title": "Chaplain's Aide",
+            "scout": {
+                "name": "",
+                "rank": ""
+            },
+            "description": "Leads nonsectarian prayers at meals and scouts' own services during weekend outdoor trips.",
+            "img": "/img/unit-docs/troop-303/leadership/asm.png",
+            "mentoredBy": "Chaplain"
+        },
+        "webmaster": {
+            "title": "Webmaster",
+            "scout": {
+                "name": "",
+                "rank": ""
+            },
+            "description": "Assists in updating and maintaining materials on the troop website.",
+            "img": "/img/unit-docs/troop-303/leadership/webmaster.png",
+            "mentoredBy": "Communication Chair"
+        },
+        "oaRepresentative": {
+            "title": "Order of the Arrow Representative",
+            "scout": {
+                "name": "",
+                "rank": ""
+            },
+            "description": "Serves as the link between the local OA Honor Society Chapter and the troop, promoting lodge events and camping traditions.",
+            "img": "/img/unit-docs/troop-303/leadership/oa-rep.png",
+            "mentoredBy": ""
+        },
+        "outdoorEthicsGuide": {
+            "title": "Outdoor Ethics Guide",
+            "scout": {
+                "name": "",
+                "rank": ""
+            },
+            "description": "Ensures the troop adheres to Leave No Trace and Tread Lightly principles during all backcountry operations.",
+            "img": "/img/unit-docs/troop-303/leadership/outdoor-ethics.png",
+            "mentoredBy": ""
+        },
+        "patrols": [
+            {
+                "patrolName": "Vicious Vultures",
+                "patrolLeader": {
+                    "name": "Owen D",
+                    "rank": "Scout"
+                },
+                "patrolAdultMentor": {
+                    "name": "Paul Burgeson"
+                },
+                "patrolYouthMentor": {
+                    "name": "Aiden D",
+                    "rank": "Life"
+                },
+                "description": "First Year Scouts",
+                "img": "/img/unit-docs/troop-303/leadership/vultures.png"
+            },
+            {
+                "patrolName": "Outlaws",
+                "patrolLeader": {
+                    "name": "Jayden F",
+                    "rank": "Scout"
+                },
+                "patrolAdultMentor": {
+                    "name": "Josh Hunt"
+                },
+                "patrolYouthMentor": {
+                    "name": "Aiden D",
+                    "rank": "Life"
+                },
+                "description": "Second Year Scouts",
+                "img": "/img/unit-docs/troop-303/leadership/outlaws.png"
+            },
+            {
+                "patrolName": "Grizzlies",
+                "patrolLeader": {
+                    "name": "Myles S",
+                    "rank": "Star"
+                },
+                "patrolAdultMentor": {
+                    "name": "Benjamin Shover"
+                },
+                "patrolYouthMentor": {
+                    "name": "Caleb W",
+                    "rank": "Life"
+                },
+                "description": "Third Year Scouts",
+                "img": "/img/unit-docs/troop-303/leadership/grizzlies.png"
+            },
+            {
+                "patrolName": "Savage Racers",
+                "patrolLeader": {
+                    "name": "Jackson G",
+                    "rank": "Life"
+                },
+                "patrolAdultMentor": {
+                    "name": "Jeff McConnell"
+                },
+                "patrolYouthMentor": {
+                    "name": "Caleb W",
+                    "rank": "Life"
+                },
+                "description": "Fourth Year and Beyond Scouts",
+                "img": "/img/unit-docs/troop-303/leadership/racers.png"
+            
+            }
+        ]
+    }
+}
