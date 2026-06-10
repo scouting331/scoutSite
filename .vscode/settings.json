@@ -1,0 +1,22 @@
+{
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.quickSuggestions": {
+            "other": "on",
+            "comments": "inline",
+            "strings": "inline"
+        }
+    },
+    "markdownlint.config": {
+        "MD033": {
+            "allowed_elements": ["SignUpCards", "CsvTable", "Column", "Columns", "MeetingLocations", "figcaption"]
+        },
+        "MD037": {
+            "enabled": false
+        },
+        "MD041": {
+            "enabled": false
+        }
+    },
+    "cSpell.enabled": true
+}

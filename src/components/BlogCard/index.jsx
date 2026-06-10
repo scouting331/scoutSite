@@ -89,7 +89,7 @@ function BlogCard({ permalink, title, date, authors, tags }) {
               {authors.map((author, idx) => (
                 <img 
                   key={idx}
-                  src={author.imageURL || 'img/favicon.png'} 
+                  src={author.imageURL || 'img/logos/favicon.png'} 
                   alt={author.name} 
                   className={styles.authorAvatar}
                   title={author.name}

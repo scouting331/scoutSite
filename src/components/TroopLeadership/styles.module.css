@@ -1,0 +1,131 @@
+/* Card Container Grid Layout */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin-top: 16px;
+  margin-bottom: 32px;
+}
+
+/* Base Role Card Layout */
+.roleCard {
+  background-color: var(--scouting-america-light-tan);
+  border: 1px solid var(--scouting-america-dark-tan);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--global-box-shadow);
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Open Position State Modifier */
+.roleCardOpen {
+  background-color: var(--scouting-america-tan);
+  border: 1px dashed var(--scouting-america-dark-tan);
+}
+
+/* User & Profile Image Styles */
+.cardImg {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--scouting-america-light-tan);
+  border: 2px solid var(--scouting-america-dark-tan);
+  flex-shrink: 0;
+}
+
+.cardImgOpen {
+  border: 2px dashed var(--scouting-america-dark-tan);
+}
+
+/* Text & Typography Layout Elements */
+.cardContent {
+  flex-grow: 1;
+}
+
+.titleText {
+  margin: 0 0 4px 0;
+  color: var(--scouting-america-dark-gray);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.nameContainer {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--scouting-america-blue);
+  margin: 0 0 2px 0;
+}
+
+.nameContainerOpen {
+  color: var(--scouting-america-red);
+}
+
+.descText {
+  font-size: 0.875rem;
+  color: var(--scouting-america-dark-gray);
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+
+.mentorSection {
+  font-size: 0.8rem;
+  color: var(--scouting-america-dark-gray);
+  margin: 0;
+  border-top: 1px dashed var(--scouting-america-gray);
+  padding-top: 8px;
+  font-style: italic;
+}
+
+/* Specific Patrol Card Structural Variant */
+.patrolCard {
+  border: 1px solid var(--scouting-america-dark-tan);
+  border-radius: 12px;
+  padding: 20px;
+  background-color: var(--scouting-america-light-tan);
+  box-shadow: var(--global-box-shadow);
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.patrolBadge {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--scouting-america-light-tan);
+  border: 1px solid var(--scouting-america-dark-tan);
+  padding: 1px;
+  flex-shrink: 0;
+}
+
+.patrolHeader {
+  margin: 0 0 12px 0;
+  color: var(--scouting-america-dark-gray);
+  border-bottom: 1px dashed var(--scouting-america-gray);
+  padding-bottom: 4px;
+}
+
+.patrolMetaText {
+  margin: 0 0 6px 0;
+  font-size: 0.9rem;
+}
+
+.patrolMetaTextLast {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.openHighlight {
+  color: var(--scouting-america-red);
+  font-weight: bold;
+}
+
+.filledText {
+  color: var(--scouting-america-dark-gray);
+}

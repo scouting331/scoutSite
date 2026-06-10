@@ -111,9 +111,9 @@ if __name__ == "__main__":
     try:
         print("Starting destructive image optimization workflow...")
         optimize_convert_and_hash_images(
-            input_dir=SOURCE_FOLDER, 
-            output_dir=OPTIMIZED_FOLDER, 
-            max_size=(1920, 1080), 
+            input_dir=SOURCE_FOLDER,
+            output_dir=OPTIMIZED_FOLDER,
+            max_size=(1920, 1080),
             quality=80,
             keep_original_names=KEEP_ORIGINAL_NAMES
         )

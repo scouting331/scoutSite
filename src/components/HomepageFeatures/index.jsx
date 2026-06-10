@@ -23,7 +23,7 @@ const FeatureList = [
   {
     title: "Troop 303",
     Jpg: require("@site/static/img/feature-cards/troop303.jpg").default,
-    UnitSite: "/unit-docs/troop-303",
+    UnitSite: "/troop-303",
     description: (
       <>
         Serving young men ages 11–17 on their journey to Eagle Scout and beyond.
@@ -33,7 +33,7 @@ const FeatureList = [
   {
     title: "Troop 331",
     Jpg: require("@site/static/img/feature-cards/troop331.jpg").default,
-    UnitSite: "/unit-docs/troop-331",
+    UnitSite: "/troop-331",
     description: (
       <>
         Providing adventure, leadership, and service opportunities for girls ages 11–17.
@@ -43,7 +43,7 @@ const FeatureList = [
   {
     title: "Crew 303",
     Jpg: require("@site/static/img/feature-cards/crew303.jpg").default,
-    UnitSite: "/unit-docs/crew-303",
+    UnitSite: "/crew-303",
     description: (
       <>
         High adventure, leadership, and service opportunities for young men and women ages 14–20.
@@ -53,7 +53,7 @@ const FeatureList = [
   {
     title: "Pack 303",
     Jpg: require("@site/static/img/feature-cards/pack303.jpg").default,
-    UnitSite: "/unit-docs/pack-303",
+    UnitSite: "/pack-303",
     description: (
       <>
         Starting the journey of Scouting with fun and adventure for boys and girls in grades K–5.

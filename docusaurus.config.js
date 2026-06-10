@@ -26,7 +26,7 @@ const config = {
   title: "The Scouting Units of American Legion Post 331",
   tagline:
     "Scouting America Units Troop 303, Troop 331, Crew 303, and Pack 303 of Brownsburg, Indiana",
-  favicon: "img/favicon.png",
+  favicon: "img/logos/favicon.png",
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -57,11 +57,7 @@ const config = {
       "classic",
       {
         blog: false,
-        docs: {
-          sidebarPath: "./sidebarsDocs.js",
-          path: "unit-docs",
-          routeBasePath: "unit-docs",
-        },
+        docs: false,
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -88,7 +84,16 @@ const config = {
         id: "cookbook",
         path: "cookbook",
         routeBasePath: "cookbook",
-        sidebarPath: "./sidebarsCookbook.js",
+        sidebarPath: "./sidebarCookbook.js",
+      },
+    ],
+    [
+      "@docusaurus/plugin-content-docs",
+      {
+        id: "docs",
+        path: "docs",
+        routeBasePath: "docs",
+        sidebarPath: "./sidebarDocs.js",
       },
     ],
     [
@@ -106,7 +111,7 @@ const config = {
   ],
 
   themeConfig: {
-    image: "img/favicon.png",
+    image: "img/logos/favicon.png",
     colorMode: {
       respectPrefersColorScheme: true,
       disableSwitch: true,
@@ -123,7 +128,7 @@ const config = {
       title: "Scouting America",
       logo: {
         alt: "Scouting America Units",
-        src: "img/all-units-logo.png",
+        src: "img/logos/all-units-logo.png",
       },
       items: [
         {
@@ -131,10 +136,10 @@ const config = {
           label: "Unit Sites",
           position: "right",
           items: [
-            { label: "Troop 303", to: "/unit-docs/troop-303" },
-            { label: "Troop 331", to: "/unit-docs/troop-331" },
-            { label: "Crew 303", to: "/unit-docs/crew-303" },
-            { label: "Pack 303", to: "/unit-docs/pack-303" },
+            { label: "Troop 303", to: "/troop-303" },
+            { label: "Troop 331", to: "/troop-331" },
+            { label: "Crew 303", to: "/crew-303" },
+            { label: "Pack 303", to: "/pack-303" },
           ],
         },
         {
@@ -159,11 +164,15 @@ const config = {
           items: [
             {
               label: "Documents",
-              to: "/unit-docs/general-info",
+              to: "/docs/general-docs",
             },
             {
               label: "Blog",
               to: "/blog",
+            },
+            {
+              label: "Helpful Links",
+              to: "/docs/general-docs/helpful-links"
             },
           ],
         },
@@ -173,7 +182,7 @@ const config = {
             {
               html: `
                 <a href="https://www.youtube.com/@Scouting331" 
-                  target=_blank rel="noreferrer noopener" 
+                  target="_blank" rel="noreferrer noopener" 
                   aria-label="YouTube Channel"
                   class="footer__link-item">
                   <i class="fa-brands fa-youtube footer__link-logo" aria-hidden="true"></i>
@@ -184,7 +193,7 @@ const config = {
             {
               html: `
                 <a href="https://www.facebook.com/groups/114681931900039" 
-                  target=_blank rel="noreferrer noopener" 
+                  target="_blank" rel="noreferrer noopener" 
                   aria-label="Troop 303 Facebook Page"
                   class="footer__link-item">
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
@@ -195,7 +204,7 @@ const config = {
             {
               html: `
                 <a href="https://www.facebook.com/groups/177465650239377" 
-                  target=_blank rel="noreferrer noopener" 
+                  target="_blank" rel="noreferrer noopener" 
                   aria-label="Troop 331 Facebook Page"
                   class="footer__link-item">
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
@@ -206,7 +215,7 @@ const config = {
             {
               html: `
                 <a href="https://www.facebook.com/groups/441282630057267" 
-                  target=_blank rel="noreferrer noopener" 
+                  target="_blank" rel="noreferrer noopener" 
                   aria-label="Pack 303 Facebook Page"
                   class="footer__link-item">
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
@@ -217,7 +226,7 @@ const config = {
             {
               html: `
                 <a href="https://www.instagram.com/venturecrew.303" 
-                  target=_blank rel="noreferrer noopener" 
+                  target="_blank" rel="noreferrer noopener" 
                   aria-label="Venture Crew 303 Instagram Page"
                   class="footer__link-item">
                   <i class="fa-brands fa-instagram footer__link-logo" aria-hidden="true"></i>
