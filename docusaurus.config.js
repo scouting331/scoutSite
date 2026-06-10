@@ -26,7 +26,7 @@ const config = {
   title: "The Scouting Units of American Legion Post 331",
   tagline:
     "Scouting America Units Troop 303, Troop 331, Crew 303, and Pack 303 of Brownsburg, Indiana",
-  favicon: "img/favicon.png",
+  favicon: "img/logos/favicon.png",
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -111,7 +111,7 @@ const config = {
   ],
 
   themeConfig: {
-    image: "img/favicon.png",
+    image: "img/logos/favicon.png",
     colorMode: {
       respectPrefersColorScheme: true,
       disableSwitch: true,
@@ -128,7 +128,7 @@ const config = {
       title: "Scouting America",
       logo: {
         alt: "Scouting America Units",
-        src: "img/all-units-logo.png",
+        src: "img/logos/all-units-logo.png",
       },
       items: [
         {

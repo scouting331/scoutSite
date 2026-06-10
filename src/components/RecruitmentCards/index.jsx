@@ -8,9 +8,9 @@
  * @requires React
  */
 
-import PackPng from '@site/static/img/pack-icon.png'; 
-import GirlsPng from '@site/static/img/troop-icon.png';
-import BoysPng from '@site/static/img/troop-icon.png';
+import PackPng from '@site/static/img/logos/pack-icon.png'; 
+import GirlsPng from '@site/static/img/logos/troop-icon.png';
+import BoysPng from '@site/static/img/logos/troop-icon.png';
 
 /**
  * Static schema mapping thematic branding variables and registration links for local Scouting units.

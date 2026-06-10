@@ -6,7 +6,7 @@ draft: false
 ---
 
 import { adultLeadership, scoutLeadership } from '@site/src/data/troop-303/leadership';
-import { Grid, RoleCard, PatrolCard } from '@site/src/components/Leadership';
+import { Grid, RoleCard, PatrolCard } from '@site/src/components/TroopLeadership';
 
 ## Our Leadership Model
 
@@ -16,9 +16,9 @@ Troop 303 operates on the true spirit of a **Scout-led troop**. Our youth leader
 
 ## Youth Leadership
 
-These positions are elected or appointed by the Scouts every leadership cycle.
+Scouting empowers youth to step into vital leadership roles, experiencing both collaborative and individual responsibility. Embracing the mindset of a servant leader builds strong character, fosters active citizenship, and teaches Scouts how to follow and lead with respect.
 
-### Troop Executive & Support Staff
+### Troop Leaders
 
 <Grid>
   <RoleCard
@@ -145,12 +145,15 @@ These positions are elected or appointed by the Scouts every leadership cycle.
 
 ### Patrol Method
 
-The troop is divided into small teams called patrols. Each patrol functions as an independent camping and competitive unit led by an elected Patrol Leader.
+> "The patrol system is not one method in which Scouting can be carried on. It
+> is the only method."
+>
+> Lord Baden-Powell, Scouting’s founder
+
+Being part of a Scout patrol offers youth a unique opportunity to build self-esteem, self-reliance, and a sense of belonging through shared responsibility and teamwork. Unlike traditional sports teams, a patrol requires every member to pool resources and apply diverse life skills to accomplish everyday tasks, such as planning, preparing, and cleaning up a campout dinner under a leader's direction. Because of the small group size, every Scout must actively contribute to the collective good, which naturally models good citizenship and fosters servant leadership.
 
 <Grid>
   {scoutLeadership.patrols?.map((patrol, idx) => (
-    <PatrolCard key={idx} patrol={patrol} />
-  )) || scoutLeadership.patrols?.map((patrol, idx) => (
     <PatrolCard key={idx} patrol={patrol} />
   ))}
 </Grid>
@@ -159,7 +162,9 @@ The troop is divided into small teams called patrols. Each patrol functions as a
 
 ## Adult Support Team
 
-Our adult volunteers handle core logistical burdens, financial health, and policy metrics so that our youth are freed up to focus entirely on the leadership experience.
+Adult conduct heavily influences how youth grow, making Scout leaders vital role
+models. When a Scoutmaster truly listens, encourages, and shows sincere interest
+in their Scouts, they can make a profound, lifelong difference.
 
 ### Key 3 Leaders
 

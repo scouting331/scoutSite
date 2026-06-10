@@ -9,11 +9,11 @@
 
 /* Base Role Card Layout */
 .roleCard {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
+  background-color: var(--scouting-america-light-tan);
+  border: 1px solid var(--scouting-america-dark-tan);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  box-shadow: var(--global-box-shadow);
   display: flex;
   gap: 16px;
   align-items: flex-start;
@@ -22,8 +22,8 @@
 
 /* Open Position State Modifier */
 .roleCardOpen {
-  background-color: #fdfaf2;
-  border: 1px dashed #e6a23c;
+  background-color: var(--scouting-america-tan);
+  border: 1px dashed var(--scouting-america-dark-tan);
 }
 
 /* User & Profile Image Styles */
@@ -32,13 +32,13 @@
   height: 64px;
   border-radius: 50%;
   object-fit: cover;
-  background-color: #f1f5f9;
-  border: 2px solid #cbd5e1;
+  background-color: var(--scouting-america-light-tan);
+  border: 2px solid var(--scouting-america-dark-tan);
   flex-shrink: 0;
 }
 
 .cardImgOpen {
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed var(--scouting-america-dark-tan);
 }
 
 /* Text & Typography Layout Elements */
@@ -48,7 +48,7 @@
 
 .titleText {
   margin: 0 0 4px 0;
-  color: #1e293b;
+  color: var(--scouting-america-dark-gray);
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1.3;
@@ -57,37 +57,37 @@
 .nameContainer {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #2b6cb0;
+  color: var(--scouting-america-blue);
   margin: 0 0 2px 0;
 }
 
 .nameContainerOpen {
-  color: #dd6b20;
+  color: var(--scouting-america-red);
 }
 
 .descText {
   font-size: 0.875rem;
-  color: #475569;
+  color: var(--scouting-america-dark-gray);
   margin: 0 0 12px 0;
   line-height: 1.4;
 }
 
 .mentorSection {
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--scouting-america-dark-gray);
   margin: 0;
-  border-top: 1px dashed #e2e8f0;
+  border-top: 1px dashed var(--scouting-america-gray);
   padding-top: 8px;
   font-style: italic;
 }
 
 /* Specific Patrol Card Structural Variant */
 .patrolCard {
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--scouting-america-dark-tan);
   border-radius: 12px;
   padding: 20px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  background-color: var(--scouting-america-light-tan);
+  box-shadow: var(--global-box-shadow);
   display: flex;
   gap: 16px;
   align-items: flex-start;
@@ -98,16 +98,16 @@
   height: 64px;
   border-radius: 50%;
   object-fit: cover;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-  padding: 4px;
+  background-color: var(--scouting-america-light-tan);
+  border: 1px solid var(--scouting-america-dark-tan);
+  padding: 1px;
   flex-shrink: 0;
 }
 
 .patrolHeader {
   margin: 0 0 12px 0;
-  color: #0f172a;
-  border-bottom: 2px solid #3b82f6;
+  color: var(--scouting-america-dark-gray);
+  border-bottom: 1px dashed var(--scouting-america-gray);
   padding-bottom: 4px;
 }
 
@@ -122,10 +122,10 @@
 }
 
 .openHighlight {
-  color: #dd6b20;
+  color: var(--scouting-america-red);
   font-weight: bold;
 }
 
 .filledText {
-  color: #1e293b;
+  color: var(--scouting-america-dark-gray);
 }

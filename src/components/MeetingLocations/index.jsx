@@ -5,14 +5,14 @@
  * 
  * @module MeetingLocations
  * @requires React
- * @requires @site/static/img/pack-icon.png
- * @requires @site/static/img/troop-icon.png
+ * @requires @site/static/img/logos/pack-icon.png
+ * @requires @site/static/img/logos/troop-icon.png
  * @requires @site/src/components/MapWrapper
  */
 
 import React from "react";
-import PackPng from "@site/static/img/pack-icon.png";
-import TroopsPng from "@site/static/img/troop-icon.png";
+import PackPng from "@site/static/img/logos/pack-icon.png";
+import TroopsPng from "@site/static/img/logos/troop-icon.png";
 import MapWrapper from "@site/src/components/Map";
 
 /**
