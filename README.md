@@ -24,7 +24,7 @@ should be jpg images. When replacing the pictures, keep the name the same.
 
 Each unit has its own docs locations. All of these are "markdown" files. Adding
 documents is as simple as adding the new markdown file to the folder in
-`/unit-docs/` directory.
+`/docs/` directory.
 
 ### Blog
 

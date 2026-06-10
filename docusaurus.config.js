@@ -90,9 +90,9 @@ const config = {
     [
       "@docusaurus/plugin-content-docs",
       {
-        id: "unit-docs",
-        path: "unit-docs",
-        routeBasePath: "unit-docs",
+        id: "docs",
+        path: "docs",
+        routeBasePath: "docs",
         sidebarPath: "./sidebarDocs.js",
       },
     ],
@@ -164,7 +164,7 @@ const config = {
           items: [
             {
               label: "Documents",
-              to: "/unit-docs/general-docs",
+              to: "/docs/general-docs",
             },
             {
               label: "Blog",
@@ -172,7 +172,7 @@ const config = {
             },
             {
               label: "Helpful Links",
-              to: "/unit-docs/general-docs/helpful-links"
+              to: "/docs/general-docs/helpful-links"
             },
           ],
         },
