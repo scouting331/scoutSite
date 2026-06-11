@@ -43,7 +43,7 @@ jobs:
 
           # Define file paths
           AUTHORS_FILE = 'blog/authors.yml'
-          TEMPLATE_FILE = '.github/ISSUE_TEMPLATE/new-blog-post.yml'
+          TEMPLATE_FILE = '.github/ISSUE_TEMPLATE/new-blog-author.yml'
 
           # Read parsed issue data
           issue_json = os.environ.get("ISSUE_DATA", "{}")
