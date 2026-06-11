@@ -17,8 +17,8 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ secrets.YOUR_EXISTING_APP_ID }}
-          private-key: ${{ secrets.YOUR_EXISTING_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Parse Issue Form
         id: parse
