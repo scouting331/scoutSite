@@ -1,5 +1,5 @@
 name: New Blog Author
-description: Add a new author to the blog authors list
+description: "Add a new author to the blog authors list"
 title: "[New Author]: {INSERT NAME HERE}"
 labels: ["blog", "new-author"]
 body:

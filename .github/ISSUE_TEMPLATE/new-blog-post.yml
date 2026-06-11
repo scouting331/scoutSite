@@ -1,30 +1,56 @@
 name: New Blog Post
-description: Add a new post to the blog
+description: "Add a new post to the blog"
 title: "[Blog Post]: "
-labels: 
-  - blog
-assignees: 
-  - shoverbj
+labels: ["blog"]
 body:
   - type: input
     id: title
     attributes:
-      label: Blog Title
-      description: "Give a title to your blog post. Typically this would be
-        the name of the event/campout/etc."
+      label: "Blog Title"
+      description: "Give a title to your blog post. Typically this would be the name of the event/campout/etc."
     validations:
       required: true
   - type: dropdown
     id: authors
     attributes:
-      label: Select authors (use new author issue if the author isn't listed
-        here)
+      label: "Select authors"
+      description: "Use new author issue form if the author isn't listed here"
       multiple: true
       options:
         # AUTHOR_START
-        - Benjamin S
+        - Christopher Koczan
+        - Benjamin Shover
         # AUTHOR_END
+    validations:
+      required: true
   - type: checkboxes
-    id: 
-      
-        
+    id: tags
+    attributes:
+      label: Unit
+      description: "Select the unit(s) to associate this post with"
+      options:
+        - label: Troop 303
+        - label: Troop 331
+        - label: Crew 303
+        - label: Pack 303
+    validations:
+      required: true
+  - type: upload
+    id: cover-photo
+    attributes:
+      label: "Cover Photo"
+      description: "Photo shown at top of your blog post and on the homepage card"
+    validations:
+      required: false
+      accept: ".png, .jpg, .jpeg, .gif, .svg, .webp"
+  - type: upload
+    id: photo-album
+    attributes:
+      label: "Photo Album"
+      description: "Compress folder of photos as a zip file before uploading. If the file is too big (>25 Mb), the photo album will need to be added manually (see Mr. Shover)"
+    validations:
+      required: false
+      accept: ".zip"
+  - type: markdown
+      attributes:
+        value: "Insert blog text here!"
