@@ -1,4 +1,9 @@
-MIT License
+# Licensing and Privacy Notice
+
+## 1. Sofware Code License (MIT)
+
+The software source code, layout configuration, and build scripts of this project 
+are licensed under the MIT License:
 
 Copyright (c) 2026 The Scouting Units of American Legion Post 331
 
@@ -19,3 +24,30 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## 2. Media, Identity, and Content Restrictions (All Rights Reserved)
+The MIT License above applies **strictly to the software infrastructure and 
+layout code**. It does NOT apply to any creative assets, personal data, or 
+individual identities contained within this repository. 
+
+The following items are strictly protected and **All Rights Are Reserved**:
+
+* **Personal Identifiable Information (PII):** All names, titles, contact
+  information, advancement records, and unit rosters of Youth Scouts and
+  Adult Leaders.
+* **Photography and Media:** All images, avatars, graphics, and video clips
+  stored within asset folders (including but not limited to `/static/img/` and
+  `/blog/assets/`).
+* **Written Content:** All individual blog posts, newsletters, calendar details,
+  and page copy detailing unit activities.
+
+### Usage Restrictions
+1. **No Reproduction:** You may not copy, download, scrape, mirror, redistribute,
+   or use any Scout's image, name, or unit content for any public or commercial purpose
+   without explicit written consent from the Unit Committee and the Scout's legal guardian.
+3. **Template Usage:** If you choose to fork or clone this repository to build a website
+   for your own Scouting Unit, you **MUST** delete all files inside the `/blog/`, `/docs/,
+   `/cookbook/`, `/src/pages/`, and `/static/` directories, and replace all unit-specific
+   images with your own assets before publishing your site to the public web.
