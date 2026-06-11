@@ -46,7 +46,7 @@ async function blogPluginEnhanced(...pluginArgs) {
       let recentPosts = [...data.content.blogPosts]
         // Only show published posts.
         .filter((p) => !p.metadata.unlisted)
-        .slice(0, 5);
+        .slice(0, 4);
 
       recentPosts = recentPosts.map((p) => {
         return {
