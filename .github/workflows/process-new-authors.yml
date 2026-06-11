@@ -26,7 +26,7 @@ jobs:
         id: parse
         uses: stefanbuck/github-issue-parser@v3
         with:
-          template-path: .github/ISSUE_TEMPLATE/new-blog-author.yaml
+          template-path: .github/ISSUE_TEMPLATE/new-blog-author.yml
 
       # 3. Process the data and append it to blog/authors.yml
       - name: Process Author and Update Files
