@@ -11,20 +11,13 @@
 #  * 
 #  * Optional Schema Attributes:
 #  *   - image_url: Remote path string pointing to avatar images (e.g., GitHub profile avatars).
-#  *   - url: Web address link to an external personal portfolio or professional landing profile.
-#  *   - email: Direct mailbox address endpoint for personal messaging inquiries.
 #  * 
 #  * @environment YAML Data Configuration Schema
 #  * @see {@link https://docusaurus.io | Docusaurus Blog Authors Documentation}
 #  */
 
-ben-s:
-  name: Benjamin S
-  title: Assistant Scoutmaster, Committee Member
-  image_url: https://github.com/shoverbj.png
-  page: true
-
-jd-d:
-  name: JD D
-  title: Assistant Scoutmaster
+benjamin-shover:
+  name: Benjamin Shover
+  title: Assistant Scoutmaster Troop 303, Committee Member
+  image_url: /img/blog/authors/benjamin-shover.png
   page: true

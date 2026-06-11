@@ -1,0 +1,36 @@
+name: New Blog Author
+description: Add a new author to the blog authors list
+title: "[New Author]: "
+labels:
+  - blog
+  - new-author
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Author's Name
+      description: "Name shown in blog posts for the author (NOTE: If you are a
+        Scout this should be your first name followed by a last initial, no last
+        names please unless you are an adult and want your last name shown)"
+      placeholder: "Scout A"
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: "If you are a Scout, list your position(s) and unit."
+      placeholder: "Position, Troop ###"
+    validations:
+      required: true
+  - type: upload
+    id: image_url
+    attributes:
+      label: Avatar Image
+      description: "This is the photo that will be associated with you. Please
+        make sure the image size is relatively small and your face is centered in
+        the image"
+    validations:
+      required: false
+      accept: ".png, .jpg, .jpeg, .gif, .svg, .webp"
+

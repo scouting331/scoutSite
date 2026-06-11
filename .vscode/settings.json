@@ -18,5 +18,7 @@
             "enabled": false
         }
     },
-    "cSpell.enabled": true
+    "cSpell.enabled": true,
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false
 }

@@ -1,0 +1,28 @@
+name: New Blog Post
+description: Add a new post to the blog
+title: "[Blog Post]: "
+labels: 
+  - blog
+assignees: 
+  - shoverbj
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Blog Title
+      description: "Give a title to your blog post. Typically this would be
+        the name of the event/campout/etc."
+    validations:
+      required: true
+  - type: dropdown
+    id: authors
+    attributes:
+      label: Select authors (use new author issue if the author isn't listed
+        here)
+      multiple: true
+      options:
+        # AUTHOR_START
+        - Benjamin S
+        # AUTHOR_END
+      
+        
