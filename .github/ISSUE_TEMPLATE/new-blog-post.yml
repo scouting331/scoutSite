@@ -1,6 +1,7 @@
 name: New Blog Post
 description: "Add a new post to the blog"
 labels: ["blog"]
+title: ""
 body:
   - type: markdown
     attributes:
@@ -56,5 +57,7 @@ body:
     attributes:
       label: "Blog Text"
       description: "Write your blog post here!"
+      placeholder: "Blog text here..."
+      render: text
     validations:
       required: true
