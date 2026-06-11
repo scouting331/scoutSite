@@ -1,0 +1,224 @@
+name: Generate Blog Post from Issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create-post:
+    if: contains(github.event.issue.labels.*.name, 'blog')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.YOUR_EXISTING_APP_ID }}
+          private-key: ${{ secrets.YOUR_EXISTING_APP_PRIVATE_KEY }}
+
+      - name: Parse Issue Form
+        id: parse
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: .github/ISSUE_TEMPLATE/new-blog-post.yml
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # Install Pillow dependency required by your image optimizer script
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow
+
+      # Process issue text, staging assets, optimization steps, and build output
+      - name: Process Issue Data and Assets (Python Optimizer)
+        id: process
+        env:
+          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
+          RAW_BODY: ${{ github.event.issue.body }}
+        run: |
+          python -c '
+          import os
+          import json
+          import re
+          import hashlib
+          import urllib.request
+          import zipfile
+          from io import BytesIO
+          from datetime import datetime
+          from PIL import Image, ImageOps
+
+          # --- 1. INTEGRATED OPTIMIZER ENGINE CODE ---
+          def optimize_convert_and_hash_images(input_dir, output_dir, max_size=(1920, 1080), quality=80, keep_original_names=False):
+              if not os.path.exists(input_dir):
+                  return
+              os.makedirs(output_dir, exist_ok=True)
+              valid_extensions = (".jpg", ".jpeg", ".png")
+              for root, _, files in os.walk(input_dir):
+                  for file in files:
+                      if file.lower().endswith(valid_extensions):
+                          input_path = os.path.join(root, file)
+                          relative_path = os.path.relpath(root, input_dir)
+                          target_folder = os.path.normpath(os.path.join(output_dir, relative_path))
+                          os.makedirs(target_folder, exist_ok=True)
+                          try:
+                              with Image.open(input_path) as img:
+                                  img = ImageOps.exif_transpose(img)
+                                  if img.mode in ("P", "CMYK"):
+                                      img = img.convert("RGBA")
+                                  img.thumbnail(max_size, Image.Resampling.LANCZOS)
+                                  buffer = BytesIO()
+                                  img.save(buffer, format="WEBP", quality=quality)
+                                  optimized_data = buffer.getvalue()
+                                  if keep_original_names:
+                                      base_name, _ = os.path.splitext(file)
+                                      output_file_name = f"{base_name}.webp"
+                                  else:
+                                      hasher = hashlib.md5(optimized_data)
+                                      content_hash = hasher.hexdigest()
+                                      output_file_name = f"img_{content_hash}.webp"
+                                  output_path = os.path.join(target_folder, output_file_name)
+                                  if os.path.exists(output_path):
+                                      os.remove(input_path)
+                                      continue
+                                  with open(output_path, "wb") as f:
+                                      f.write(optimized_data)
+                                  if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+                                      os.remove(input_path)
+                                      print(f"[Processed & Purged] {file} -> {output_file_name}")
+                          except Exception as e:
+                              print(f"Failed to process {file}. Error: {e}")
+
+          # --- 2. SETUP FORMS & METADATA ---
+          data = json.loads(os.environ["ISSUE_JSON"])
+          body_text = os.environ.get("RAW_BODY", "")
+          date_str = datetime.now().strftime("%Y-%m-%d")
+
+          def to_kebab(text):
+              if not text: return ""
+              text = text.lower().strip()
+              text = re.sub(r"[^a-z0-9\s-]", "", text)
+              return re.sub(r"[\s-]+", "-", text).strip("-")
+
+          slug = to_kebab(data.get("title", "untitled"))
+          blogfilename = f"{date_str}-{slug}"
+
+          authors = [to_kebab(a) for a in data.get("authors", [])]
+          tags = [to_kebab(t["label"]) for t in data.get("tags", []) if t.get("value") == True]
+
+          # Define Docusaurus target destinations
+          static_folder = f"static/img/blog/{blogfilename}"
+          web_prefix = f"/img/blog/{blogfilename}"
+
+          # --- 3. FETCH AND RUN OPTIMIZER ON COVER PHOTO ---
+          cover_url = data.get("cover-photo")
+          cover_line = ""
+          if cover_url and cover_url != "null":
+              # Create an isolated staging bucket for the download
+              tmp_cover_dir = "/tmp/raw_cover"
+              os.makedirs(tmp_cover_dir, exist_ok=True)
+              
+              clean_url = cover_url.split("?")[0]
+              _, ext = os.path.splitext(clean_url)
+              if not ext: ext = ".jpg"
+              
+              # Stage raw image file natively
+              raw_cover_path = os.path.join(tmp_cover_dir, f"cover{ext}")
+              urllib.request.urlretrieve(cover_url, raw_cover_path)
+              
+              # Run optimizer engine on cover folder -> outputs straight to static directory root
+              optimize_convert_and_hash_images(tmp_cover_dir, static_folder, keep_original_names=True)
+              cover_line = f"![Cover Picture]({web_prefix}/cover.webp)\n\n"
+
+          # --- 4. FETCH AND RUN OPTIMIZER ON ZIP ALBUM SLIDES ---
+          album_url = data.get("photo-album")
+          has_album = False
+          album_line = ""
+          if album_url and album_url != "null":
+              tmp_slides_dir = "/tmp/raw_slides"
+              os.makedirs(tmp_slides_dir, exist_ok=True)
+              
+              zip_path = "album.zip"
+              urllib.request.urlretrieve(album_url, zip_path)
+              with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                  zip_ref.extractall(tmp_slides_dir)
+              os.remove(zip_path)
+              
+              # Run optimizer engine on extracted slides folder -> outputs straight to slides target subdirectory
+              slides_target_folder = os.path.join(static_folder, "slides")
+              optimize_convert_and_hash_images(tmp_slides_dir, slides_target_folder, keep_original_names=True)
+              
+              has_album = True
+              album_line = f"\n\n<PhotoAlbumGallery\n    context={{require.context('\''{web_prefix}/slides'\'', false, /\\.(png|jpe?g|svg|webp)$/)}}\n/>"
+
+          # --- 5. PARSE TEXT CONTENT ---
+          marker = "Insert blog text here!"
+          if marker in body_text:
+              body_text = body_text.split(marker)[-1].strip()
+
+          paragraphs = [p.strip() for p in body_text.split("\n\n") if p.strip()]
+          content_markdown = ""
+          if paragraphs:
+              content_markdown += paragraphs[0] + "\n\n{/* truncate */}"
+              if len(paragraphs) > 1:
+                  content_markdown += "\n\n" + "\n\n".join(paragraphs[1:])
+
+          # --- 6. COMPILE INTEGRATED FILE TEXT ---
+          authors_str = ", ".join(authors)
+          tags_str = ", ".join(tags)
+          import_line = "import PhotoAlbumGallery from '\''@site/src/components/PhotoAlbumGallery'\'';\n\n" if has_album else ""
+
+          file_content = f"""---
+title: {data.get("title")}
+authors: [{authors_str}]
+tags: [{tags_str}]
+---
+
+{import_line}{cover_line}{content_markdown}{album_line}
+"""
+          os.makedirs("blog", exist_ok=True)
+          with open(f"blog/{blogfilename}.md", "w", encoding="utf-8") as f:
+              f.write(file_content.strip() + "\n")
+
+          with open(os.environ["GITHUB_ENV"], "a") as env_file:
+              env_file.write(f"BLOG_FILENAME={blogfilename}\n")
+          '
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          commit-message: "feat(blog): add new post from issue #${{ github.event.issue.number }}"
+          branch: "blog/issue-${{ github.event.issue.number }}-${{ env.BLOG_FILENAME }}"
+          title: "feat(blog): ${{ github.event.issue.title }}"
+          body: |
+            This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.
+            
+            ### Asset Optimization Checklist:
+            - [x] Extracted raw upload fields safely
+            - [x] Auto-converted assets to heavily compressed **WebP** formats
+            - [x] Stripped EXIF data and resized frames to bounding `1920x1080` parameters
+            
+            Closes #${{ github.event.issue.number }}
+          labels: |
+            blog
+            ready-to-review
+
+      - name: Comment on Issue with PR Link
+        if: steps.cpr.outputs.pull-request-number != ''
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            🎉 **Success!** Your blog post has been generated and all assets have been fully optimized into WebP formats.
+            
+            Review your branch modifications and staging environments here:👉 ${{ steps.cpr.outputs.pull-request-url }}

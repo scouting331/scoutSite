@@ -22,14 +22,19 @@ import recentPosts from '@site/.docusaurus/recent-posts.json';
 import useBaseUrl from "@docusaurus/useBaseUrl";
 
 /**
- * Localizes an ISO date string to "MMM DD, YYYY" format (e.g., "Oct 24, 2026").
+ * Localizes an ISO date string to "MMM DD, YYYY" using UTC to prevent timezone offsets.
  * @private
  * @param {string} isoString - The ISO date format string from Docusaurus metadata.
  * @returns {string} The formatted date.
  */
 const formatDate = (isoString) => {
     const date = new Date(isoString);
-    return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
+    return new Intl.DateTimeFormat('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric', 
+      timeZone: 'UTC'
+    }).format(date);
 };
 
 /**
@@ -46,13 +51,23 @@ const formatDate = (isoString) => {
 function BlogCard({ permalink, title, date, authors, tags }) {
   const fallbackDefaultImage = useBaseUrl('img/blog/default-blog-cover.webp');
   
-  // 1. Strip trailing slashes and get the folder name from permalink
-  const cleanPath = permalink.replace(/^\/|\/$/g, ''); 
+  // 1. Isolate the base slug name by stripping the leading "/blog" and trailing slashes
+  const cleanUrl = permalink.replace(/^\/|\/$/g, '').replace(/^blog\//, '');
+
+  // 2. Isolate ONLY the final trailing title string
+  const slugName = cleanUrl.split('/').pop();
+  
+  // 3. Extract the exact YYYY-MM-DD prefix from the raw ISO string directly without date manipulation
+  // An ISO timestamp starts with "YYYY-MM-DD", so we slice the first 10 characters
+  const datePrefix = date.slice(0, 10);
+
+  // 4. Combine them into the exact format requested: YYYY-MM-DD-blogtitle
+  const folderName = `${datePrefix}-${slugName}`;
   
   let resolvedCoverUrl;
   try {
     // 2. Webpack looks inside the static folder during compile time
-    resolvedCoverUrl = require(`@site/static/img/${cleanPath}/cover.webp`).default;
+    resolvedCoverUrl = require(`@site/static/img/blog/${folderName}/cover.webp`).default;
   } catch (err) {
     // 3. If file doesn't exist, it instantly uses the fallback at build time
     resolvedCoverUrl = fallbackDefaultImage;
@@ -63,6 +78,7 @@ function BlogCard({ permalink, title, date, authors, tags }) {
       <Link to={permalink} className={styles.blogCard}>
         
         <div className={styles.cardHeader}>
+          {folderName}
           <img 
             src={resolvedCoverUrl} 
             alt={title} 

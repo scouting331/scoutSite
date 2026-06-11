@@ -52,5 +52,5 @@ body:
       required: false
       accept: ".zip"
   - type: markdown
-      attributes:
-        value: "Insert blog text here!"
+    attributes:
+      value: "Insert blog text here!"

@@ -1,7 +1,7 @@
 name: New Blog Author
 description: "Add a new author to the blog authors list"
 title: "[New Author]: {INSERT NAME HERE}"
-labels: ["blog", "new-author"]
+labels: ["new-author"]
 body:
   - type: input
     id: name
