@@ -31,20 +31,18 @@ jobs:
         with:
           python-version: '3.x'
 
-      # Install Pillow dependency required by your image optimizer script
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install Pillow
 
-      # Process issue text, staging assets, optimization steps, and build output
       - name: Process Issue Data and Assets (Python Optimizer)
         id: process
         env:
           ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
-          RAW_BODY: ${{ github.event.issue.body }}
+          RAW_TITLE: ${{ github.event.issue.title }}
+        shell: python
         run: |
-          python -c '
           import os
           import json
           import re
@@ -98,7 +96,7 @@ jobs:
 
           # --- 2. SETUP FORMS & METADATA ---
           data = json.loads(os.environ["ISSUE_JSON"])
-          body_text = os.environ.get("RAW_BODY", "")
+          raw_title = os.environ.get("RAW_TITLE", "Untitled Post")
           date_str = datetime.now().strftime("%Y-%m-%d")
 
           def to_kebab(text):
@@ -107,13 +105,12 @@ jobs:
               text = re.sub(r"[^a-z0-9\s-]", "", text)
               return re.sub(r"[\s-]+", "-", text).strip("-")
 
-          slug = to_kebab(data.get("title", "untitled"))
+          slug = to_kebab(raw_title)
           blogfilename = f"{date_str}-{slug}"
 
           authors = [to_kebab(a) for a in data.get("authors", [])]
           tags = [to_kebab(t["label"]) for t in data.get("tags", []) if t.get("value") == True]
 
-          # Define Docusaurus target destinations
           static_folder = f"static/img/blog/{blogfilename}"
           web_prefix = f"/img/blog/{blogfilename}"
 
@@ -121,21 +118,18 @@ jobs:
           cover_url = data.get("cover-photo")
           cover_line = ""
           if cover_url and cover_url != "null":
-              # Create an isolated staging bucket for the download
               tmp_cover_dir = "/tmp/raw_cover"
               os.makedirs(tmp_cover_dir, exist_ok=True)
               
-              clean_url = cover_url.split("?")[0]
-              _, ext = os.path.splitext(clean_url)
+              clean_url = cover_url.split("?")
+              _, ext = os.path.splitext(clean_url[0])
               if not ext: ext = ".jpg"
               
-              # Stage raw image file natively
               raw_cover_path = os.path.join(tmp_cover_dir, f"cover{ext}")
               urllib.request.urlretrieve(cover_url, raw_cover_path)
               
-              # Run optimizer engine on cover folder -> outputs straight to static directory root
               optimize_convert_and_hash_images(tmp_cover_dir, static_folder, keep_original_names=True)
-              cover_line = f"![Cover Picture]({web_prefix}/cover.webp)\n\n"
+              cover_line = f"![Cover Picture]({web_prefix}/cover.webp)"
 
           # --- 4. FETCH AND RUN OPTIMIZER ON ZIP ALBUM SLIDES ---
           album_url = data.get("photo-album")
@@ -151,18 +145,14 @@ jobs:
                   zip_ref.extractall(tmp_slides_dir)
               os.remove(zip_path)
               
-              # Run optimizer engine on extracted slides folder -> outputs straight to slides target subdirectory
               slides_target_folder = os.path.join(static_folder, "slides")
               optimize_convert_and_hash_images(tmp_slides_dir, slides_target_folder, keep_original_names=True)
               
               has_album = True
-              album_line = f"\n\n<PhotoAlbumGallery\n    context={{require.context('\''{web_prefix}/slides'\'', false, /\\.(png|jpe?g|svg|webp)$/)}}\n/>"
+              album_line = f"<PhotoAlbumGallery\n    context={{require.context('{web_prefix}/slides', false, /\\.(png|jpe?g|svg|webp)$/)}}\n/>"
 
-          # --- 5. PARSE TEXT CONTENT ---
-          marker = "Insert blog text here!"
-          if marker in body_text:
-              body_text = body_text.split(marker)[-1].strip()
-
+          # --- 5. PARSE TEXT CONTENT FROM TEXTAREA ---
+          body_text = data.get("blog-content", "").strip()
           paragraphs = [p.strip() for p in body_text.split("\n\n") if p.strip()]
           content_markdown = ""
           if paragraphs:
@@ -170,26 +160,37 @@ jobs:
               if len(paragraphs) > 1:
                   content_markdown += "\n\n" + "\n\n".join(paragraphs[1:])
 
-          # --- 6. COMPILE INTEGRATED FILE TEXT ---
+          # --- 6. COMPILE FILE VIA CLEAN SEQUENTIAL LIST AND \n JOINS ---
           authors_str = ", ".join(authors)
           tags_str = ", ".join(tags)
-          import_line = "import PhotoAlbumGallery from '\''@site/src/components/PhotoAlbumGallery'\'';\n\n" if has_album else ""
+          
+          lines = [
+              "---",
+              f"title: {raw_title}",
+              f"authors: [{authors_str}]",
+              f"tags: [{tags_str}]",
+              "---",
+              ""
+          ]
+          
+          if has_album:
+              lines.append("import PhotoAlbumGallery from '@site/src/components/PhotoAlbumGallery';\n")
+          if cover_line:
+              lines.append(cover_line + "\n")
+              
+          lines.append(content_markdown)
+          
+          if has_album and album_line:
+              lines.append("\n" + album_line)
 
-          file_content = f"""---
-title: {data.get("title")}
-authors: [{authors_str}]
-tags: [{tags_str}]
----
+          file_content = "\n".join(lines).strip() + "\n"
 
-{import_line}{cover_line}{content_markdown}{album_line}
-"""
           os.makedirs("blog", exist_ok=True)
           with open(f"blog/{blogfilename}.md", "w", encoding="utf-8") as f:
-              f.write(file_content.strip() + "\n")
+              f.write(file_content)
 
           with open(os.environ["GITHUB_ENV"], "a") as env_file:
               env_file.write(f"BLOG_FILENAME={blogfilename}\n")
-          '
 
       - name: Create Pull Request
         id: cpr
@@ -201,11 +202,6 @@ tags: [{tags_str}]
           title: "feat(blog): ${{ github.event.issue.title }}"
           body: |
             This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.
-            
-            ### Asset Optimization Checklist:
-            - [x] Extracted raw upload fields safely
-            - [x] Auto-converted assets to heavily compressed **WebP** formats
-            - [x] Stripped EXIF data and resized frames to bounding `1920x1080` parameters
             
             Closes #${{ github.event.issue.number }}
           labels: |
@@ -219,6 +215,7 @@ tags: [{tags_str}]
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
           body: |
-            🎉 **Success!** Your blog post has been generated and all assets have been fully optimized into WebP formats.
+            🎉 **Success!** A staging branch has been created.
             
-            Review your branch modifications and staging environments here:👉 ${{ steps.cpr.outputs.pull-request-url }}
+            Your blog post is ready for review here:
+            👉 ${{ steps.cpr.outputs.pull-request-url }}
