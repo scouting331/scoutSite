@@ -1,12 +1,14 @@
 name: New Blog Post
 description: "Add a new post to the blog"
 labels: ["blog"]
-title: ""
+title: "Replace this with your blog title"
 body:
   - type: markdown
     attributes:
       value: |
         **The title above will be the title of your blog post**
+
+        Your title should highlight what the post is about (campout/event/etc.)
 
         Fill out this form and click "Create" below to submit a new blog post.
         After submitting your post, it will be reviewed by the webmaster before
