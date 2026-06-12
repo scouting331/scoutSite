@@ -1,41 +1,38 @@
 name: Generate Blog Post from Issue
-
 on:
   issues:
     types: [opened]
-
 jobs:
   create-post:
     if: contains(github.event.issue.labels.*.name, 'blog')
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
+        
       - name: Generate GitHub App Token
         id: app-token
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
+          
       - name: Parse Issue Form
         id: parse
         uses: stefanbuck/github-issue-parser@v3
         with:
           template-path: .github/ISSUE_TEMPLATE/new-blog-post.yml
-
+          
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-
+          
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install Pillow
-
+          
       - name: Process Issue Data and Assets (Python Optimizer)
         id: process
         env:
@@ -90,17 +87,22 @@ jobs:
                                       f.write(optimized_data)
                                   if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
                                       os.remove(input_path)
-                                      print(f"[Processed & Purged] {file} -> {output_file_name}")
+                                  print(f"[Processed & Purged] {file} -> {output_file_name}")
                           except Exception as e:
                               print(f"Failed to process {file}. Error: {e}")
 
           # --- 2. SETUP FORMS & METADATA ---
           data = json.loads(os.environ["ISSUE_JSON"])
           raw_title = os.environ.get("RAW_TITLE", "Untitled Post")
+          
+          # Clean title for frontmatter (escapes existing internal quotes)
+          safe_title = raw_title.replace('"', '\\"')
+          
           date_str = datetime.now().strftime("%Y-%m-%d")
 
           def to_kebab(text):
-              if not text: return ""
+              if not text:
+                  return ""
               text = text.lower().strip()
               text = re.sub(r"[^a-z0-9\s-]", "", text)
               return re.sub(r"[\s-]+", "-", text).strip("-")
@@ -108,8 +110,25 @@ jobs:
           slug = to_kebab(raw_title)
           blogfilename = f"{date_str}-{slug}"
 
-          authors = [to_kebab(a) for a in data.get("authors", [])]
-          tags = [to_kebab(t["label"]) for t in data.get("tags", []) if t.get("value") == True]
+          # Fix: Handles author array safely whether strings or parsed objects
+          raw_authors = data.get("authors", [])
+          if isinstance(raw_authors, str):
+              authors = [to_kebab(a.strip()) for a in raw_authors.split(",") if a.strip()]
+          else:
+              authors = [to_kebab(str(a)) for a in raw_authors if a]
+
+          # Fix: Safely parses tags list regardless of type to prevent AttributeError
+          raw_tags = data.get("tags", [])
+          tags = []
+          if isinstance(raw_tags, list):
+              for t in raw_tags:
+                  if isinstance(t, dict):
+                      if t.get("value") is True:
+                          tags.append(to_kebab(t.get("label", "")))
+                  else:
+                      tags.append(to_kebab(str(t)))
+          elif isinstance(raw_tags, str):
+              tags = [to_kebab(t.strip()) for t in raw_tags.split(",") if t.strip()]
 
           static_folder = f"static/img/blog/{blogfilename}"
           web_prefix = f"/img/blog/{blogfilename}"
@@ -120,14 +139,12 @@ jobs:
           if cover_url and cover_url != "null":
               tmp_cover_dir = "/tmp/raw_cover"
               os.makedirs(tmp_cover_dir, exist_ok=True)
-              
               clean_url = cover_url.split("?")
               _, ext = os.path.splitext(clean_url[0])
-              if not ext: ext = ".jpg"
-              
+              if not ext:
+                  ext = ".jpg"
               raw_cover_path = os.path.join(tmp_cover_dir, f"cover{ext}")
               urllib.request.urlretrieve(cover_url, raw_cover_path)
-              
               optimize_convert_and_hash_images(tmp_cover_dir, static_folder, keep_original_names=True)
               cover_line = f"![Cover Picture]({web_prefix}/cover.webp)"
 
@@ -138,18 +155,15 @@ jobs:
           if album_url and album_url != "null":
               tmp_slides_dir = "/tmp/raw_slides"
               os.makedirs(tmp_slides_dir, exist_ok=True)
-              
               zip_path = "album.zip"
               urllib.request.urlretrieve(album_url, zip_path)
               with zipfile.ZipFile(zip_path, "r") as zip_ref:
                   zip_ref.extractall(tmp_slides_dir)
               os.remove(zip_path)
-              
               slides_target_folder = os.path.join(static_folder, "slides")
               optimize_convert_and_hash_images(tmp_slides_dir, slides_target_folder, keep_original_names=True)
-              
               has_album = True
-              album_line = f"<PhotoAlbumGallery\n    context={{require.context('{web_prefix}/slides', false, /\\.(png|jpe?g|svg|webp)$/)}}\n/>"
+              album_line = f"<PhotoAlbumGallery\n  context={{require.context('{web_prefix}/slides', false, /\\.(png|jpe?g|svg|webp)$/)}}\n/>"
 
           # --- 5. PARSE TEXT CONTENT FROM TEXTAREA ---
           body_text = data.get("blog-content", "").strip()
@@ -157,34 +171,29 @@ jobs:
           content_markdown = ""
           if paragraphs:
               content_markdown += paragraphs[0] + "\n\n{/* truncate */}"
-              if len(paragraphs) > 1:
-                  content_markdown += "\n\n" + "\n\n".join(paragraphs[1:])
+          if len(paragraphs) > 1:
+              content_markdown += "\n\n" + "\n\n".join(paragraphs[1:])
 
           # --- 6. COMPILE FILE VIA CLEAN SEQUENTIAL LIST AND \n JOINS ---
-          authors_str = ", ".join(authors)
-          tags_str = ", ".join(tags)
-          
+          authors_str = ", ".join([f'"{a}"' for a in authors])
+          tags_str = ", ".join([f'"{t}"' for a in tags])
           lines = [
               "---",
-              f"title: {raw_title}",
+              f'title: "{safe_title}"', # Wraps the title safely inside quotations
               f"authors: [{authors_str}]",
               f"tags: [{tags_str}]",
               "---",
               ""
           ]
-          
           if has_album:
               lines.append("import PhotoAlbumGallery from '@site/src/components/PhotoAlbumGallery';\n")
           if cover_line:
               lines.append(cover_line + "\n")
-              
           lines.append(content_markdown)
-          
           if has_album and album_line:
               lines.append("\n" + album_line)
 
           file_content = "\n".join(lines).strip() + "\n"
-
           os.makedirs("blog", exist_ok=True)
           with open(f"blog/{blogfilename}.md", "w", encoding="utf-8") as f:
               f.write(file_content)
@@ -202,7 +211,6 @@ jobs:
           title: "feat(blog): ${{ github.event.issue.title }}"
           body: |
             This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.
-            
             Closes #${{ github.event.issue.number }}
           labels: |
             blog
@@ -211,11 +219,10 @@ jobs:
       - name: Comment on Issue with PR Link
         if: steps.cpr.outputs.pull-request-number != ''
         uses: peter-evans/create-or-update-comment@v4
-        with:
+        with: 
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
           body: |
-            🎉 **Success!** A staging branch has been created.
+            🎉 Success! A staging branch has been created. 
             
-            Your blog post is ready for review here:
-            👉 ${{ steps.cpr.outputs.pull-request-url }}
+            Your blog post is ready for review here:👉 ${{ steps.cpr.outputs.pull-request-url }}
