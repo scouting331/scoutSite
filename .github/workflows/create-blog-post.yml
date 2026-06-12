@@ -135,6 +135,7 @@ jobs:
           else:
               authors = [to_kebab(str(raw_authors))]
 
+          # This section handles parsing whether options are flat strings or structured maps
           raw_tags = data.get("tags", "")
           if isinstance(raw_tags, str):
               tags = [to_kebab(t) for t in raw_tags.split(",") if t.strip()]
