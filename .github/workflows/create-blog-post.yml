@@ -31,13 +31,12 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install Pillow
+          pip install Pillow python-dateutil
           
       - name: Process Issue Data and Assets (Python Optimizer)
         id: process
         env:
           ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
-          RAW_TITLE: ${{ github.event.issue.title }}
         shell: python
         run: |
           import os
@@ -48,14 +47,17 @@ jobs:
           import zipfile
           from io import BytesIO
           from datetime import datetime
+          from dateutil import parser
           from PIL import Image, ImageOps
 
           # --- 1. INTEGRATED OPTIMIZER ENGINE CODE ---
           def optimize_convert_and_hash_images(input_dir, output_dir, max_size=(1920, 1080), quality=80, keep_original_names=False):
               if not os.path.exists(input_dir):
-                  return
+                  return {}
               os.makedirs(output_dir, exist_ok=True)
-              valid_extensions = (".jpg", ".jpeg", ".png")
+              valid_extensions = (".jpg", ".jpeg", ".png", ".webp")
+              url_to_new_path_map = {}
+              
               for root, _, files in os.walk(input_dir):
                   for file in files:
                       if file.lower().endswith(valid_extensions):
@@ -72,6 +74,7 @@ jobs:
                                   buffer = BytesIO()
                                   img.save(buffer, format="WEBP", quality=quality)
                                   optimized_data = buffer.getvalue()
+                                  
                                   if keep_original_names:
                                       base_name, _ = os.path.splitext(file)
                                       output_file_name = f"{base_name}.webp"
@@ -79,26 +82,42 @@ jobs:
                                       hasher = hashlib.md5(optimized_data)
                                       content_hash = hasher.hexdigest()
                                       output_file_name = f"img_{content_hash}.webp"
+                                      
                                   output_path = os.path.join(target_folder, output_file_name)
-                                  if os.path.exists(output_path):
+                                  
+                                  if not os.path.exists(output_path):
+                                      with open(output_path, "wb") as f:
+                                          f.write(optimized_data)
+                                          
+                                  if os.path.exists(input_path):
                                       os.remove(input_path)
-                                      continue
-                                  with open(output_path, "wb") as f:
-                                      f.write(optimized_data)
-                                  if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
-                                      os.remove(input_path)
+                                      
+                                  with open(os.path.join(root, f"{file}.ref"), "r") as ref_f:
+                                      orig_url = ref_f.read().strip()
+                                      url_to_new_path_map[orig_url] = output_file_name
+                                      
                                   print(f"[Processed & Purged] {file} -> {output_file_name}")
                           except Exception as e:
                               print(f"Failed to process {file}. Error: {e}")
+              return url_to_new_path_map
 
           # --- 2. SETUP FORMS & METADATA ---
           data = json.loads(os.environ["ISSUE_JSON"])
-          raw_title = os.environ.get("RAW_TITLE", "Untitled Post")
           
-          # Clean title for frontmatter (escapes existing internal quotes)
+          raw_title = data.get("title", "Untitled Post").strip()
           safe_title = raw_title.replace('"', '\\"')
           
-          date_str = datetime.now().strftime("%Y-%m-%d")
+          form_date = data.get("date", "").strip()
+          current_time = datetime.now()
+          date_str = current_time.strftime("%Y-%m-%d")
+
+          if form_date and form_date != "null" and form_date != "_No response_":
+              try:
+                  year_anchor = datetime(current_time.year, 1, 1)
+                  parsed_date = parser.parse(form_date, default=year_anchor, fuzzy=True)
+                  date_str = parsed_date.strftime("%Y-%m-%d")
+              except Exception as e:
+                  print(f"[Date Parsing Alert] Fallback used. Error: {e}")
 
           def to_kebab(text):
               if not text:
@@ -110,25 +129,17 @@ jobs:
           slug = to_kebab(raw_title)
           blogfilename = f"{date_str}-{slug}"
 
-          # Fix: Handles author array safely whether strings or parsed objects
-          raw_authors = data.get("authors", [])
+          raw_authors = data.get("authors", "")
           if isinstance(raw_authors, str):
-              authors = [to_kebab(a.strip()) for a in raw_authors.split(",") if a.strip()]
+              authors = [to_kebab(a) for a in raw_authors.split(",") if a.strip()]
           else:
-              authors = [to_kebab(str(a)) for a in raw_authors if a]
+              authors = [to_kebab(str(raw_authors))]
 
-          # Fix: Safely parses tags list regardless of type to prevent AttributeError
-          raw_tags = data.get("tags", [])
-          tags = []
-          if isinstance(raw_tags, list):
-              for t in raw_tags:
-                  if isinstance(t, dict):
-                      if t.get("value") is True:
-                          tags.append(to_kebab(t.get("label", "")))
-                  else:
-                      tags.append(to_kebab(str(t)))
-          elif isinstance(raw_tags, str):
-              tags = [to_kebab(t.strip()) for t in raw_tags.split(",") if t.strip()]
+          raw_tags = data.get("tags", "")
+          if isinstance(raw_tags, str):
+              tags = [to_kebab(t) for t in raw_tags.split(",") if t.strip()]
+          else:
+              tags = [to_kebab(str(raw_tags))]
 
           static_folder = f"static/img/blog/{blogfilename}"
           web_prefix = f"/img/blog/{blogfilename}"
@@ -136,7 +147,7 @@ jobs:
           # --- 3. FETCH AND RUN OPTIMIZER ON COVER PHOTO ---
           cover_url = data.get("cover-photo")
           cover_line = ""
-          if cover_url and cover_url != "null":
+          if cover_url and cover_url != "null" and cover_url != "_No response_":
               tmp_cover_dir = "/tmp/raw_cover"
               os.makedirs(tmp_cover_dir, exist_ok=True)
               clean_url = cover_url.split("?")
@@ -144,29 +155,79 @@ jobs:
               if not ext:
                   ext = ".jpg"
               raw_cover_path = os.path.join(tmp_cover_dir, f"cover{ext}")
-              urllib.request.urlretrieve(cover_url, raw_cover_path)
-              optimize_convert_and_hash_images(tmp_cover_dir, static_folder, keep_original_names=True)
-              cover_line = f"![Cover Picture]({web_prefix}/cover.webp)"
+              try:
+                  urllib.request.urlretrieve(cover_url, raw_cover_path)
+                  with open(f"{raw_cover_path}.ref", "w") as ref_f:
+                      ref_f.write("cover")
+                  optimize_convert_and_hash_images(tmp_cover_dir, static_folder, keep_original_names=True)
+                  cover_line = f"![Cover Picture]({web_prefix}/cover.webp)"
+              except Exception as e:
+                  print(f"Skipping cover photo download. Error: {e}")
 
           # --- 4. FETCH AND RUN OPTIMIZER ON ZIP ALBUM SLIDES ---
           album_url = data.get("photo-album")
           has_album = False
           album_line = ""
-          if album_url and album_url != "null":
+          if album_url and album_url != "null" and album_url != "_No response_":
               tmp_slides_dir = "/tmp/raw_slides"
               os.makedirs(tmp_slides_dir, exist_ok=True)
               zip_path = "album.zip"
-              urllib.request.urlretrieve(album_url, zip_path)
-              with zipfile.ZipFile(zip_path, "r") as zip_ref:
-                  zip_ref.extractall(tmp_slides_dir)
-              os.remove(zip_path)
-              slides_target_folder = os.path.join(static_folder, "slides")
-              optimize_convert_and_hash_images(tmp_slides_dir, slides_target_folder, keep_original_names=True)
-              has_album = True
-              album_line = f"<PhotoAlbumGallery\n  context={{require.context('{web_prefix}/slides', false, /\\.(png|jpe?g|svg|webp)$/)}}\n/>"
+              try:
+                  urllib.request.urlretrieve(album_url, zip_path)
+                  with zipfile.ZipFile(zip_path, "r") as zip_ref:
+                      zip_ref.extractall(tmp_slides_dir)
+                  os.remove(zip_path)
+                  
+                  for root, _, files in os.walk(tmp_slides_dir):
+                      for file in files:
+                          if file.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
+                              with open(os.path.join(root, f"{file}.ref"), "w") as ref_f:
+                                  ref_f.write("album")
+                                  
+                  slides_target_folder = os.path.join(static_folder, "slides")
+                  optimize_convert_and_hash_images(tmp_slides_dir, slides_target_folder, keep_original_names=True)
+                  has_album = True
+                  album_line = f"<PhotoAlbumGallery\n  context={{require.context('{web_prefix}/slides', false, /\\.(png|jpe?g|svg|webp)$/)}}\n/>"
+              except Exception as e:
+                  print(f"Skipping album download. Error: {e}")
 
-          # --- 5. PARSE TEXT CONTENT FROM TEXTAREA ---
+          # --- 5. PARSE & PROCESS INLINE CONTENT PHOTOS ---
           body_text = data.get("blog-content", "").strip()
+          
+          inline_markdown_urls = re.findall(r'!\[.*?\]\((.*?)\)', body_text)
+          inline_html_urls = re.findall(r'<img[^>]*src=["\'](.*?)["\']', body_text)
+          all_inline_urls = list(set(inline_markdown_urls + inline_html_urls))
+          
+          if all_inline_urls:
+              tmp_inline_dir = "/tmp/raw_inline"
+              os.makedirs(tmp_inline_dir, exist_ok=True)
+              print(f"[Inline Images Detected] Found {len(all_inline_urls)} embedded image assets.")
+              
+              for idx, img_url in enumerate(all_inline_urls):
+                  if not img_url.startswith("http") or img_url == "null":
+                      continue
+                  try:
+                      clean_img_url = img_url.split("?")
+                      _, ext = os.path.splitext(clean_img_url[0])
+                      if not ext:
+                          ext = ".jpg"
+                          
+                      filename = f"inline_img_{idx}{ext}"
+                      full_tmp_path = os.path.join(tmp_inline_dir, filename)
+                      
+                      urllib.request.urlretrieve(img_url, full_tmp_path)
+                      with open(f"{full_tmp_path}.ref", "w") as ref_f:
+                          ref_f.write(img_url)
+                  except Exception as e:
+                      print(f"Failed to pull inline asset reference: {img_url}. Error: {e}")
+                      
+              url_to_filename_map = optimize_convert_and_hash_images(tmp_inline_dir, static_folder, keep_original_names=False)
+              
+              for original_url, new_filename in url_to_filename_map.items():
+                  optimized_web_path = f"{web_prefix}/{new_filename}"
+                  body_text = body_text.replace(original_url, optimized_web_path)
+                  print(f"[Rewriting Asset Path] {original_url} -> {optimized_web_path}")
+
           paragraphs = [p.strip() for p in body_text.split("\n\n") if p.strip()]
           content_markdown = ""
           if paragraphs:
@@ -179,7 +240,8 @@ jobs:
           tags_str = ", ".join([f'"{t}"' for a in tags])
           lines = [
               "---",
-              f'title: "{safe_title}"', # Wraps the title safely inside quotations
+              f'title: "{safe_title}"',
+              f"date: {date_str}",
               f"authors: [{authors_str}]",
               f"tags: [{tags_str}]",
               "---",
@@ -195,7 +257,8 @@ jobs:
 
           file_content = "\n".join(lines).strip() + "\n"
           os.makedirs("blog", exist_ok=True)
-          with open(f"blog/{blogfilename}.md", "w", encoding="utf-8") as f:
+          
+          with open(f"blog/{blogfilename}.mdx", "w", encoding="utf-8") as f:
               f.write(file_content)
 
           with open(os.environ["GITHUB_ENV"], "a") as env_file:
@@ -215,11 +278,10 @@ jobs:
           labels: |
             blog
             ready-to-review
-
       - name: Comment on Issue with PR Link
         if: steps.cpr.outputs.pull-request-number != ''
         uses: peter-evans/create-or-update-comment@v4
-        with: 
+        with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
           body: |

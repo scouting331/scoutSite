@@ -1,23 +1,46 @@
 name: New Blog Post
 description: "Add a new post to the blog"
 labels: ["blog"]
-title: "Replace this with your blog title"
+title: "[New Blog Post]"
 body:
   - type: markdown
     attributes:
       value: |
-        **The title above will be the title of your blog post**
+        **The title above is just for internal use. Please don't change it**
 
-        Your title should highlight what the post is about (campout/event/etc.)
+        # Creating new blog post
 
         Fill out this form and click "Create" below to submit a new blog post.
         After submitting your post, it will be reviewed by the webmaster before
         being posted to the website.
+  - type: input
+    id: title
+    attributes:
+      label: "Blog Title"
+      description: |
+        Title for your post
+
+        This should include the campout/adventure/event if thats what this post
+        is about!
+      placeholder: "Our Recent Adventures"
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: "Post Date"
+      description: |
+        Date for your blog post
+
+        If this is left empty, today's date will be used.
+      placeholder: YYYY-MM-DD
+    validations:
+      required: false
   - type: dropdown
     id: authors
     attributes:
-      label: "Select authors"
-      description: "Use new author issue form if the author isn't listed here"
+      label: "Authors"
+      description: "Select author(s) of this post"
       multiple: true
       options:
         # AUTHOR_START
@@ -26,11 +49,22 @@ body:
         # AUTHOR_END
     validations:
       required: true
-  - type: checkboxes
+  - type: markdown
+    attributes:
+      value: |
+        If your name is not in the list of authors, please submit a request to
+        add your name to the list of authors here:
+
+        [New Author Request](https://github.com/scouting331/scoutSite/issues/new?template=new-blog-author.yml)
+  - type: dropdown
     id: tags
     attributes:
-      label: Unit
-      description: "Select the unit(s) to associate this post with"
+      label: "Unit"
+      description: |
+        Select the unit(s) to associate this post with.
+
+        Multiple units may be selected.
+      multiple: true
       options:
         - label: Troop 303
         - label: Troop 331
@@ -50,7 +84,12 @@ body:
     id: photo-album
     attributes:
       label: "Photo Album"
-      description: "Compress folder of photos as a zip file before uploading. If the file is too big (>25 Mb), the photo album will need to be added manually (see Mr. Shover)"
+      description: |
+        If you want to include a photo album upload it here.
+
+        Compress the folder of photos as a zip file before uploading. 
+        
+        NOTE: If the resulting file is too big (>25 Mb), the photo album will need to be added manually (see webmaster)
     validations:
       required: false
       accept: ".zip"
@@ -58,8 +97,12 @@ body:
     id: blog-content
     attributes:
       label: "Blog Text"
-      description: "Write your blog post here!"
+      description: |
+        Write your blog post here!
       placeholder: "Blog text here..."
-      render: text
     validations:
       required: true
+  - type: markdown
+    attributes:
+      value: |
+        **Please don't edit any of the other options!**

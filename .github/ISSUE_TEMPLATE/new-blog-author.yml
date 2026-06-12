@@ -1,15 +1,23 @@
 name: New Blog Author
 description: "Add a new author to the blog authors list"
-title: "Add New Author"
+title: "[New Author]"
 labels: ["new-author"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        **The title above is just for internal use. Please don't change it**
   - type: input
     id: name
     attributes:
       label: Author's Name
-      description: "Name shown in blog posts for the author (NOTE: If you are a
-        Scout this should be your first name followed by a last initial, no last
-        names please unless you are an adult and want your last name shown)"
+      description: | 
+        Name shown in blog posts for the author
+        
+        NOTE: If you are a Scout this should be your first name followed by 
+        a last initial, **NO LAST NAMES PLEASE**
+        
+        If you are an adult and want your last name shown, feel free to include it"
       placeholder: "Scout A"
     validations:
       required: true
@@ -17,7 +25,7 @@ body:
     id: title
     attributes:
       label: Title
-      description: "If you are a Scout, list your position(s) and unit."
+      description: "List your position(s) and unit."
       placeholder: "Position, Troop ###"
     validations:
       required: true
