@@ -44,8 +44,9 @@ body:
       multiple: true
       options:
         # AUTHOR_START
-        - Chris Koczan
         - Benjamin Shover
+        - Chris Koczan
+        - Joey B
         # AUTHOR_END
     validations:
       required: true
