@@ -44,7 +44,7 @@ body:
       multiple: true
       options:
         # AUTHOR_START
-        - Christopher Koczan
+        - Chris Koczan
         - Benjamin Shover
         # AUTHOR_END
     validations:
@@ -80,6 +80,7 @@ body:
     validations:
       required: false
       accept: ".png, .jpg, .jpeg, .gif, .svg, .webp"
+      multiple: false
   - type: upload
     id: photo-album
     attributes:
@@ -93,6 +94,7 @@ body:
     validations:
       required: false
       accept: ".zip"
+      multiple: true
   - type: textarea
     id: blog-content
     attributes:

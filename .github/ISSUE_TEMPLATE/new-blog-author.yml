@@ -39,4 +39,5 @@ body:
     validations:
       required: false
       accept: ".png, .jpg, .jpeg, .gif, .svg, .webp"
+      multiple: false
 
