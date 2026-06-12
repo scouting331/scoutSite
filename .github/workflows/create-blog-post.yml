@@ -238,7 +238,7 @@ jobs:
 
           # --- 6. COMPILE FILE VIA CLEAN SEQUENTIAL LIST AND \n JOINS ---
           authors_str = ", ".join([f'"{a}"' for a in authors])
-          tags_str = ", ".join([f'"{t}"' for a in tags])
+          tags_str = ", ".join([f'"{t}"' for t in tags])
           lines = [
               "---",
               f'title: "{safe_title}"',
