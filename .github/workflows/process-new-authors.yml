@@ -22,7 +22,7 @@ jobs:
         id: parse
         uses: stefanbuck/github-issue-parser@v3
         with:
-          template-path: .github/ISSUE_TEMPLATE/new-blog-author.yml
+          template-path: .github/ISSUE_TEMPLATE/03-new-blog-author.yml
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -49,7 +49,7 @@ jobs:
           from PIL import Image, ImageOps
 
           AUTHORS_FILE = 'blog/authors.yml'
-          TEMPLATE_FILE = '.github/ISSUE_TEMPLATE/new-blog-post.yml'
+          TEMPLATE_FILE = '.github/ISSUE_TEMPLATE/01-new-blog-post.yml'
           AUTHORS_IMG_DIR = 'static/img/blog/authors'
 
           issue_json = os.environ.get("ISSUE_DATA", "{}")

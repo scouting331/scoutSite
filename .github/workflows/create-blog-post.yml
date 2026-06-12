@@ -21,7 +21,7 @@ jobs:
         id: parse
         uses: stefanbuck/github-issue-parser@v3
         with:
-          template-path: .github/ISSUE_TEMPLATE/new-blog-post.yml
+          template-path: .github/ISSUE_TEMPLATE/01-new-blog-post.yml
           
       - name: Set up Python
         uses: actions/setup-python@v5

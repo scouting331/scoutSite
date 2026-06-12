@@ -55,7 +55,7 @@ body:
         If your name is not in the list of authors, please submit a request to
         add your name to the list of authors here:
 
-        [New Author Request](https://github.com/scouting331/scoutSite/issues/new?template=new-blog-author.yml)
+        [New Author Request](https://github.com/scouting331/scoutSite/issues/new?template=03-new-blog-author.yml)
   - type: dropdown
     id: tags
     attributes:
