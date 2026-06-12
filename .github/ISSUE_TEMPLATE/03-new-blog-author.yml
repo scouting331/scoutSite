@@ -14,7 +14,7 @@ body:
       description: | 
         Name shown in blog posts for the author
         
-        NOTE: If you are a Scout this should be your first name followed by 
+        **NOTE**: If you are a Scout this should be your first name followed by 
         a last initial, **NO LAST NAMES PLEASE**
         
         If you are an adult and want your last name shown, feel free to include it"
@@ -33,9 +33,14 @@ body:
     id: image_url
     attributes:
       label: Avatar Image
-      description: "This is the photo that will be associated with you. Please
-        make sure the image size is relatively small and your face is centered in
-        the image"
+      description: |
+        This is the photo that will be associated with you. Please make sure the
+        image size is relatively small (500 x 500 pixels is ideal) and your face
+        is centered in the image.
+        
+        **NOTE**: There is no way to limit the number of files in this space. Please
+        only upload 1 photo. If multiple photos are uploaded, the script will
+        simply choose one photo and discard the rest.
     validations:
       required: false
       accept: ".png, .jpg, .jpeg, .gif, .svg, .webp"

@@ -76,7 +76,12 @@ body:
     id: cover-photo
     attributes:
       label: "Cover Photo"
-      description: "Photo shown at top of your blog post and on the homepage card"
+      description: |
+        Photo shown at top of your blog post and on the homepage card
+
+        **NOTE**: There is no way to limit the number of files in this space. Please
+        only upload 1 photo. If multiple photos are uploaded, the script will
+        simply choose one photo and discard the rest.
     validations:
       required: false
       accept: ".png, .jpg, .jpeg, .gif, .svg, .webp"
@@ -85,14 +90,14 @@ body:
     attributes:
       label: "Photo Album"
       description: |
-        If you want to include a photo album upload it here.
-
-        Compress the folder of photos as a zip file before uploading. 
+        If you want to include a photo album upload all of the photos you want
+        included here.
         
-        NOTE: If the resulting file is too big (>25 Mb), the photo album will need to be added manually (see webmaster)
+        **NOTE**: If the file is too big (>25 Mb), the photo will need to be resized
+        before being uploaded.
     validations:
       required: false
-      accept: ".zip"
+      accept: ".png, .jpg, .jpeg, .gif, .svg, .webp"
   - type: textarea
     id: blog-content
     attributes:
