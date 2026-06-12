@@ -44,8 +44,9 @@ body:
       multiple: true
       options:
         # AUTHOR_START
-        - Chris Koczan
         - Benjamin Shover
+        - Chris Koczan
+        - Scouter A
         # AUTHOR_END
     validations:
       required: true
