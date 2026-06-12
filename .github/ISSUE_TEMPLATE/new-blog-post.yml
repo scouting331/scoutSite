@@ -66,10 +66,10 @@ body:
         Multiple units may be selected.
       multiple: true
       options:
-        - label: Troop 303
-        - label: Troop 331
-        - label: Crew 303
-        - label: Pack 303
+        - Troop 303
+        - Troop 331
+        - Crew 303
+        - Pack 303
     validations:
       required: true
   - type: upload
