@@ -271,14 +271,14 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
           commit-message: "feat(blog): add new post from issue #${{ github.event.issue.number }}"
-          branch: "blog/issue-${{ github.event.issue.number }}-${{ env.BLOG_FILENAME }}"
+          branch: "automation/issue-${{ github.event.issue.number }}-${{ env.BLOG_FILENAME }}"
           title: "feat(blog): ${{ github.event.issue.title }}"
           body: |
             This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.
             Closes #${{ github.event.issue.number }}
+          delete-branch: true
           labels: |
             blog
-            ready-to-review
       - name: Comment on Issue with PR Link
         if: steps.cpr.outputs.pull-request-number != ''
         uses: peter-evans/create-or-update-comment@v4

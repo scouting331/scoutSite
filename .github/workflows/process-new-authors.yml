@@ -177,7 +177,7 @@ jobs:
             3. Re-generates and sorts the author dropdown options inside the issue templates.
             Closes #${{ github.event.issue.number }}.
             CODEOWNERS have been automatically assigned to review.
-          branch: "automation/add-author-issue-${{ github.event.issue.number }}"
+          branch: "automation/issue-${{ github.event.issue.number }}"
           delete-branch: true
           labels: |
             new-author
