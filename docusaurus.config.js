@@ -106,7 +106,21 @@ const config = {
         onInlineTags: "warn",
         onInlineAuthors: "warn",
         onUntruncatedBlogPosts: "warn",
-      }
+        processBlogPosts: async ({ blogPosts }) => {
+          const DEFAULT_IMAGE = '/img/logos/favicon.png';
+
+          return blogPosts.map((post) => {
+            if (post.metadata && post.metadata.authors) {
+              post.metadata.authors = post.metadata.authors.map((author) => ({
+                ...author,
+                // If imageURL is missing, use the default image
+                imageURL: author.imageURL || DEFAULT_IMAGE,
+              }));
+            }
+            return post;
+          });
+        },
+      },
     ],
   ],
 
