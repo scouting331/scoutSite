@@ -67,14 +67,13 @@ jobs:
               print("Missing required fields. Exiting.")
               sys.exit(1)
 
+          # Read existing content to check for duplicates without rewriting via safe_load
           if os.path.exists(AUTHORS_FILE):
-              with open(AUTHORS_FILE, 'r') as f:
-                  authors_data = yaml.safe_load(f) or {}
-          else:
-              authors_data = {}
-
-          for existing_key, existing_details in authors_data.items():
-              if isinstance(existing_details, dict) and existing_details.get('name', '').lower() == author_name.lower():
+              with open(AUTHORS_FILE, 'r', encoding='utf-8') as f:
+                  raw_content = f.read()
+              
+              # Simple case-insensitive duplicate name check
+              if f"name: {author_name}" in raw_content or f'name: "{author_name}"' in raw_content:
                   print(f"::error::The author name '{author_name}' already exists.")
                   sys.exit(1)
 
@@ -84,15 +83,17 @@ jobs:
           
           final_slug = slug
           counter = 1
-          while final_slug in authors_data:
+          
+          # Scan file text to ensure slug uniqueness
+          while f"{final_slug}:" in raw_content:
               final_slug = f"{slug}-{counter}"
               counter += 1
 
           final_image_path = ""
           if image_url:
               os.makedirs(AUTHORS_IMG_DIR, exist_ok=True)
-              clean_url = image_url.split("?")[0]
-              _, ext = os.path.splitext(clean_url)
+              clean_url = image_url.split("?")
+              _, ext = os.path.splitext(clean_url[0])
               if not ext:
                   ext = ".jpg"
               
@@ -118,24 +119,29 @@ jobs:
               except Exception as e:
                   print(f"Warning: Failed to download or process avatar image. Error: {e}")
 
-          new_author_entry = {
-              "name": author_name,
-              "title": author_title,
-              "page": True
-          }
+          # Prepare the clean textual representation block manually to preserve docstrings
+          entry_lines = [
+              f"{final_slug}:",
+              f"  name: {author_name}",
+              f"  title: {author_title}",
+              "  page: true"
+          ]
           if final_image_path:
-              new_author_entry["image_url"] = final_image_path
-          
-          authors_data[final_slug] = new_author_entry
+              entry_lines.append(f"  image_url: {final_image_path}")
+              
+          raw_append_block = "\n" + "\n".join(entry_lines) + "\n"
 
-          with open(AUTHORS_FILE, 'w') as f:
-              yaml.dump(authors_data, f, sort_keys=False, allow_unicode=True)
-          print(f"Successfully updated {AUTHORS_FILE}")
+          # Append directly to the bottom of the filesystem document
+          with open(AUTHORS_FILE, 'a', encoding='utf-8') as f:
+              f.write(raw_append_block)
+          print(f"Successfully appended new profile block to {AUTHORS_FILE}")
 
-          all_names = []
-          for key, details in authors_data.items():
-              if isinstance(details, dict) and 'name' in details:
-                  all_names.append(details['name'])
+          # --- 2. REGEX EXTRACT NAMES TO BUILD TEMPLATE DROPDOWN ---
+          with open(AUTHORS_FILE, 'r', encoding='utf-8') as f:
+              updated_raw_content = f.read()
+              
+          all_names = re.findall(r'^\s*name:\s*["\']?(.*?)["\']?\s*$', updated_raw_content, re.MULTILINE)
+          all_names = [n.strip() for n in all_names if n.strip()]
           all_names.sort()
 
           yaml_lines = [f"        - {name}" for name in all_names]
@@ -174,8 +180,7 @@ jobs:
           branch: "automation/add-author-issue-${{ github.event.issue.number }}"
           delete-branch: true
           labels: |
-            blog
-            automation
+            new-author
 
       - name: Comment on Success
         if: success()
