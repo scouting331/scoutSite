@@ -3,32 +3,37 @@ name: Process New Author Request
 on:
   issues:
     types: [opened]
-
 jobs:
   add-author-and-pr:
-    # Only run if the issue has your specific 'new-author' label
     if: contains(github.event.issue.labels.*.name, 'new-author')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      # 1. Generate bot token from your GitHub App
       - name: Generate Token
         id: app-token
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          
-      # 2. Parse the issue template form data into JSON
+
       - name: Parse Issue Form
         id: parse
         uses: stefanbuck/github-issue-parser@v3
         with:
           template-path: .github/ISSUE_TEMPLATE/new-blog-author.yml
 
-      # 3. Process the data and append it to blog/authors.yml
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow PyYAML python-dateutil
+
       - name: Process Author and Update Files
         id: process_files
         shell: python
@@ -40,20 +45,19 @@ jobs:
           import re
           import os
           import sys
+          import urllib.request
+          from PIL import Image, ImageOps
 
-          # Define file paths
           AUTHORS_FILE = 'blog/authors.yml'
-          TEMPLATE_FILE = '.github/ISSUE_TEMPLATE/new-blog-author.yml'
+          TEMPLATE_FILE = '.github/ISSUE_TEMPLATE/new-blog-post.yml'
+          AUTHORS_IMG_DIR = 'static/img/blog/authors'
 
-          # Read parsed issue data
           issue_json = os.environ.get("ISSUE_DATA", "{}")
           data = json.loads(issue_json)
-
           author_name = data.get("name", "").strip()
           author_title = data.get("title", "").strip()
           raw_image_url = data.get("image_url", "").strip()
-          
-          # Extract image URL
+
           image_url = ""
           url_match = re.search(r'\((https://[^\)]+)\)', raw_image_url)
           if url_match:
@@ -63,78 +67,96 @@ jobs:
               print("Missing required fields. Exiting.")
               sys.exit(1)
 
-          # Read existing authors
           if os.path.exists(AUTHORS_FILE):
               with open(AUTHORS_FILE, 'r') as f:
                   authors_data = yaml.safe_load(f) or {}
           else:
               authors_data = {}
 
-          # Duplicate check
           for existing_key, existing_details in authors_data.items():
               if isinstance(existing_details, dict) and existing_details.get('name', '').lower() == author_name.lower():
                   print(f"::error::The author name '{author_name}' already exists.")
                   sys.exit(1)
 
-          # Generate unique key slug
           slug = author_name.lower()
           slug = re.sub(r'[^a-z0-9\s-]', '', slug)
           slug = re.sub(r'[\s-]+', '-', slug).strip('-')
-
+          
           final_slug = slug
           counter = 1
           while final_slug in authors_data:
               final_slug = f"{slug}-{counter}"
               counter += 1
 
-          # 1. Update blog/authors.yml
+          final_image_path = ""
+          if image_url:
+              os.makedirs(AUTHORS_IMG_DIR, exist_ok=True)
+              clean_url = image_url.split("?")[0]
+              _, ext = os.path.splitext(clean_url)
+              if not ext:
+                  ext = ".jpg"
+              
+              tmp_avatar_path = f"/tmp/raw_avatar{ext}"
+              try:
+                  urllib.request.urlretrieve(image_url, tmp_avatar_path)
+                  
+                  target_file_name = f"{final_slug}.webp"
+                  target_full_path = os.path.join(AUTHORS_IMG_DIR, target_file_name)
+                  
+                  with Image.open(tmp_avatar_path) as img:
+                      img = ImageOps.exif_transpose(img)
+                      if img.mode in ("P", "CMYK"):
+                          img = img.convert("RGBA")
+                      img.thumbnail((500, 500), Image.Resampling.LANCZOS)
+                      img.save(target_full_path, format="WEBP", quality=85)
+                  
+                  final_image_path = f"/img/blog/authors/{target_file_name}"
+                  print(f"Successfully processed and saved avatar to {target_full_path}")
+                  
+                  if os.path.exists(tmp_avatar_path):
+                      os.remove(tmp_avatar_path)
+              except Exception as e:
+                  print(f"Warning: Failed to download or process avatar image. Error: {e}")
+
           new_author_entry = {
               "name": author_name,
               "title": author_title,
               "page": True
           }
-          if image_url:
-              new_author_entry["image_url"] = image_url
-
+          if final_image_path:
+              new_author_entry["image_url"] = final_image_path
+          
           authors_data[final_slug] = new_author_entry
 
           with open(AUTHORS_FILE, 'w') as f:
               yaml.dump(authors_data, f, sort_keys=False, allow_unicode=True)
-          
           print(f"Successfully updated {AUTHORS_FILE}")
 
-          # 2. Extract all names (including the new one) and update the dropdown template
           all_names = []
           for key, details in authors_data.items():
               if isinstance(details, dict) and 'name' in details:
                   all_names.append(details['name'])
-          
           all_names.sort()
 
-          # Format list for the template dropdown indents (8 spaces padding)
           yaml_lines = [f"        - {name}" for name in all_names]
           replacement_string = "\n".join(yaml_lines)
 
-          # Read and update template file
           if os.path.exists(TEMPLATE_FILE):
               with open(TEMPLATE_FILE, 'r') as f:
                   template_content = f.read()
-
               pattern = r'(# AUTHOR_START\n)(.*?)(\n\s*# AUTHOR_END)'
               updated_content = re.sub(
-                  pattern, 
-                  f"\\1{replacement_string}\\3", 
-                  template_content, 
+                  pattern,
+                  f"\\1{replacement_string}\\3",
+                  template_content,
                   flags=re.DOTALL
               )
-
               with open(TEMPLATE_FILE, 'w') as f:
                   f.write(updated_content)
               print(f"Successfully updated dropdown in {TEMPLATE_FILE}")
           else:
               print(f"Warning: Template file {TEMPLATE_FILE} not found. Skipping dropdown injection.")
-      
-      # 4. Open the Pull Request on behalf of the bot app
+
       - name: Create Pull Request
         if: success()
         uses: peter-evans/create-pull-request@v6
@@ -143,21 +165,18 @@ jobs:
           commit-message: "feat: add new blog author via Issue #${{ github.event.issue.number }}"
           title: "feat: add new author from Issue #${{ github.event.issue.number }}"
           body: |
-            This PR automatically handles two tasks:
-            1. Adds the new author to `blog/authors.yml`.
-            2. Re-generates and sorts the author dropdown options inside the issue templates.
-            
+            This PR automatically handles three tasks:
+            1. Downloads, optimizes, and names the avatar image matching the unique author slug.
+            2. Adds the new author data mapping properties into `blog/authors.yml`.
+            3. Re-generates and sorts the author dropdown options inside the issue templates.
             Closes #${{ github.event.issue.number }}.
-            
             CODEOWNERS have been automatically assigned to review.
-
           branch: "automation/add-author-issue-${{ github.event.issue.number }}"
           delete-branch: true
           labels: |
             blog
             automation
 
-      # 5. Comment on success
       - name: Comment on Success
         if: success()
         uses: peter-evans/create-or-update-comment@v4
@@ -165,11 +184,8 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
           body: |
-            Hi there! An automated Pull Request has been generated to add you to the blog authors file and update our submission dropdown tools. 
-            
-            The project's CODEOWNERS have been notified to review and merge the changes. Once merged, your author profile and dropdown options will be active!
+            Hi there! An automated Pull Request has been generated to add you to the blog authors file and update our submission dropdown tools. The project's CODEOWNERS have been notified to review and merge the changes. Once merged, your author profile and dropdown options will be active!
 
-      # 6. Handle failure / duplicates (Only runs if the Python script failed)
       - name: Handle Duplicate / Failure
         if: failure()
         uses: actions/github-script@v7
@@ -177,16 +193,12 @@ jobs:
           github-token: ${{ steps.app-token.outputs.token }}
           script: |
             const issueNumber = context.issue.number;
-            
-            // 1. Leave an error comment
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber,
               body: "🛑 **Registration Error:** It looks like an author profile with this name already exists in `blog/authors.yml`. Duplicate entries are not allowed. This issue will now be closed automatically."
             });
-            
-            // 2. Close the issue automatically
             await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
