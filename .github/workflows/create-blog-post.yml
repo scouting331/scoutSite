@@ -50,6 +50,19 @@ jobs:
           from dateutil import parser
           from PIL import Image, ImageOps
 
+          # --- Helper to extract raw URLs from GitHub Markdown Links ---
+          def extract_url(text):
+              if not text or text == "null" or text == "_No response_":
+                  return None
+              # Matches markdown urls like ![text](url) or [text](url)
+              match = re.search(r'\]\((https?://[^\s\)]+)\)', text)
+              if match:
+                  return match.group(1)
+              # Fallback if it is already a plain URL
+              if text.strip().startswith(('http://', 'https://')):
+                  return text.strip()
+              return None
+
           # --- 1. INTEGRATED OPTIMIZER ENGINE CODE ---
           def optimize_convert_and_hash_images(input_dir, output_dir, max_size=(1920, 1080), quality=80, keep_original_names=False):
               if not os.path.exists(input_dir):
@@ -92,9 +105,11 @@ jobs:
                                   if os.path.exists(input_path):
                                       os.remove(input_path)
                                       
-                                  with open(os.path.join(root, f"{file}.ref"), "r") as ref_f:
-                                      orig_url = ref_f.read().strip()
-                                      url_to_new_path_map[orig_url] = output_file_name
+                                  ref_path = os.path.join(root, f"{file}.ref")
+                                  if os.path.exists(ref_path):
+                                      with open(ref_path, "r") as ref_f:
+                                          orig_url = ref_f.read().strip()
+                                          url_to_new_path_map[orig_url] = output_file_name
                                       
                                   print(f"[Processed & Purged] {file} -> {output_file_name}")
                           except Exception as e:
@@ -135,7 +150,6 @@ jobs:
           else:
               authors = [to_kebab(str(raw_authors))]
 
-          # This section handles parsing whether options are flat strings or structured maps
           raw_tags = data.get("tags", "")
           if isinstance(raw_tags, str):
               tags = [to_kebab(t) for t in raw_tags.split(",") if t.strip()]
@@ -146,9 +160,10 @@ jobs:
           web_prefix = f"/img/blog/{blogfilename}"
 
           # --- 3. FETCH AND RUN OPTIMIZER ON COVER PHOTO ---
-          cover_url = data.get("cover-photo")
+          cover_input = data.get("cover-photo")
+          cover_url = extract_url(cover_input)
           cover_line = ""
-          if cover_url and cover_url != "null" and cover_url != "_No response_":
+          if cover_url:
               tmp_cover_dir = "/tmp/raw_cover"
               os.makedirs(tmp_cover_dir, exist_ok=True)
               clean_url = cover_url.split("?")
@@ -166,10 +181,10 @@ jobs:
                   print(f"Skipping cover photo download. Error: {e}")
 
           # --- 4. FETCH AND RUN OPTIMIZER ON ZIP ALBUM SLIDES ---
-          album_url = data.get("photo-album")
-          has_album = False
-          album_line = ""
-          if album_url and album_url != "null" and album_url != "_No response_":
+          album_input = data.get("photo-album")
+          album_url = extract_url(album_input)
+          album_images_paths = []
+          if album_url:
               tmp_slides_dir = "/tmp/raw_slides"
               os.makedirs(tmp_slides_dir, exist_ok=True)
               zip_path = "album.zip"
@@ -179,91 +194,77 @@ jobs:
                       zip_ref.extractall(tmp_slides_dir)
                   os.remove(zip_path)
                   
-                  for root, _, files in os.walk(tmp_slides_dir):
-                      for file in files:
+                  # Create tracking references for zip content files
+                  for r, _, f_list in os.walk(tmp_slides_dir):
+                      for file in f_list:
                           if file.lower().endswith((".jpg", ".jpeg", ".png", ".webp")):
-                              with open(os.path.join(root, f"{file}.ref"), "w") as ref_f:
-                                  ref_f.write("album")
+                              with open(os.path.join(r, f"{file}.ref"), "w") as ref_f:
+                                  ref_f.write(file)
                                   
-                  slides_target_folder = os.path.join(static_folder, "slides")
-                  optimize_convert_and_hash_images(tmp_slides_dir, slides_target_folder, keep_original_names=True)
-                  has_album = True
-                  album_line = f"<PhotoAlbumGallery\n  context={{require.context('{web_prefix}/slides', false, /\\.(png|jpe?g|svg|webp)$/)}}\n/>"
+                  album_map = optimize_convert_and_hash_images(tmp_slides_dir, static_folder, keep_original_names=False)
+                  album_images_paths = [f"{web_prefix}/{v}" for v in album_map.values()]
               except Exception as e:
-                  print(f"Skipping album download. Error: {e}")
-
-          # --- 5. PARSE & PROCESS INLINE CONTENT PHOTOS ---
-          body_text = data.get("blog-content", "").strip()
+                  print(f"Skipping zip photo album extract. Error: {e}")
+              
+          # --- 5. PARSE AND DOWNLOAD IMAGES INSIDE BLOG CONTENT ---
+          blog_content = data.get("blog-content", "")
+          # Find all markdown image URLs inside the text editor field
+          inline_matches = re.findall(r'!\[.*?\]\(((https?://[^\s\)]+))\)', blog_content)
           
-          inline_markdown_urls = re.findall(r'!\[.*?\]\((.*?)\)', body_text)
-          inline_html_urls = re.findall(r'<img[^>]*src=["\'](.*?)["\']', body_text)
-          all_inline_urls = list(set(inline_markdown_urls + inline_html_urls))
-          
-          if all_inline_urls:
+          if inline_matches:
               tmp_inline_dir = "/tmp/raw_inline"
               os.makedirs(tmp_inline_dir, exist_ok=True)
-              print(f"[Inline Images Detected] Found {len(all_inline_urls)} embedded image assets.")
               
-              for idx, img_url in enumerate(all_inline_urls):
-                  if not img_url.startswith("http") or img_url == "null":
-                      continue
+              for index, (full_match_url, clean_match_url) in enumerate(inline_matches):
+                  clean_url = clean_match_url.split("?")[0]
+                  _, ext = os.path.splitext(clean_url)
+                  if not ext:
+                      ext = ".png"
+                  inline_filename = f"inline_{index}{ext}"
+                  inline_filepath = os.path.join(tmp_inline_dir, inline_filename)
+                  
                   try:
-                      clean_img_url = img_url.split("?")
-                      _, ext = os.path.splitext(clean_img_url[0])
-                      if not ext:
-                          ext = ".jpg"
-                          
-                      filename = f"inline_img_{idx}{ext}"
-                      full_tmp_path = os.path.join(tmp_inline_dir, filename)
-                      
-                      urllib.request.urlretrieve(img_url, full_tmp_path)
-                      with open(f"{full_tmp_path}.ref", "w") as ref_f:
-                          ref_f.write(img_url)
+                      urllib.request.urlretrieve(clean_match_url, inline_filepath)
+                      with open(f"{inline_filepath}.ref", "w") as ref_f:
+                          ref_f.write(clean_match_url)
                   except Exception as e:
-                      print(f"Failed to pull inline asset reference: {img_url}. Error: {e}")
+                      print(f"Failed downloading inline image {clean_match_url}: {e}")
                       
-              url_to_filename_map = optimize_convert_and_hash_images(tmp_inline_dir, static_folder, keep_original_names=False)
+              inline_map = optimize_convert_and_hash_images(tmp_inline_dir, static_folder, keep_original_names=False)
               
-              for original_url, new_filename in url_to_filename_map.items():
-                  optimized_web_path = f"{web_prefix}/{new_filename}"
-                  body_text = body_text.replace(original_url, optimized_web_path)
-                  print(f"[Rewriting Asset Path] {original_url} -> {optimized_web_path}")
+              # Swap original markdown URLs with the newly generated WebP image routes
+              for orig_url, webp_filename in inline_map.items():
+                  blog_content = blog_content.replace(orig_url, f"{web_prefix}/{webp_filename}")
 
-          paragraphs = [p.strip() for p in body_text.split("\n\n") if p.strip()]
-          content_markdown = ""
-          if paragraphs:
-              content_markdown += paragraphs[0] + "\n\n{/* truncate */}"
-          if len(paragraphs) > 1:
-              content_markdown += "\n\n" + "\n\n".join(paragraphs[1:])
-
-          # --- 6. COMPILE FILE VIA CLEAN SEQUENTIAL LIST AND \n JOINS ---
-          authors_str = ", ".join([f'"{a}"' for a in authors])
-          tags_str = ", ".join([f'"{t}"' for t in tags])
-          lines = [
-              "---",
-              f'title: "{safe_title}"',
-              f"date: {date_str}",
-              f"authors: [{authors_str}]",
-              f"tags: [{tags_str}]",
-              "---",
-              ""
-          ]
-          if has_album:
-              lines.append("import PhotoAlbumGallery from '@site/src/components/PhotoAlbumGallery';\n")
-          if cover_line:
-              lines.append(cover_line + "\n")
-          lines.append(content_markdown)
-          if has_album and album_line:
-              lines.append("\n" + album_line)
-
-          file_content = "\n".join(lines).strip() + "\n"
+          # --- 6. WRITE OUT THE MDX POST FILE ---
           os.makedirs("blog", exist_ok=True)
+          md_filepath = f"blog/{blogfilename}.md"
           
-          with open(f"blog/{blogfilename}.mdx", "w", encoding="utf-8") as f:
-              f.write(file_content)
+          front_matter_authors = ", ".join(authors)
+          front_matter_tags = ", ".join(tags)
+          
+          # Render photo album stack if pictures were provided
+          album_markdown = ""
+          if album_images_paths:
+              album_markdown = "\n\n## Photo Album\n" + "\n".join([f"![Album Image]({path})" for path in album_images_paths])
 
-          with open(os.environ["GITHUB_ENV"], "a") as env_file:
-              env_file.write(f"BLOG_FILENAME={blogfilename}\n")
+          with open(md_filepath, "w", encoding="utf-8") as md_file:
+              md_file.write(f"---\n")
+              md_file.write(f"title: \"{safe_title}\"\n")
+              md_file.write(f"date: {date_str}\n")
+              if authors:
+                  md_file.write(f"authors: [{front_matter_authors}]\n")
+              if tags:
+                  md_file.write(f"tags: [{front_matter_tags}]\n")
+              md_file.write(f"---\n\n")
+              
+              if cover_line:
+                  md_file.write(f"{cover_line}\n\n")
+                  
+              md_file.write(f"{blog_content}")
+              md_file.write(f"{album_markdown}\n")
+
+          print(f"Successfully generated blog file at: {md_filepath}")
 
       - name: Create Pull Request
         id: cpr
