@@ -1,0 +1,66 @@
+name: New Document
+description: "Add a new document"
+labels: ["docs"]
+title: "[New Document]"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **The title above is just for internal use. Please don't change it**
+
+        # Adding a new document to the site
+
+        Fill out this form and click "Create" below to submit a new document.
+        After submitting your document, it will be reviewed by the webmaster before
+        being added to the website.
+  - type: input
+    id: title
+    attributes:
+      label: "Document Title"
+      description: |
+        Title of the proposed document
+
+        This will be displayed at the top of the document. Make sure it is descriptive of what the document is!
+      placeholder: "New Document"
+    validations:
+      required: true
+  - type: input
+    id: description
+    attributes:
+      label: "Document Description"
+      description: |
+        Please provide a single sentence description of what this document is.
+      placeholder: "This is the packing list/rules/etc..."
+    validations:
+      required: true
+  - type: dropdown
+    id: tags
+    attributes:
+      label: "Unit"
+      description: |
+        Select the unit(s) to associate this post with.
+
+        If this document applies to multiple units, select "General Document"
+      multiple: false
+      options:
+        - Troop 303
+        - Troop 331
+        - Crew 303
+        - Pack 303
+        - General
+    validations:
+      required: true
+  - type: textarea
+    id: doc-content
+    attributes:
+      label: "Document Text"
+      description: |
+        Add the content of your document here. You can include inline
+        images/files if needed.
+      placeholder: "Document text here..."
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        **Please don't edit any of the other options!**

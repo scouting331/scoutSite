@@ -178,7 +178,7 @@ const config = {
           items: [
             {
               label: "Documents",
-              to: "/docs/general-docs",
+              to: "/docs/general",
             },
             {
               label: "Blog",
@@ -186,7 +186,7 @@ const config = {
             },
             {
               label: "Helpful Links",
-              to: "/docs/general-docs/helpful-links"
+              to: "/docs/general/helpful-links"
             },
           ],
         },
