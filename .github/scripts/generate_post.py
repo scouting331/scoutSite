@@ -38,6 +38,48 @@ from dateutil import parser
 from PIL import Image, ImageOps
 
 # --- Helper functions ---
+def generate_clean_description(blog_content):
+    """Parses raw markdown content to extract a clean 150-character SEO description.
+
+    Removes code blocks, images, headings, and markdown syntax markup to form
+    a punchy, reader-friendly string that fits within Google snippet limits.
+
+    Args:
+        blog_content (str): The raw text string from the 'blog-content' form field.
+
+    Returns:
+        str: A clean text summary exactly 150 characters or less with an ellipsis.
+    """
+    if not blog_content or len(blog_content.strip()) < 15:
+        # High-utility localized fallback text if the body field was left empty
+        return "Discover recent outdoor adventures, volunteer service projects, and youth leadership milestones from our Brownsburg, IN Scouting units."
+
+    # 1. Clean out the heaviest non-text elements completely
+    text = re.sub(r'```.*?```', '', blog_content, flags=re.DOTALL) # Remove code blocks
+    text = re.sub(r'!\[.*?\]\(.*?\)', '', text)                   # Remove markdown images
+    text = re.sub(r'<img.*?>', '', text)                          # Remove HTML images
+    text = re.sub(r'<.*?>.*?</.*?>', '', text, flags=re.DOTALL)    # Remove HTML tags/components
+    text = re.sub(r'#+\s+.*', '', text)                            # Remove headers (# Title)
+
+    # 2. Strip out inline styling symbols
+    text = re.sub(r'[*_`~]', '', text)               # Strip bold, italics, code strings, strikethroughs
+    text = re.sub(r'\[(.*?)\]\(.*?\)', r'\1', text)  # Convert [Click Here](url) -> Click Here
+    text = re.sub(r'^[\-\*\+]\s+', '', text, flags=re.MULTILINE) # Strip out list item dashes/bullets
+
+    # 3. Flatten lines breaks, tabs, and duplicate white space
+    text = " ".join(text.split())
+
+    # 4. Enforce strict 145-character boundary rule to protect against truncation
+    if len(text) > 145:
+        # Clip back to the last complete word so words aren't cut in half
+        text = text[:145].rsplit(' ', 1)[0].strip()
+
+    # Ensure the sentence has an appropriate grammatical ending
+    if not text.endswith(('.', '!', '?')):
+        text += "..."
+
+    return text
+
 def optimize_convert_and_hash_images(input_dir, output_dir, max_size=(1920, 1080), quality=80, keep_original_names=False):
     """
     Optimizes, resizes, and converts images in an input directory to WebP format, 
@@ -312,6 +354,10 @@ def main():
         # Swap original markdown URLs with the newly generated WebP image routes
         for orig_url, webp_filename in inline_map.items():
             blog_content = blog_content.replace(orig_url, f"{web_prefix}/{webp_filename}")
+    
+    # --- NEW: GENERATE THE AUTOMATED SEO DESCRIPTION ---
+    # Extracts text out of the final modified content string right before writing the file
+    seo_description = generate_clean_description(blog_content)
 
     # --- WRITE OUT THE MDX POST FILE ---
     os.makedirs("blog", exist_ok=True)
@@ -388,13 +434,14 @@ def main():
     with open(mdx_filepath, "w", encoding="utf-8") as mdx_file:
         mdx_file.write(f"---\n")
         mdx_file.write(f"title: \"{safe_title}\"\n")
+        mdx_file.write(f"description: \"{seo_description}\"\n")
         mdx_file.write(f"date: {date_str}\n")
         if authors:
             mdx_file.write(f"authors: [{front_matter_authors}]\n")
         if tags:
             mdx_file.write(f"tags: [{front_matter_tags}]\n")
         if cover_line:
-            mdx_file.write(f"image: {web_prefix}/cover.webp")
+            mdx_file.write(f"image: {web_prefix}/cover.webp\n")
         mdx_file.write(f"---\n\n")
         if import_line:
             mdx_file.write(import_line)
