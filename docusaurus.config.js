@@ -1,9 +1,9 @@
 /**
  * @file docusaurus.config.js
  * @description Master Node.js configuration schema engine for the American Legion Post 331 Scouting website.
- * Declares localized metadata paths, custom theme configurations, multi-instance plugin documentation paths 
+ * Declares localized metadata paths, custom theme configurations, multi-instance plugin documentation paths
  * (Standard Docs + Cookbooks), custom localized sitemap filtration schemes, and third-party tracking scripts.
- * 
+ *
  * @environment Node.js (Build-time compilation script)
  * @see {@link https://docusaurus.io/docs/api/docusaurus-config | Docusaurus Configuration API Documentation}
  */
@@ -12,7 +12,7 @@ import { themes as prismThemes } from "prism-react-renderer";
 
 /**
  * Global configuration data schema structure for Docusaurus system operations.
- * 
+ *
  * @type {import('@docusaurus/types').Config}
  */
 
@@ -37,8 +37,8 @@ const config = {
   baseUrl: "/", // Tells the server that the website is installed at the root directory level
 
   // Guardrails to prevent broken links from going live.
-  onBrokenLinks: "throw",      // ❌ STOPS the build process immediately if a Scout links to a page or image that does not exist.
-  onBrokenAnchors: "ignore",   // 🟡 Ignores minor section-header anchor tag mistakes so they don't break the build pipeline.
+  onBrokenLinks: "throw", // ❌ STOPS the build process immediately if a Scout links to a page or image that does not exist.
+  onBrokenAnchors: "ignore", // 🟡 Ignores minor section-header anchor tag mistakes so they don't break the build pipeline.
 
   // Internationalization settings (Language control).
   i18n: {
@@ -67,19 +67,22 @@ const config = {
         },
         // --- SEARCH ENGINE SITEMAP ENGINE ---
         // Dynamically turns off sitemap generation during Cloudflare Preview builds to save build time for the Scouts.
-        sitemap: process.env.SKIP_SITEMAP == "true" ? false : {
-          lastmod: "date",
-          changefreq: "weekly",
-          priority: 0.5,
-          ignorePatterns: ["/tags/**"], // Bypasses internal organization tags to keep search results clean.
-          filename: "sitemap.xml",
-          // Custom filter that strips out pagination pages (like /page/2) from search engine results.
-          createSitemapItems: async (params) => {
-            const { defaultCreateSitemapItems, ...rest } = params;
-            const items = await defaultCreateSitemapItems(rest);
-            return items.filter((item) => !item.url.includes("/page/"));
-          },
-        },
+        sitemap:
+          process.env.SKIP_SITEMAP == "true"
+            ? false
+            : {
+                lastmod: "date",
+                changefreq: "weekly",
+                priority: 0.5,
+                ignorePatterns: ["/tags/**"], // Bypasses internal organization tags to keep search results clean.
+                filename: "sitemap.xml",
+                // Custom filter that strips out pagination pages (like /page/2) from search engine results.
+                createSitemapItems: async (params) => {
+                  const { defaultCreateSitemapItems, ...rest } = params;
+                  const items = await defaultCreateSitemapItems(rest);
+                  return items.filter((item) => !item.url.includes("/page/"));
+                },
+              },
       },
     ],
   ],
@@ -91,8 +94,8 @@ const config = {
       "@docusaurus/plugin-content-docs",
       {
         id: "cookbook",
-        path: "cookbook",              // Looks for folder named 'cookbook' in the root of the project.
-        routeBasePath: "cookbook",      // Makes the website URL point to brownsburgscouts.org/cookbook.
+        path: "cookbook", // Looks for folder named 'cookbook' in the root of the project.
+        routeBasePath: "cookbook", // Makes the website URL point to brownsburgscouts.org/cookbook.
         sidebarPath: "./sidebarCookbook.js", // The control panel file managing the cookbook's left-hand menu tree.
       },
     ],
@@ -101,8 +104,8 @@ const config = {
       "@docusaurus/plugin-content-docs",
       {
         id: "docs",
-        path: "docs",                  // Looks for folder named 'docs' in the root of the project.
-        routeBasePath: "docs",          // Makes the website URL point to brownsburgscouts.org/docs.
+        path: "docs", // Looks for folder named 'docs' in the root of the project.
+        routeBasePath: "docs", // Makes the website URL point to brownsburgscouts.org/docs.
         sidebarPath: "./sidebarDocs.js", // The control panel file managing the core documentation menu tree.
       },
     ],
@@ -119,7 +122,7 @@ const config = {
         onUntruncatedBlogPosts: "warn",
         // 💡 SAFETY OVERRIDE: Automatically assigns a default Scouting logo if a Scout forgets to add an author profile photo.
         processBlogPosts: async ({ blogPosts }) => {
-          const DEFAULT_IMAGE = '/img/logos/favicon.png';
+          const DEFAULT_IMAGE = "/img/logos/favicon.png";
 
           return blogPosts.map((post) => {
             if (post.metadata && post.metadata.authors) {
@@ -136,18 +139,19 @@ const config = {
     // 🍪 PRIVACY COMPLIANCE: Optional cookie consent pop-up banner.
     // Set 'enabled: true' if you decide to activate tracking analytics in the future.
     [
-      'docusaurus-plugin-cookie-consent',
+      "docusaurus-plugin-cookie-consent",
       {
-        title: 'Cookie Consent',
-        description: 'We use cookies to enhance your browsing experience and analyze our traffic.',
+        title: "Cookie Consent",
+        description:
+          "We use cookies to enhance your browsing experience and analyze our traffic.",
         links: [
-          { label: 'Privacy Policy', href: '/privacy' },
-          { label: 'Cookie Policy', href: '/cookies' },
+          { label: "Privacy Policy", href: "/privacy" },
+          { label: "Cookie Policy", href: "/cookies" },
         ],
         enabled: false,
-        acceptAllText: 'Accept All Cookies',
-        rejectOptionalText: 'Essential Only',
-        rejectAllText: 'Reject All',
+        acceptAllText: "Accept All Cookies",
+        rejectOptionalText: "Essential Only",
+        rejectAllText: "Reject All",
         toastMode: true,
       },
     ],
@@ -162,13 +166,15 @@ const config = {
       defaultMode: "light",
     },
     // Configures the header banner alert when active. Controlled by the SHOW_ANNOUNCEMENT toggle at the top of this file.
-    announcementBar: SHOW_ANNOUNCEMENT ? {
-      id: "announcement-bar",
-      content: 'This is an announcement',
-      backgroundColor: "var(--announcement-bar)", // Links to a color variable set in src/css/custom.css
-      textColor: "var(--scouting-america-white)",
-      isCloseable: true,
-    } : undefined,
+    announcementBar: SHOW_ANNOUNCEMENT
+      ? {
+          id: "announcement-bar",
+          content: "This is an announcement",
+          backgroundColor: "var(--announcement-bar)", // Links to a color variable set in src/css/custom.css
+          textColor: "var(--scouting-america-white)",
+          isCloseable: true,
+        }
+      : undefined,
 
     // --- NAVIGATION BAR CONFIGURATION ---
     navbar: {
@@ -222,7 +228,7 @@ const config = {
             },
             {
               label: "Helpful Links",
-              to: "/docs/general/helpful-links"
+              to: "/docs/general/helpful-links",
             },
           ],
         },
@@ -238,7 +244,7 @@ const config = {
                   <i class="fa-brands fa-youtube footer__link-logo" aria-hidden="true"></i>
                   YouTube Channel
                 </a>
-                `
+                `,
             },
             {
               html: `
@@ -249,7 +255,7 @@ const config = {
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
                   Troop 303
                 </a>
-                `
+                `,
             },
             {
               html: `
@@ -260,7 +266,7 @@ const config = {
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
                   Troop 331
                 </a>
-                `
+                `,
             },
             {
               html: `
@@ -271,7 +277,7 @@ const config = {
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
                   Pack 303
                 </a>
-                `
+                `,
             },
             {
               html: `
@@ -282,7 +288,7 @@ const config = {
                   <i class="fa-brands fa-instagram footer__link-logo" aria-hidden="true"></i>
                   Crew 303
                 </a>
-                `
+                `,
             },
           ],
         },
@@ -300,7 +306,7 @@ const config = {
                     Brownsburg, IN 46112
                   </address>
                 </div>
-                `
+                `,
             },
             {
               html: `
@@ -311,17 +317,17 @@ const config = {
                     Email Us
                   </div>
                 </a>
-                `
+                `,
             },
           ],
         },
       ],
     },
-     // --- CODE BLOCKS SYNTAX HIGHLIGHTING ---
+    // --- CODE BLOCKS SYNTAX HIGHLIGHTING ---
     // Controls how programming snippets look when displayed in documentation tutorials or cookbook instructions.
     prism: {
-      theme: prismThemes.github,      // Uses clean light colors matching general GitHub documentation layouts.
-      darkTheme: prismThemes.dracula,  // Fallback dark color block theme format.
+      theme: prismThemes.github, // Uses clean light colors matching general GitHub documentation layouts.
+      darkTheme: prismThemes.dracula, // Fallback dark color block theme format.
     },
     // --- MERMAID DIAGRAM OPERATOR ---
     // Configures flowchart layout trees so we can build unit organization maps using text commands.
@@ -336,7 +342,7 @@ const config = {
       {
         name: "keywords",
         content:
-          "scouts bsa brownsburg, cub scouts near me, brownsburg scout troops, troop 303 brownsburg, troop 331 indiana, pack 303 indiana, crew 303 ventilation, scouting america indiana, boy scouts brownsburg indiana, girl scouts bsa hendricks county, youth groups brownsburg in, kids activities brownsburg indiana, kid friendly clubs near me, youth leadership programs, eagle scout rank, cub scout advancement, kids outdoor activities hendricks county, family camping brownsburg, stem activities for kids indiana, youth community service brownsburg, child development groups, scouts bsa girls troop, cub scouts avon indiana, boy scouts pittsboro in, youth sports and adventure brownsburg, child character building programs, community youth organizations indiana",
+          "scouts bsa brownsburg, cub scouts near me, brownsburg scout troops, troop 303 brownsburg, troop 331 indiana, pack 303 indiana, crew 303, scouting america indiana, boy scouts brownsburg indiana, girl scouts bsa hendricks county, youth groups brownsburg in, kids activities brownsburg indiana, kid friendly clubs near me, youth leadership programs, eagle scout rank, cub scout advancement, kids outdoor activities hendricks county, family camping brownsburg, stem activities for kids indiana, youth community service brownsburg, child development groups, scouts bsa girls troop, cub scouts avon indiana, boy scouts pittsboro in, youth sports and adventure brownsburg, child character building programs, community youth organizations indiana",
       },
     ],
   },
@@ -344,13 +350,13 @@ const config = {
   // --- MARKDOWN & PARSING ENGINES ---
   themes: ["@docusaurus/theme-mermaid"], // Extends theme engine capabilities to natively render Mermaid charts.
   markdown: {
-    format: "mdx",    // Enforces rich MDX format so we can embed custom interactive buttons inside text files.
-    mermaid: true,    // Turns on graph generation tools within standard markdown documents.
-    emoji: true,      // Allows Scouts to write basic shortcuts like :tent: or :fire: to automatically show visual emojis.
+    format: "mdx", // Enforces rich MDX format so we can embed custom interactive buttons inside text files.
+    mermaid: true, // Turns on graph generation tools within standard markdown documents.
+    emoji: true, // Allows Scouts to write basic shortcuts like :tent: or :fire: to automatically show visual emojis.
 
     // --- SAFETY HOOKS & COMPILATION GUARDRAILS ---
     hooks: {
-      onBrokenMarkdownLinks: "warn",  // 🟡 Warns us in the terminal if a text link points to an invalid section header anchor.
+      onBrokenMarkdownLinks: "warn", // 🟡 Warns us in the terminal if a text link points to an invalid section header anchor.
       onBrokenMarkdownImages: "throw", // ❌ CRASHES the local builder instantly if a Scout tries to link a photo that is missing.
     },
   },
