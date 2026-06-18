@@ -280,7 +280,7 @@ def main():
                 print(f"Failed downloading album image {clean_match_url}: {e}")
         
         # Process and optimize the directory full of individual files
-        optimize_convert_and_hash_images(tmp_slides_dir, static_folder, keep_original_names=False)
+        optimize_convert_and_hash_images(tmp_slides_dir, slides_static_folder, keep_original_names=False)
         has_album = True
 
     # --- PARSE AND DOWNLOAD IMAGES INSIDE BLOG CONTENT ---
