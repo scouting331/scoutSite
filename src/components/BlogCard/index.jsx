@@ -78,7 +78,6 @@ function BlogCard({ permalink, title, date, authors, tags }) {
       <Link to={permalink} className={styles.blogCard}>
         
         <div className={styles.cardHeader}>
-          {folderName}
           <img 
             src={resolvedCoverUrl} 
             alt={title} 

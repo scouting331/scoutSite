@@ -40,7 +40,7 @@ body:
       description: |
         Select the unit(s) to associate this post with.
 
-        If this document applies to multiple units, select "General Document"
+        If this document applies to multiple units, select **General**
       multiple: false
       options:
         - Troop 303

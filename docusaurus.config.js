@@ -22,6 +22,9 @@ import { themes as prismThemes } from "prism-react-renderer";
  * @property {Array<Array<string|Object>>} plugins - Custom multi-instance document routes and isolated post processors parsing recent content folders.
  * @property {import('@docusaurus/types').ThemeConfig} themeConfig - The master styling architecture setting default light-modes, banners, nav bars, and HTML social links.
  */
+
+const SHOW_ANNOUNCEMENT = false;
+
 const config = {
   title: "The Scouting Units of American Legion Post 331",
   tagline:
@@ -122,6 +125,27 @@ const config = {
         },
       },
     ],
+    [
+      // Capability for Cookie Consent pop-up if determined that it is necessary
+      // for our site.
+      // See https://github.com/mcclowes/docusaurus-plugin-cookie-consent for
+      // more configuration details
+      // Privacy and Cookie policy pages would need to be created.
+      'docusaurus-plugin-cookie-consent',
+      {
+        title: 'Cookie Consent',
+        description: 'We use cookies to enhance your browsing experience and analyze our traffic.',
+        links: [
+          { label: 'Privacy Policy', href: '/privacy' },
+          { label: 'Cookie Policy', href: '/cookies' },
+        ],
+        enabled: false,
+        acceptAllText: 'Accept All Cookies',
+        rejectOptionalText: 'Essential Only',
+        rejectAllText: 'Reject All',
+        toastMode: true,
+      },
+    ],
   ],
 
   themeConfig: {
@@ -131,13 +155,16 @@ const config = {
       disableSwitch: true,
       defaultMode: "light",
     },
-    // announcementBar: {
-    //   id: "new_website",
-    //   content: "Welcome to our new website! Please poke around and if something could be improved, contact the webmaster.",
-    //   backgroundColor: "var(--announcement-bar)",
-    //   textColor: "var(--scouting-america-white)",
-    //   isCloseable: true,
-    // },
+    // Capability to add an announcement on the top of all pages
+    // Simply add text to the 'content' and change the "SHOW_ANNOUNCEMENT"
+    // variable above to true.
+    announcementBar: SHOW_ANNOUNCEMENT ? {
+      id: "announcement-bar",
+      content: 'This is an announcement',
+      backgroundColor: "var(--announcement-bar)",
+      textColor: "var(--scouting-america-white)",
+      isCloseable: true,
+    } : undefined,
     navbar: {
       title: "Scouting America",
       logo: {

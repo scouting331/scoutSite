@@ -179,6 +179,9 @@ def main():
         json.JSONDecodeError: If the provided configuration string contains malformed JSON data.
     """
     # --- SETUP FORMS & METADATA ---
+    if "ISSUE_JSON" not in os.environ:
+        raise KeyError("Missing 'ISSUE_JSON' environment variable.")
+
     data = json.loads(os.environ["ISSUE_JSON"])
 
     # Get safe_title and raw_title from 'title'
