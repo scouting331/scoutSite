@@ -393,6 +393,8 @@ def main():
             mdx_file.write(f"authors: [{front_matter_authors}]\n")
         if tags:
             mdx_file.write(f"tags: [{front_matter_tags}]\n")
+        if cover_line:
+            mdx_file.write(f"image: {web_prefix}/cover.webp")
         mdx_file.write(f"---\n\n")
         if import_line:
             mdx_file.write(import_line)

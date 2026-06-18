@@ -22,7 +22,7 @@ body:
 
         This should include the campout/adventure/event if thats what this post
         is about!
-      placeholder: "Our Recent Adventures"
+      placeholder: "👉 REPLACE WITH YOUR TITLE 👈"
     validations:
       required: true
   - type: input
@@ -104,7 +104,21 @@ body:
       label: "Blog Text"
       description: |
         Write your blog post here!
-      placeholder: "Blog text here..."
+      placeholder: |
+        <!-- 💡 SCOUT TIP: Write a catchy 1-2 sentence introduction here! -->
+
+        ## What We Did
+        <!-- 💡 SCOUT TIP: List 3 fun activities or skills we learned during this event! -->
+        - Activity 1
+        - Activity 2
+        - Activity 3
+
+        :::info⛺ Outdoor Adventure Tip
+
+        If this post is about a camping trip, use this box to share a tip about 
+        the gear or recipes we used!
+        
+        :::
     validations:
       required: true
   - type: markdown
