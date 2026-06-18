@@ -9,7 +9,7 @@
  */
 
 import React from "react";
-import clsx from "clsx";
+import clsx from "clsx";                                    // Utility engine used for conditionally joining dynamic string classes together
 
 /**
  * Renders a centered grid container and row wrapper for dynamic columns.
@@ -23,10 +23,11 @@ import clsx from "clsx";
  */
 export default function Columns({ children, className, style }) {
   return (
-    // This section encompasses the columns that we will integrate with children from a dedicated component to allow the addition of columns as needed
+    // Outer responsive grid framework wrapper centering the entire layout section block horizontally on the page canvas
     <div className="container center">
+      {/* Creates the horizontal layout row, combining standard grid properties with dynamic custom styles and classes */}
       <div className={clsx("row", className)} style={style}>
-        {children}
+        {children}                                          {/* Injects and mounts nested child column components inside the row structure */}
       </div>
     </div>
   );

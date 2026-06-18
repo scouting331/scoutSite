@@ -1,39 +1,62 @@
-name: New Blog Author
-description: "Add a new author to the blog authors list"
-title: "[New Author]"
-labels: ["new-author"]
-body:
-  - type: markdown
-    attributes:
-      value: |
+# ==============================================================================
+# GitHub Issue Form Template Configuration
+# This file defines the structured submission form used by the onboarding script
+# to extract new author metadata, roles, and profile avatars.
+# ==============================================================================
+
+# Core metadata for the GitHub Issue Form template
+name: New Blog Author                  # Name of the template displayed in the GitHub UI
+description: "Add a new author to the blog authors list" # Subtext explaining the purpose of this form
+title: "[New Author]"                  # Pre-fills the issue title with this prefix
+labels: ["new-author"]                 # Applies the label used by the automation script to trigger runs
+body:                                  # Begins the list of form UI components/fields
+
+  # ----------------------------------------------------------------------------
+  # FIELD 1: Introductory Instructions (Markdown Notice)
+  # ----------------------------------------------------------------------------
+  - type: markdown                     # Static text block using Markdown formatting
+    attributes:                        # Map of properties for this markdown block
+      value: |                         # Literal block scalar to preserve line breaks
         **The title above is just for internal use. Please don't change it**
-  - type: input
-    id: name
-    attributes:
-      label: Author's Name
-      description: | 
+
+  # ----------------------------------------------------------------------------
+  # FIELD 2: Author's Name Input
+  # ----------------------------------------------------------------------------
+  - type: input                        # Single-line text input field
+    id: name                           # Unique identifier read by data.get("name") in the Python script
+    attributes:                        # Map of properties for this text input
+      label: Author's Name             # Heading text displayed above the text box
+      description: |                   # Subtext outlining important privacy rules for youth
         Name shown in blog posts for the author
         
         **NOTE**: If you are a Scout this should be your first name followed by 
         a last initial, **NO LAST NAMES PLEASE**
         
         If you are an adult and want your last name shown, feel free to include it"
-      placeholder: "Scout A"
-    validations:
-      required: true
-  - type: input
-    id: title
-    attributes:
-      label: Title
-      description: "List your position(s) and unit."
-      placeholder: "Position, Troop ###"
-    validations:
-      required: true
-  - type: upload
-    id: image_url
-    attributes:
-      label: Avatar Image
-      description: |
+      placeholder: "Scout A"           # Temporary ghost text demonstrating correct formatting
+    validations:                       # Section for field constraints
+      required: true                   # Script will exit with code 1 if this field is missing
+
+  # ----------------------------------------------------------------------------
+  # FIELD 3: Author Title / Role Input
+  # ----------------------------------------------------------------------------
+  - type: input                        # Single-line text input field
+    id: title                          # Unique identifier read by data.get("title") in the Python script
+    attributes:                        # Map of properties for this text input
+      label: Title                     # Heading text displayed above the text box
+      description: "List your position(s) and unit." # Instructions for submission
+      placeholder: "Position, Troop ###" # Visual example of expected input format
+    validations:                       # Section for field constraints
+      required: true                   # Script will exit with code 1 if this field is missing
+
+  # ----------------------------------------------------------------------------
+  # FIELD 4: Avatar Image File Attachment
+  # ----------------------------------------------------------------------------
+  - type: upload                       # File attachment upload component
+    id: image_url                      # Unique identifier read by data.get("image_url") in the Python script
+    attributes:                        # Map of properties for this upload field
+      label: Avatar Image              # Heading text displayed above the dropzone
+      description: |                   # Instructions containing sizing metrics and processing alerts
         This is the photo that will be associated with you. Please make sure the
         image size is relatively small (500 x 500 pixels is ideal) and your face
         is centered in the image.
@@ -41,7 +64,7 @@ body:
         **NOTE**: There is no way to limit the number of files in this space. Please
         only upload 1 photo. If multiple photos are uploaded, the script will
         simply choose one photo and discard the rest.
-    validations:
-      required: false
-      accept: ".png, .jpg, .jpeg, .gif, .svg, .webp"
+    validations:                       # Section for file upload constraints
+      required: false                  # Script allows missing image files and skips processing if empty
+      accept: ".png, .jpg, .jpeg, .gif, .svg, .webp" # Supported image extension types for conversion
 

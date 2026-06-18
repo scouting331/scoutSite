@@ -1,5 +1,5 @@
-"""
-Docusaurus Document Generator and Asset Optimizer.
+# .github/scripts/generate_docs.py
+"""Docusaurus Document Generator and Asset Optimizer.
 
 This module automates the generation of MDX documents for Docusaurus from 
 structured GitHub Issue Form JSON data. It extracts front matter details 
@@ -27,14 +27,14 @@ import os
 import json
 import re
 import hashlib
-import urllib.request
+import urllib.request 
 from io import BytesIO
 from PIL import Image, ImageOps
 
 # --- Helper functions ---
 def optimize_convert_and_hash_images(input_dir, output_dir, max_size=(1920, 1080), quality=80, keep_original_names=False):
-    """
-    Optimizes, resizes, and converts images in an input directory to WebP format, 
+    """Optimizes, resizes, and converts images in an input directory to WebP format, 
+
     saving them to an output directory while optionally renaming them using MD5 hashes.
 
     This function traverses an input folder structure, processes supported images 
@@ -62,60 +62,70 @@ def optimize_convert_and_hash_images(input_dir, output_dir, max_size=(1920, 1080
         No explicit exceptions are raised. Errors encountered during individual file processing 
         or file mutations are intercepted and printed to standard output to allow the loop to continue.
     """
+    # Guard clause to skip image optimization processing runs if the source directory does not exist
     if not os.path.exists(input_dir):
         return {}
+        
+    # Safely creates the target destination output directory tree path mapping layers
     os.makedirs(output_dir, exist_ok=True)
-    valid_extensions = (".jpg", ".jpeg", ".png", ".webp")
-    url_to_new_path_map = {}
+    valid_extensions = (".jpg", ".jpeg", ".png", ".webp")   # Tuple listing supported source assets to process
+    url_to_new_path_map = {}                                # Allocation map container linking original URLs to new filenames
     
+    # Recursively step down through the local raw file directory storage tree structures
     for root, _, files in os.walk(input_dir):
         for file in files:
+            # Check if the file extension matches our list of target images
             if file.lower().endswith(valid_extensions):
-                input_path = os.path.join(root, file)
-                relative_path = os.path.relpath(root, input_dir)
-                target_folder = os.path.normpath(os.path.join(output_dir, relative_path))
-                os.makedirs(target_folder, exist_ok=True)
+                input_path = os.path.join(root, file)       # Constructs the absolute system source path to the file
+                relative_path = os.path.relpath(root, input_dir) # Tracks internal subfolder offsets relative to root
+                target_folder = os.path.normpath(os.path.join(output_dir, relative_path)) # Formulates output directory
+                os.makedirs(target_folder, exist_ok=True)   # Creates target subfolders if missing on disk
                 try:
+                    # Instantiates a clean PIL workspace buffer tracking the source image file
                     with Image.open(input_path) as img:
-                        img = ImageOps.exif_transpose(img)
-                        if img.mode in ("P", "CMYK"):
+                        img = ImageOps.exif_transpose(img)  # Re-orients image automatically using structural EXIF metadata tags
+                        if img.mode in ("P", "CMYK"):      # Normalizes palette and print profiles to preserve alpha channels
                             img = img.convert("RGBA")
-                        img.thumbnail(max_size, Image.Resampling.LANCZOS)
-                        buffer = BytesIO()
-                        img.save(buffer, format="WEBP", quality=quality)
-                        optimized_data = buffer.getvalue()
+                        img.thumbnail(max_size, Image.Resampling.LANCZOS) # High-fidelity scale reduction utilizing Lanczos algorithm
+                        buffer = BytesIO()                  # Initializes an in-memory byte pipeline stream buffer
+                        img.save(buffer, format="WEBP", quality=quality) # Compresses and writes file into memory as WebP format
+                        optimized_data = buffer.getvalue()   # Extracts the optimized binary byte layout mapping data payload
                         
+                        # Evaluates naming configurations to resolve output string file structures
                         if keep_original_names:
-                            base_name, _ = os.path.splitext(file)
+                            base_name, _ = os.path.splitext(file) # Separates filename strings from extensions
                             output_file_name = f"{base_name}.webp"
                         else:
-                            hasher = hashlib.md5(optimized_data)
-                            content_hash = hasher.hexdigest()
+                            hasher = hashlib.md5(optimized_data) # Instantiates MD5 engine against the unique file bits stream
+                            content_hash = hasher.hexdigest() # Generates unique hex hash identifier mapping key
                             output_file_name = f"img_{content_hash}.webp"
                             
-                        output_path = os.path.join(target_folder, output_file_name)
+                        output_path = os.path.join(target_folder, output_file_name) # Builds output file destination block path
                         
+                        # Guard clause checking local asset directories to ensure duplicate files are not overwritten
                         if not os.path.exists(output_path):
                             with open(output_path, "wb") as f:
-                                f.write(optimized_data)
+                                f.write(optimized_data)    # Commits byte layout data safely to permanent local storage disk
                                 
+                        # Delete the original raw file from temporary disk to preserve server space allocations
                         if os.path.exists(input_path):
                             os.remove(input_path)
                             
+                        # Scan for `.ref` sidecar metadata maps containing the original source download URL address link
                         ref_path = os.path.join(root, f"{file}.ref")
                         if os.path.exists(ref_path):
                             with open(ref_path, "r") as ref_f:
-                                orig_url = ref_f.read().strip()
-                                url_to_new_path_map[orig_url] = output_file_name
+                                orig_url = ref_f.read().strip() # Extracts original URL address string
+                                url_to_new_path_map[orig_url] = output_file_name # Updates internal tracking links dictionary maps
                             
                         print(f"[Processed & Purged] {file} -> {output_file_name}")
                 except Exception as e:
-                    print(f"Failed to process {file}. Error: {e}")
-    return url_to_new_path_map
+                    print(f"Failed to process {file}. Error: {e}") # Log error messages to prevent entire automation pipeline crashes
+    return url_to_new_path_map                              # Returns the collection linking old asset links to new files
 
 def to_kebab(text):
-    """
-    Converts a text string into a clean, lowercased kebab-case format 
+    """Converts a text string into a clean, lowercased kebab-case format 
+
     suitable for slugs, URLs, or file names.
 
     The function strips leading/trailing whitespace, converts characters 
@@ -141,14 +151,13 @@ def to_kebab(text):
         ''
     """
     if not text:
-        return ""
-    text = text.lower().strip()
-    text = re.sub(r"[^a-z0-9\s-]", "", text)
-    return re.sub(r"[\s-]+", "-", text).strip("-")
+        return ""                                           # Edge case mitigation handling missing properties gracefully
+    text = text.lower().strip()                             # Normalizes character cases and clips exterior whitespace frames
+    text = re.sub(r"[^a-z0-9\s-]", "", text)                # Regex scrubbing punctuation and non-alphanumeric configuration patterns
+    return re.sub(r"[\s-]+", "-", text).strip("-")         # Condenses multi-spaces into single hyphens and trims loose edges
 
 def main():
-    """
-    Executes the end-to-end extraction, asset optimization, and generation pipeline.
+    """Executes the end-to-end extraction, asset optimization, and generation pipeline.
 
     This function acts as the orchestrator for the script. It loads the source JSON 
     payload from the environment variables, processes metadata, downloads 
@@ -160,77 +169,88 @@ def main():
         description (str): A description of the new document that will be used in metadata
         unit (str): unit with which to classify this document.
         doc-content (str): Raw Markdown core narrative containing text and inline graphics.
-      
-    Returns:
+        Returns:
         None
-
-    Raises:
+        Raises:
         KeyError: If the 'ISSUE_JSON' environment variable is entirely missing.
         json.JSONDecodeError: If the provided configuration string contains malformed JSON data.
-    """
+        """
+        
     # --- SETUP FORMS & METADATA ---
+    # Guard clause asserting that the required input variable stream data block is active on the server
     if "ISSUE_JSON" not in os.environ:
         raise KeyError("Missing 'ISSUE_JSON' environment variable.")
-
-    data = json.loads(os.environ["ISSUE_JSON"])
     
-    # Get safe_title and raw_title from 'title'
-    raw_title = data.get("title", "Untitled Document").strip()
-    description = data.get("description", "").strip()
-    selected_unit = data.get("unit", "General").strip()
-    doc_content = data.get("doc-content", "")
+    # Decodes incoming issue string parameters into interactive structural python dictionaries
+    data = json.loads(os.environ["ISSUE_JSON"])
 
-    # Clean strings for Markdown front matter
+    # Get safe_title and raw_title from 'title'
+    raw_title = data.get("title", "Untitled Document").strip() # Pulls the document heading text from form mappings
+    description = data.get("description", "").strip() # Pulls the descriptive subtext metadata parameter string
+    
+    # Extract structural form input parameters from the loaded configuration map
+    selected_unit = data.get("unit", "General").strip()     # Fetches target sorting classification group
+    doc_content = data.get("doc-content", "")               # Extracts core multi-line markdown narrative layout text
+
+    # Escape interior quote marks within text strings to prevent formatting breaks inside front matter metadata
     safe_title = raw_title.replace('"', '\\"')
     safe_description = description.replace('"', '\\"')
 
-    # Generate slugified file name
+    # Transform raw title characters into a web-safe, standardized lower-case kebab-case text slug
     slug = to_kebab(raw_title)
 
     # --- DETERMINE TARGET DIRECTORY PATH ---
-    # Convert unit to kebab case for safe folder names (e.g., "troop-331")
+    # Convert chosen classification category name to a clean directory path format (e.g., "troop-331")
     unit_folder = to_kebab(selected_unit)
-    docs_directory = f"docs/{unit_folder}"
-    os.makedirs(docs_directory, exist_ok=True)
+    docs_directory = f"docs/{unit_folder}"                  # Assembles path to the native Docusaurus document content tree
+    os.makedirs(docs_directory, exist_ok=True)              # Provisions structural folder pathways on disk if missing
 
-    # Establish asset pathways for uploaded inline document media
-    static_folder = f"static/img/docs/{unit_folder}/{slug}"
-    web_prefix = f"/img/docs/{unit_folder}/{slug}"
+    # Set up static asset pipeline storage targets and frontend reference url strings
+    static_folder = f"static/img/docs/{unit_folder}/{slug}" # Permanent hard disk destination directory path
+    web_prefix = f"/img/docs/{unit_folder}/{slug}"           # Client-side routing reference path used in generated web pages
 
     # --- PARSE AND DOWNLOAD INLINE IMAGES ---
+    # Regular expression capturing markdown image link variants, isolating raw matching pairs and clean URLs
     inline_matches = re.findall(r'!\[.*?\]\(((https?://[^\s\)]+))\)', doc_content)
 
+    # Conditional workflow block executing download pipelines if inline graphic links were identified
     if inline_matches:
-        tmp_inline_dir = "/tmp/raw_doc_inline"
-        os.makedirs(tmp_inline_dir, exist_ok=True)
+        tmp_inline_dir = "/tmp/raw_doc_inline"              # Defines isolated local runner workspace scratchpad buffer path
+        os.makedirs(tmp_inline_dir, exist_ok=True)          # Safely constructs server workspace environment layer
 
+        # Iterates through every unique index instance matching inline url string criteria
         for index, (full_match_url, clean_match_url) in enumerate(inline_matches):
-            clean_url = clean_match_url.split("?")[0]
-            _, ext = os.path.splitext(clean_url)
+            clean_url = clean_match_url.split("?")[0]       # Discards query string parameters to protect clean path matching
+            _, ext = os.path.splitext(clean_url)            # Extracts file extension out of the isolated tracking string
             if not ext:
-                ext = ".png"
+                ext = ".png"                                # Default extension fallback parameter if undetected
 
+            # Standardizes raw local filename text formats using iteration trackers
             inline_filename = f"image_{index}{ext}"
-            inline_filepath = os.path.join(tmp_inline_dir, inline_filename)
+            inline_filepath = os.path.join(tmp_inline_dir, inline_filename) # Builds absolute path context link
 
             try:
+                # Dispatches server download request stream fetching remote assets directly onto the local drive
                 urllib.request.urlretrieve(clean_match_url, inline_filepath)
+                # Writes `.ref` sidecar files containing original absolute URL references to assist optimization mapping steps
                 with open(f"{inline_filepath}.ref", "w") as ref_f:
                     ref_f.write(clean_match_url)
             except Exception as e:
-                print(f"Failed downloading inline image {clean_match_url}: {e}")
+                print(f"Failed downloading inline image {clean_match_url}: {e}") # Non-blocking diagnostic tracker logging
 
-            # Optimize downloads
+            # Optimize downloads: scales, hashes, saves optimized assets, and removes temporary items from scratch space
             inline_map = optimize_convert_and_hash_images(tmp_inline_dir, static_folder, keep_original_names=False)
 
             # Swap out raw URLs inside text area with local static paths
+            # Step down through calculated mapping dictionary records to update text body markup variables
             for orig_url, webp_filename in inline_map.items():
                 doc_content = doc_content.replace(orig_url, f"{web_prefix}/{webp_filename}")
             
             # --- BUILD FRONT MATTER AND WRITING THE MARKDOWN ---
-            markdown_path = f"{docs_directory}/{slug}.mdx"
+            markdown_path = f"{docs_directory}/{slug}.mdx"   # Defines ultimate destination path for the document
 
             # Assemble metadata block required by Docusaurus
+            # Constructs a list array mapping standard key-value headers to fulfill Front Matter criteria
             front_matter = [
                 "---",
                 f'title: "{safe_title}"',
@@ -239,12 +259,15 @@ def main():
                 "",
             ]
 
+            # Merges compiled header metadata lists with modified markdown text blocks via joining newline strings
             doc_payload = "\n".join(front_matter) + doc_content
 
+            # Writes operational file contents back down to permanent project storage with universal UTF-8 file layouts
             with open(markdown_path, "w", encoding="utf-8") as doc_file:
                 doc_file.write(doc_payload)
 
             print(f"[Pipeline Complete] Document successfully written to: {markdown_path}")
 
 if __name__ == "__main__":
-    main()
+    main()                                                  # Executes the core application script runtime routine
+

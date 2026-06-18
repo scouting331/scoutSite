@@ -1,3 +1,4 @@
+# .github/scripts/generate_post.py
 """
 Docusaurus Blog Post Generator and Asset Optimizer.
 

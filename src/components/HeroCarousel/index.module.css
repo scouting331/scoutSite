@@ -1,1 +1,18 @@
-@media screen and (max-width:996px){.heroBanner{padding:0}}.buttons{display:flex;align-items:center;justify-content:center}
+/* ==============================================================================
+   CSS Module Stylesheet: Hero Carousel Typography Overlays
+   Controls layout structures for action elements and responsive mobile boundaries.
+   ============================================================================== */
+
+/* Responsive media query gate handling layout shifts for smaller viewports */
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 0;                           /* Strips standard Infima hero padding on tablet and mobile screens to expand the slider full-width */
+  }
+}
+
+/* Call-to-action button alignment layout panel box container */
+.buttons {
+  display: flex;                          /* Invokes Flexbox layout properties to easily align action triggers side-by-side */
+  align-items: center;                    /* Centers button elements perfectly along vertical coordinate balancing nodes */
+  justify-content: center;                 /* Centers button elements perfectly along the horizontal alignment tracking grid */
+}

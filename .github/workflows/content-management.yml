@@ -1,113 +1,125 @@
-name: Content Management Automation
+# ==============================================================================
+# GitHub Actions Automation Workflow: Content Management
+# Orchestrates automatic Pull Request creation when issues with specific labels
+# ('blog', 'docs', or 'new-author') are submitted via issue form templates.
+# ==============================================================================
 
-on:
-  issues:
-    types: [opened]
+name: Content Management Automation    # Friendly name displayed in the GitHub Actions tab
 
-jobs:
+on:                                    # Defines the event hook that triggers this workflow
+  issues:                              # Listens to issue activity
+    types: [opened]                    # Restricts execution to run only when an issue is newly created
+
+jobs:                                  # Contains the operational pipelines/jobs to execute
+  # ----------------------------------------------------------------------------
   # WORKFLOW 1: Generate Blog Post from Issue
+  # ----------------------------------------------------------------------------
   create-post:
+    # Execution gate: only runs if the newly opened issue has the 'blog' label applied
     if: contains(github.event.issue.labels.*.name, 'blog')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest             # Provisions a fresh virtual machine host environment
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v6
+      - name: Checkout Code            # Step 1: Pulls down your repository code onto the runner
+        uses: actions/checkout@v6      # Uses the standard repository checkout action
 
-      - name: Generate GitHub App Token
-        id: app-token
-        uses: actions/create-github-app-token@v3
+      - name: Generate GitHub App Token # Step 2: Obtains elevated permissions for automation steps
+        id: app-token                  # ID designation used to query output data in later fields
+        uses: actions/create-github-app-token@v3 # Uses GitHub App credentials to bypass workflow limits
         with:
-          client-id: ${{ secrets.APP_ID }}
+          client-id: ${{ secrets.APP_ID }} # References system secret credentials
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
-      - name: Parse Issue Form
-        id: parse
+      - name: Parse Issue Form         # Step 3: Extracts individual form values from the issue
+        id: parse                      # ID notation used to fetch variables like jsonString
         uses: stefanbuck/github-issue-parser@v3
         with:
-          template-path: .github/ISSUE_TEMPLATE/01-new-blog-post.yml
+          template-path: .github/ISSUE_TEMPLATE/01-new-blog-post.yml # Path targeting the source form template
 
-      - name: Set up Python
+      - name: Set up Python            # Step 4: Installs runtime environment for processing scripts
         uses: actions/setup-python@v6
         with:
-          python-version: "3.x"
+          python-version: "3.x"        # Always provisions the latest minor build variation of Python 3
 
-      - name: Install Dependencies
+      - name: Install Dependencies     # Step 5: Installs mandatory libraries for image/text handling
         run: |
           python -m pip install --upgrade pip
           pip install Pillow python-dateutil
 
-      - name: Process Issue Data and Assets (Python Optimizer)
+      - name: Process Issue Data and Assets (Python Optimizer) # Step 6: Executes data conversion script
         id: process
         env:
-          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
+          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }} # Maps extracted form fields to environment variables
         run: |
-          python .github/scripts/generate_post.py
+          python .github/scripts/generate_post.py # Script execution target file
 
-      - name: Create Pull Request
-        id: cpr
+      - name: Create Pull Request      # Step 7: Opens a staging PR with the new post files
+        id: cpr                        # ID mapping used to fetch the PR URL for issue commenting
         uses: peter-evans/create-pull-request@v8
         with:
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ steps.app-token.outputs.token }} # Grants PR permissions via the generated App token
           commit-message: "feat(blog): add new post from issue #${{ github.event.issue.number }}"
-          branch: "automation/issue-${{ github.event.issue.number }}-${{ env.BLOG_FILENAME }}"
-          title: "feat(blog): ${{ github.event.issue.title }}"
-          body: |
+          branch: "automation/issue-${{ github.event.issue.number }}-${{ env.BLOG_FILENAME }}" # Isolated branch path
+          title: "feat(blog): ${{ github.event.issue.title }}" # Sets the issue title as the PR title
+          body: |                      # Description text posted within the generated PR body description
             This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.
             Closes #${{ github.event.issue.number }}
-          delete-branch: true
-          labels: |
+          delete-branch: true          # Deletes the branch once the PR is merged into main
+          labels: |                    # Automatically appends tracking tags to the PR
             blog
 
-      - name: Comment on Issue with PR Link
-        if: steps.cpr.outputs.pull-request-number != ''
+      - name: Comment on Issue with PR Link # Step 8: Provides clear notification link back to the user
+        if: steps.cpr.outputs.pull-request-number != '' # Guard clause ensuring the PR was successfully opened
         uses: peter-evans/create-or-update-comment@v5
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
-          body: |
+          body: |                      # Formats notice text targeting the native conversation section
             🎉 Success! A staging branch has been created. 
 
             Your blog post is ready for review here:👉 ${{ steps.cpr.outputs.pull-request-url }}
 
+  # ----------------------------------------------------------------------------
   # WORKFLOW 2: Generate Document from Issue
+  # ----------------------------------------------------------------------------
   create-doc:
+    # Execution gate: only runs if the newly opened issue has the 'docs' label applied
     if: contains(github.event.issue.labels.*.name, 'docs')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest             # Provisions a fresh virtual machine host environment
     steps:
-      - name: Checkout Code
+      - name: Checkout Code            # Step 1: Pulls down your repository code onto the runner
         uses: actions/checkout@v6
 
-      - name: Generate GitHub App Token
+      - name: Generate GitHub App Token # Step 2: Obtains elevated permissions for automation steps
         id: app-token
         uses: actions/create-github-app-token@v3
         with:
           client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
-      - name: Parse Issue Form
+      - name: Parse Issue Form         # Step 3: Extracts individual form values from the issue
         id: parse
         uses: stefanbuck/github-issue-parser@v3
         with:
-          template-path: ./github/ISSUE_TEMPLATE/02-new-document.yml
+          template-path: ./github/ISSUE_TEMPLATE/02-new-document.yml # Targeting the document form template
 
-      - name: Set up Python
+      - name: Set up Python            # Step 4: Installs runtime environment for processing scripts
         uses: actions/setup-python@v6
         with:
           python-version: "3.x"
 
-      - name: Install Dependencies
+      - name: Install Dependencies     # Step 5: Installs mandatory libraries for file handling
         run: |
           python -m pip install --upgrade pip
           pip install Pillow
 
-      - name: Process Issue Data and Assets (Python Optimizer)
+      - name: Process Issue Data and Assets (Python Optimizer) # Step 6: Executes file conversion script
         id: process
         env:
-          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
+          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }} # Maps extracted form fields to environment variables
         run: |
           python .github/scripts/generate_docs.py
 
-      - name: Create Pull Request
+      - name: Create Pull Request      # Step 7: Opens a staging PR with the new documentation files
         id: cpr
         uses: peter-evans/create-pull-request@v8
         with:
@@ -122,7 +134,7 @@ jobs:
           labels: |
             docs
 
-      - name: Comment on Issue with PR Link
+      - name: Comment on Issue with PR Link # Step 8: Provides clear notification link back to the user
         if: steps.cpr.outputs.pull-request-number != ''
         uses: peter-evans/create-or-update-comment@v5
         with:
@@ -133,46 +145,49 @@ jobs:
 
             Your document is ready for review here:👉 ${{ steps.cpr.outputs.pull-request-url }}
 
+  # ----------------------------------------------------------------------------
   # WORKFLOW 3: Process New Author Request
+  # ----------------------------------------------------------------------------
   add-author-and-pr:
+    # Execution gate: only runs if the newly opened issue has the 'new-author' label applied
     if: contains(github.event.issue.labels.*.name, 'new-author')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest             # Provisions a fresh virtual machine host environment
     steps:
-      - name: Checkout Repo
+      - name: Checkout Repo            # Step 1: Pulls down your repository code onto the runner
         uses: actions/checkout@v6
 
-      - name: Generate Token
+      - name: Generate Token           # Step 2: Obtains elevated permissions for automation steps
         id: app-token
         uses: actions/create-github-app-token@v3
         with:
           client-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
-      - name: Parse Issue Form
+      - name: Parse Issue Form         # Step 3: Extracts profile fields from onboarding issue
         id: parse
         uses: stefanbuck/github-issue-parser@v3
         with:
-          template-path: .github/ISSUE_TEMPLATE/03-new-blog-author.yml
+          template-path: .github/ISSUE_TEMPLATE/03-new-blog-author.yml # Targeting onboarding template
 
-      - name: Set up Python
+      - name: Set up Python            # Step 4: Installs runtime environment for onboarding script
         uses: actions/setup-python@v6
         with:
           python-version: "3.x"
 
-      - name: Install Dependencies
+      - name: Install Dependencies     # Step 5: Installs text/image optimization libraries
         run: |
           python -m pip install --upgrade pip
           pip install Pillow PyYAML python-dateutil
 
-      - name: Process Author and Update Files
+      - name: Process Author and Update Files # Step 6: Appends dataset and edits dropdown lists
         id: process_files
         env:
-          ISSUE_DATA: ${{ steps.parse.outputs.jsonString }}
+          ISSUE_DATA: ${{ steps.parse.outputs.jsonString }} # Context identifier variable name target
         run: |
           python .github/scripts/add_author.py
 
-      - name: Create Pull Request
-        if: success()
+      - name: Create Pull Request      # Step 7: Opens a staging PR updating configuration maps
+        if: success()                  # Condition check: ensures data steps finished with exit code 0
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -181,7 +196,7 @@ jobs:
           body: |
             This PR automatically handles three tasks:
             1. Downloads, optimizes, and names the avatar image matching the unique author slug.
-            2. Adds the new author data mapping properties into `blog/authors.yml`.
+            2. Adds the new author data mapping properties into blog/authors.yml.
             3. Re-generates and sorts the author dropdown options inside the issue templates.
             Closes #${{ github.event.issue.number }}.
             CODEOWNERS have been automatically assigned to review.
@@ -189,29 +204,37 @@ jobs:
           delete-branch: true
           labels: |
             new-author
-
-      - name: Comment on Success
-        if: success()
+            
+      - name: Comment on Success       # Step 8: Alerts author that review process has begun
+        if: success()                  # Condition check: executes only if PR creation succeeds
         uses: peter-evans/create-or-update-comment@v5
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
           body: |
-            Hi there! An automated Pull Request has been generated to add you to the blog authors file and update our submission dropdown tools. The project's CODEOWNERS have been notified to review and merge the changes. Once merged, your author profile and dropdown options will be active!
-
-      - name: Handle Duplicate / Failure
-        if: failure()
-        uses: actions/github-script@v9
+            Hi there! An automated Pull Request has been generated to add you to
+            the blog authors file and update our submission dropdown tools. The
+            project's CODEOWNERS have been notified to review and merge the
+            changes. Once merged, your author profile and dropdown options will
+            be active!
+            
+      - name: Handle Duplicate / Failure # Step 9: Rejects entry and handles automated clean close
+        if: failure()                  # Condition check: executes if scripts fail (e.g., duplicate errors)
+        uses: actions/github-script@v9  # Leverages native JavaScript inline engine execution tools
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
+          github-token: ${{ secrets.GITHUB_TOKEN }} # Standard repo token is fine for closure actions
+          script: |                    # Runs inline Javascript logic against Github API layers
             const issueNumber = context.issue.number;
+            // Post notification error explanation comment to issue chat log
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber,
-              body: "🛑 **Registration Error:** It looks like an author profile with this name already exists in `blog/authors.yml`. Duplicate entries are not allowed. This issue will now be closed automatically."
+              body: "🛑 Registration Error: It looks like an author profile with
+              this name already exists in blog/authors.yml. Duplicate entries are
+              not allowed. This issue will now be closed automatically."
             });
+            // Immediately close out the issue and label it as uncompleted
             await github.rest.issues.update({
               owner: context.repo.owner,
               repo: context.repo.repo,

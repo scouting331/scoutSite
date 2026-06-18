@@ -9,7 +9,7 @@
  */
 
 import React from "react";
-import clsx from "clsx";
+import clsx from "clsx";                                    // Utility engine for conditionally joining dynamic strings and CSS classes together
 
 /**
  * Renders a standard layout grid column container.
@@ -23,8 +23,9 @@ import clsx from "clsx";
  */
 export default function Column({ children, className, style }) {
   return (
+    // Combines the base structural 'col' styling rule with custom runtime classes passed via props
     <div className={clsx("col", className)} style={style}>
-      {children}
+      {children}                                            {/* Injects child components or text nodes into the rendered column framework */}
     </div>
   );
 }

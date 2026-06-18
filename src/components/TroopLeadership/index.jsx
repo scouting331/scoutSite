@@ -9,7 +9,7 @@
  * @requires ./styles.module.css
  */
 import React from 'react';
-import styles from './styles.module.css';
+import styles from './styles.module.css';                  // Scoped CSS Modules stylesheet managing grid properties, highlights, and fallback filters
 
 /**
  * Structural definition representing data shapes for individual youth Scouts.
@@ -51,14 +51,17 @@ import styles from './styles.module.css';
  */
 export const RoleCard = ({ title, name, description, img, mentoredBy }) => {
   let rawNameString = "";
+  
+  // Normalizes dynamic input typing variations down into a standard raw lookup text string
   if (typeof name === 'string') {
     rawNameString = name;
   } else if (typeof name === 'object' && name !== null && typeof name.name === 'string') {
     rawNameString = name.name;
   }
 
-  // Sanitized fallback to catch blank objects, empty strings, and empty arrays
+  // Sanitized safety gates to flag missing names, empty listings arrays, or structural placeholder objects
   const hasNoName = !name || rawNameString.trim() === "( Scout)" || (Array.isArray(name) && name.length === 0);
+  // Evaluates state check flags to instantly discover if the leadership position is unassigned (Open)
   const isOpen = hasNoName || rawNameString.toLowerCase() === "open position";
 
   /**
@@ -67,16 +70,20 @@ export const RoleCard = ({ title, name, description, img, mentoredBy }) => {
    * @returns {React.JSX.Element} A contextual metadata layer adjusting typography coloring parameters.
    */
   const renderNameContent = () => {
+    // Condition 1: Position is vacant -> Renders a clean styled warning notification block
     if (isOpen) {
       return <div className={`${styles.nameContainer} ${styles.nameContainerOpen}`}>Open Position</div>;
     }
 
+    // Condition 2: Multi-person position assignment input type -> Maps out an ordered roster list block
     if (Array.isArray(name)) {
       return (
         <div>
           {name.map((n, idx) => {
+            // Unpacks items checks to determine if listing array nodes are objects or raw strings
             let itemText = typeof n === 'object' ? n.name : n;
             
+            // Evaluates youth properties to append rank tags (e.g., "(Eagle Scout)") while avoiding "(Scout Scout)" redundancy
             let rankText = '';
             if (typeof n === 'object' && n.rank) {
               rankText = n.rank === 'Scout' ? ' (Scout)' : ` (${n.rank} Scout)`;
@@ -92,6 +99,7 @@ export const RoleCard = ({ title, name, description, img, mentoredBy }) => {
       );
     }
 
+    // Condition 3: Single assignment structure wrapped explicitly within a ScoutObject mapping layout
     if (typeof name === 'object' && name !== null) {
       let rankText = '';
       if (name.rank) {
@@ -100,21 +108,26 @@ export const RoleCard = ({ title, name, description, img, mentoredBy }) => {
       return <div className={styles.nameContainer}>{name.name}{rankText}</div>;
     }
 
+    // Condition 4: Basic string fallback option for standard adult or singular text profiles
     return <div className={styles.nameContainer}>{name}</div>;
   };
 
 
   return (
+    // Dynamic class assignment that shifts layout opacity metrics if isOpen evaluates to a true condition flag
     <div className={`${styles.roleCard} ${isOpen ? styles.roleCardOpen : ''}`}>
+      {/* Structural profile patch illustration or user placeholder portrait graphic */}
       <img 
         src={img} 
         alt={title} 
         className={`${styles.cardImg} ${isOpen ? styles.cardImgOpen : ''}`} 
       />
+      {/* Information text layout compartment box container */}
       <div className={styles.cardContent}>
         <h4 className={styles.titleText}>{title}</h4>
-        {renderNameContent()}
+        {renderNameContent()}                             {/* Dynamically computes name layout text structures via helper loops */}
         <p className={styles.descText}>{description}</p>
+        {/* Conditional rendering block overlaying youth leadership-to-adult mentoring tracking trails */}
         {mentoredBy && (
           <p className={styles.mentorSection}>
             🤝 <strong>Mentored by:</strong> {mentoredBy}
@@ -135,6 +148,7 @@ export const RoleCard = ({ title, name, description, img, mentoredBy }) => {
  * @returns {React.JSX.Element} A layout grid container enforcing flexible spacing guidelines.
  */
 export const Grid = ({ children }) => {
+  // Injects structural flexbox or responsive CSS grid layout styles across child cell bundles
   return <div className={styles.grid}>{children}</div>;
 };
 
@@ -149,32 +163,45 @@ export const Grid = ({ children }) => {
  * @returns {React.JSX.Element} A separate display cell visualizing localized patrol assets.
  */
 export const PatrolCard = ({ patrol }) => {
+  // Guard validation parsing checks scanning patrol leader records to flag empty vacancies
   const plOpen = !patrol.patrolLeader?.name || patrol.patrolLeader.name.trim() === "";
+  
+  // Computes formatting logic to build the Patrol Leader's youth rank string segment
   const plRank = patrol.patrolLeader?.rank 
     ? (patrol.patrolLeader.rank === 'Scout' ? ' (Scout)' : ` (${patrol.patrolLeader.rank} Scout)`)
     : '';
+    
+  // Computes formatting logic to build the Troop Guide / Youth Mentor rank string segment
   const youthMentorRank = patrol.patrolYouthMentor?.rank 
     ? (patrol.patrolYouthMentor.rank === 'Scout' ? ' (Scout)' : ` (${patrol.patrolYouthMentor.rank} Scout)`)
     : '';
   
   return (
     <div className={styles.patrolCard}>
+      {/* Patrol patch asset graphic (e.g., Fox, Eagle, or Wolf icon patch) */}
       <img 
         src={patrol.img} 
         alt={`${patrol.patrolName} Emblem`} 
         className={styles.patrolBadge} 
       />
+      {/* Inner profile text tracking compartment container wrapper */}
       <div className={styles.cardContent}>
         <h4 className={styles.patrolHeader}>{patrol.patrolName} Patrol</h4>
+        
+        {/* Patrol Leader Display Field: Dynamic text switch highlighting open vacancies in red */}
         <p className={styles.patrolMetaText}>
           <strong>Patrol Leader:</strong>{' '}
           <span className={plOpen ? styles.openHighlight : styles.filledText}>
             {plOpen ? "Open Position" : `${patrol.patrolLeader.name}${plRank}`}
           </span>
         </p>
+        
+        {/* Youth Mentor Display Field: Lists Assigned Troop Guide or Senior Youth Advisor */}
         <p className={styles.patrolMetaText}>
           <strong>Youth Mentor:</strong> {patrol.patrolYouthMentor?.name || "None"}{youthMentorRank}
         </p>
+        
+        {/* Adult Mentor Display Field: Lists Assigned Assistant Scoutmaster or Patrol Counselor */}
         <p className={styles.patrolMetaTextLast}>
           <strong>Adult Mentor:</strong> {patrol.patrolAdultMentor?.name || "None"}
         </p>

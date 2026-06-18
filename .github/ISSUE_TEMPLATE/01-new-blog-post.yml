@@ -1,11 +1,21 @@
-name: New Blog Post
-description: "Add a new post to the blog"
-labels: ["blog"]
-title: "[New Blog Post]"
-body:
-  - type: markdown
-    attributes:
-      value: |
+# ==============================================================================
+# GitHub Issue Form Template Configuration
+# This file defines a structured form for submitting new blog posts.
+# ==============================================================================
+
+# Core metadata for the GitHub Issue Form template
+name: New Blog Post                    # Name of the template displayed in the GitHub UI
+description: "Add a new post to the blog" # Subtext explaining the purpose of this form
+labels: ["blog"]                       # Automatically applies this label to the created issue
+title: "[New Blog Post]"               # Pre-fills the issue title with this prefix
+body:                                  # Begins the list of form UI components/fields
+
+  # ----------------------------------------------------------------------------
+  # FIELD 1: Introductory Instructions (Markdown Notice)
+  # ----------------------------------------------------------------------------
+  - type: markdown                     # Static text block using Markdown formatting
+    attributes:                        # Map of properties for this markdown block
+      value: |                         # Literal block scalar to preserve line breaks
         **The title above is just for internal use. Please don't change it**
 
         # Creating new blog post
@@ -13,98 +23,131 @@ body:
         Fill out this form and click "Create" below to submit a new blog post.
         After submitting your post, it will be reviewed by the webmaster before
         being posted to the website.
-  - type: input
-    id: title
-    attributes:
-      label: "Blog Title"
-      description: |
+
+  # ----------------------------------------------------------------------------
+  # FIELD 2: Blog Post Title Input
+  # ----------------------------------------------------------------------------
+  - type: input                        # Single-line text input field
+    id: title                          # Unique identifier used by automated scripts
+    attributes:                        # Map of properties for this text input
+      label: "Blog Title"              # Heading text displayed above the text box
+      description: |                   # Subtext providing user instructions
         Title for your post
 
         This should include the campout/adventure/event if thats what this post
         is about!
-      placeholder: "👉 REPLACE WITH YOUR TITLE 👈"
-    validations:
-      required: true
-  - type: input
-    id: date
-    attributes:
-      label: "Post Date"
-      description: |
+      placeholder: "👉 REPLACE WITH YOUR TITLE 👈" # Temporary ghost text inside the empty box
+    validations:                       # Section for field constraints
+      required: true                   # User must fill this out to submit the form
+
+  # ----------------------------------------------------------------------------
+  # FIELD 3: Publication Date Input
+  # ----------------------------------------------------------------------------
+  - type: input                        # Single-line text input field
+    id: date                           # Unique identifier for the date property
+    attributes:                        # Map of properties for this text input
+      label: "Post Date"               # Heading text displayed above the text box
+      description: |                   # Instruction subtext
         Date for your blog post
 
         If this is left empty, today's date will be used.
-      placeholder: YYYY-MM-DD
-    validations:
-      required: false
-  - type: dropdown
-    id: authors
-    attributes:
-      label: "Authors"
-      description: "Select author(s) of this post"
-      multiple: true
-      options:
+      placeholder: YYYY-MM-DD          # Example format text shown inside the empty field
+    validations:                       # Section for field constraints
+      required: false                  # Makes this an optional field for the user
+
+  # ----------------------------------------------------------------------------
+  # FIELD 4: Author Selection Dropdown
+  # ----------------------------------------------------------------------------
+  - type: dropdown                     # Selectable list component
+    id: authors                        # Unique identifier for the authors list
+    attributes:                        # Map of properties for this dropdown
+      label: "Authors"                 # Heading text displayed above the dropdown
+      description: "Select author(s) of this post" # Instruction subtext
+      multiple: true                   # Allows users to choose more than one option
+      options:                         # List of selectable choices
+        # NOTE: Do not change the line below. It is used by our GitHub Action.
         # AUTHOR_START
         - Chris Koczan
         - Benjamin Shover
         # AUTHOR_END
-    validations:
-      required: true
-  - type: markdown
-    attributes:
-      value: |
+    validations:                       # Section for field constraints
+      required: true                   # User must choose at least one author
+
+  # ----------------------------------------------------------------------------
+  # FIELD 5: Missing Author Instructions (Markdown Link)
+  # ----------------------------------------------------------------------------
+  - type: markdown                     # Static text block using Markdown formatting
+    attributes:                        # Map of properties for this markdown block
+      value: |                         # Text layout block with a link to add new authors
         If your name is not in the list of authors, please submit a request to
         add your name to the list of authors here:
 
         [New Author Request](https://github.com/scouting331/scoutSite/issues/new?template=03-new-blog-author.yml)
-  - type: dropdown
-    id: tags
-    attributes:
-      label: "Unit"
-      description: |
+
+  # ----------------------------------------------------------------------------
+  # FIELD 6: Unit / Tag Dropdown Selection
+  # ----------------------------------------------------------------------------
+  - type: dropdown                     # Selectable list component
+    id: tags                           # Unique identifier (maps to post categories or tags)
+    attributes:                        # Map of properties for this dropdown
+      label: "Unit"                    # Heading text displayed above the dropdown
+      description: |                   # Instruction subtext
         Select the unit(s) to associate this post with.
 
         Multiple units may be selected.
-      multiple: true
-      options:
+      multiple: true                   # Allows selection of multiple scouting units
+      options:                         # List of available scouting units
         - Troop 303
         - Troop 331
         - Crew 303
         - Pack 303
-    validations:
-      required: true
-  - type: upload
-    id: cover-photo
-    attributes:
-      label: "Cover Photo"
-      description: |
+    validations:                       # Section for field constraints
+      required: true                   # User must select at least one unit
+
+  # ----------------------------------------------------------------------------
+  # FIELD 7: Cover Photo File Attachment
+  # ----------------------------------------------------------------------------
+  - type: upload                       # File attachment component
+    id: cover-photo                    # Unique identifier for the cover photo asset
+    attributes:                        # Map of properties for this upload field
+      label: "Cover Photo"             # Heading text displayed above the dropzone
+      description: |                   # Subtext containing processing warnings
         Photo shown at top of your blog post and on the homepage card
 
         **NOTE**: There is no way to limit the number of files in this space. Please
         only upload 1 photo. If multiple photos are uploaded, the script will
         simply choose one photo and discard the rest.
-    validations:
-      required: false
-      accept: ".png, .jpg, .jpeg, .gif, .svg, .webp"
-  - type: upload
-    id: photo-album
-    attributes:
-      label: "Photo Album"
-      description: |
+    validations:                       # Section for file upload constraints
+      required: false                  # Cover photo is not mandatory to submit
+      accept: ".png, .jpg, .jpeg, .gif, .svg, .webp" # Allowed image extensions
+
+  # ----------------------------------------------------------------------------
+  # FIELD 8: Photo Album File Attachment List
+  # ----------------------------------------------------------------------------
+  - type: upload                       # File attachment component
+    id: photo-album                    # Unique identifier for the gallery asset batch
+    attributes:                        # Map of properties for this upload field
+      label: "Photo Album"             # Heading text displayed above the dropzone
+      description: |                   # Subtext containing file size limits
         If you want to include a photo album upload all of the photos you want
         included here.
         
         **NOTE**: If the file is too big (>25 Mb), the photo will need to be resized
         before being uploaded.
-    validations:
-      required: false
-      accept: ".png, .jpg, .jpeg, .gif, .svg, .webp"
-  - type: textarea
-    id: blog-content
-    attributes:
-      label: "Blog Text"
-      description: |
+    validations:                       # Section for file upload constraints
+      required: false                  # Photo gallery is not mandatory to submit
+      accept: ".png, .jpg, .jpeg, .gif, .svg, .webp" # Allowed image extensions
+
+  # ----------------------------------------------------------------------------
+  # FIELD 9: Main Body Content Textarea
+  # ----------------------------------------------------------------------------
+  - type: textarea                     # Large multi-line text input block
+    id: blog-content                   # Unique identifier for the markdown body text
+    attributes:                        # Map of properties for this textarea
+      label: "Blog Text"               # Heading text displayed above the textarea
+      description: |                   # Instruction subtext
         Write your blog post here!
-      placeholder: |
+      placeholder: |                   # Boilerplate template text pre-filled inside the box
         <!-- 💡 SCOUT TIP: Write a catchy 1-2 sentence introduction here! -->
 
         ## What We Did
@@ -119,9 +162,13 @@ body:
         the gear or recipes we used!
         
         :::
-    validations:
-      required: true
-  - type: markdown
-    attributes:
-      value: |
-        **Please don't edit any of the other options!**
+    validations:                       # Section for field constraints
+      required: true                   # User must enter text content to submit
+
+    # ----------------------------------------------------------------------------
+    # FIELD 10: Closing Instructions (Markdown Footer)
+    # ----------------------------------------------------------------------------
+  - type: markdown                     # Static text block using Markdown formatting
+    attributes:                        # Map of properties for this markdown block
+    value: |                           # Final warning text for form submitters
+      **Please don't edit any of the other options!**

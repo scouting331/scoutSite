@@ -1,87 +1,104 @@
+/* ==============================================================================
+   CSS Module Stylesheet: Leadership & Patrol Roster Cards
+   Configures a fluid, responsive auto-fitting grid system using custom brand
+   theming color tokens for text headers, profile images, and vacant roles.
+   ============================================================================== */
+
 /* Card Container Grid Layout */
 .grid {
   display: grid;
+  /* Automatically generates columns that wrap fluidly down to 320px minimum widths, stretching to fill available viewport rows */
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
+  gap: 20px;                               /* Consistent channel margins dividing neighboring cell blocks */
   margin-top: 16px;
   margin-bottom: 32px;
 }
 
-/* Base Role Card Layout */
+/* Base Role Card Layout Panel */
 .roleCard {
-  background-color: var(--scouting-america-light-tan);
-  border: 1px solid var(--scouting-america-dark-tan);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: var(--global-box-shadow);
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: var(--scouting-america-light-tan); /* Soft thematic sand background tone */
+  border: 1px solid var(--scouting-america-dark-tan); /* Thin framing outline boundary stroke */
+  border-radius: 12px;                     /* Modern curved panel corner profile geometry */
+  padding: 20px;                           /* Uniform layout cushions separating contents from card frame walls */
+  box-shadow: var(--global-box-shadow);    /* Injects smooth site-wide elevation depth casting drop-shadow values */
+  display: flex;                           /* Establishes dynamic Flexbox rows to position profile pictures beside text logs */
+  gap: 16px;                               /* Air gap margin spacing separating the image from the text box block */
+  align-items: flex-start;                 /* Vertical alignment lock keeping child elements flush with the card roof line */
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Fluid hardware-accelerated tracking timings for layout shifts */
 }
 
 /* Open Position State Modifier */
 .roleCardOpen {
-  background-color: var(--scouting-america-tan);
-  border: 1px dashed var(--scouting-america-dark-tan);
+  background-color: var(--scouting-america-tan); /* Shifts backing to a deeper neutral shade to emphasize vacancy */
+  border: 1px dashed var(--scouting-america-dark-tan); /* Transitions solid line outlines to an explicit dashed pattern style */
 }
 
 /* User & Profile Image Styles */
 .cardImg {
-  width: 64px;
+  width: 64px;                             /* Strict square aspect bounding box framework dimensions */
   height: 64px;
-  border-radius: 50%;
-  object-fit: cover;
+  border-radius: 50%;                      /* Transforms source square graphics into clean circular profile portrait views */
+  object-fit: cover;                       /* Centers and masks raw files safely to protect human body aspect ratios */
   background-color: var(--scouting-america-light-tan);
-  border: 2px solid var(--scouting-america-dark-tan);
-  flex-shrink: 0;
+  border: 2px solid var(--scouting-america-dark-tan); /* Strong framing border stroke encapsulating the portrait circle */
+  flex-shrink: 0;                          /* Layout lock: prevents horizontal text layout pressures from squishing the portrait */
 }
 
+/* Open Position Profile Picture Modifier */
 .cardImgOpen {
-  border: 2px dashed var(--scouting-america-dark-tan);
+  border: 2px dashed var(--scouting-america-dark-tan); /* Convers user placeholder boundaries to dashed paths matching the open state */
 }
 
 /* Text & Typography Layout Elements */
 .cardContent {
-  flex-grow: 1;
+  flex-grow: 1;                            /* Directs the text box compartment to swell outward to absorb all remaining row width spaces */
 }
 
+/* Position title heading string configurations */
 .titleText {
-  margin: 0 0 4px 0;
+  margin: 0 0 4px 0;                       /* Clears vertical layout padding fields to keep line heights compact */
   color: var(--scouting-america-dark-gray);
   font-size: 1.15rem;
-  font-weight: 700;
-  line-height: 1.3;
+  font-weight: 700;                        /* Heavy title typography formatting parameter */
+  line-height: 1.3;                        /* Closes leading gaps preventing long headers from drifting across text blocks */
 }
 
+/* Roster entity name text layout block line elements */
 .nameContainer {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--scouting-america-blue);
+  color: var(--scouting-america-blue);     # Deep high-contrast theme blue color tag indicating an active profile name assignment
   margin: 0 0 2px 0;
 }
 
+/* Open Position Name Text Modifier */
 .nameContainerOpen {
-  color: var(--scouting-america-red);
+  color: var(--scouting-america-red);      # Shifts typography colors to a prominent attention-grabbing warning red token
 }
 
+/* Role abstract text description paragraph block layout */
 .descText {
   font-size: 0.875rem;
   color: var(--scouting-america-dark-gray);
-  margin: 0 0 12px 0;
-  line-height: 1.4;
+  margin: 0 0 12px 0;                      /* Bottom cushion isolating text summaries away from mentorship metadata tags */
+  line-height: 1.4;                        /* Optimizes sentence line heights to enhance overall paragraph readability values */
 }
 
+/* Footnote segment outlining mentor relationships */
 .mentorSection {
   font-size: 0.8rem;
   color: var(--scouting-america-dark-gray);
   margin: 0;
-  border-top: 1px dashed var(--scouting-america-gray);
-  padding-top: 8px;
-  font-style: italic;
+  border-top: 1px dashed var(--scouting-america-gray); # Fine divider separating main summary paragraphs from mentor rows
+  padding-top: 8px;                        /* Spacing buffer pushing text below the dashed line axis */
+  font-style: italic;                      /* Slanted editorial character typography configuration */
 }
 
-/* Specific Patrol Card Structural Variant */
+/* ==============================================================================
+   Specific Patrol Card Structural Variant
+   ============================================================================== */
+
+/* Patrol panel card component container block layout */
 .patrolCard {
   border: 1px solid var(--scouting-america-dark-tan);
   border-radius: 12px;
@@ -93,39 +110,45 @@
   align-items: flex-start;
 }
 
+/* Small patch emblem circular element frame formatting */
 .patrolBadge {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: cover;                       /* Scale locks the emblem patch graphics without clipping critical shape edges */
   background-color: var(--scouting-america-light-tan);
   border: 1px solid var(--scouting-america-dark-tan);
-  padding: 1px;
+  padding: 1px;                            /* Thin inner breathing track between outline borders and patch contents */
   flex-shrink: 0;
 }
 
+/* Section title layout for specific sub-unit patrol groups */
 .patrolHeader {
   margin: 0 0 12px 0;
   color: var(--scouting-america-dark-gray);
-  border-bottom: 1px dashed var(--scouting-america-gray);
+  border-bottom: 1px dashed var(--scouting-america-gray); /* Floor baseline separator strip splitting headers from crew names */
   padding-bottom: 4px;
 }
 
+/* Unified baseline properties handling metadata line outputs inside the card */
 .patrolMetaText {
-  margin: 0 0 6px 0;
+  margin: 0 0 6px 0;                       /* Generates short uniform steps to segment name variables lines cleanly */
   font-size: 0.9rem;
 }
 
+/* Terminal meta row entry parameter adjustments to drop trailing space boundaries */
 .patrolMetaTextLast {
   margin: 0;
   font-size: 0.9rem;
 }
 
+/* Target highlight override alerting users to vacant patrol leadership gaps */
 .openHighlight {
-  color: var(--scouting-america-red);
-  font-weight: bold;
+  color: var(--scouting-america-red);       /* Assigns red font color indicators to vacant labels */
+  font-weight: bold;                       /* Enhances character stroke visibility weights */
 }
 
+/* Default styling assignment for standard assigned roster entities strings */
 .filledText {
-  color: var(--scouting-america-dark-gray);
+  color: var(--scouting-america-dark-gray); /* Blends active records to match standard body text outputs smoothly */
 }

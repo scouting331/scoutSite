@@ -1,1 +1,108 @@
-.features{padding-bottom:10px}.imageContainer{position:relative;display:inline-block;overflow:hidden;border-radius:8px;background-color:var(--ifm-color-black);height:200px;width:200px}.featureJpg{height:100%;width:100%;object-fit:cover;transition:transform .4s,opacity .4s;display:block}.overlayContent{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:15px;z-index:2}.overlayDescription,.overlayHeading{color:var(--ifm-color-white);text-align:center;z-index:3;margin:0;position:absolute}.overlayHeading{bottom:5px;left:0;right:0;text-shadow:2px 2px 4px rgba(0,0,0,.8);transition:bottom .4s,transform .4s}.overlayDescription{top:50%;left:50%;transform:translate(-50%,-50%);width:90%;opacity:0;transition:opacity .4s;font-size:.85rem;line-height:1.4}.imageContainer:hover .featureJpg{transform:scale(1.1);opacity:.5}.imageContainer:hover .overlayHeading{bottom:75%}.imageContainer:hover .overlayDescription{opacity:1}.imageContainer::after{content:'';position:absolute;inset:0;background-color:rgba(0,0,0,.2);transition:background-color .4s;z-index:1}.imageContainer:hover::after{background-color:rgba(0,0,0,.6)}
+/* ==============================================================================
+   CSS Module Stylesheet: Scouting Unit Grid Feature Cards
+   Handles responsive spacing, image masking layers, and hover slide-up motions.
+   ============================================================================== */
+
+/* Core workspace block wrapping the entire features collection section layout */
+.features {
+  padding-bottom: 10px;                   /* Subtle clearance buffer below the unit section canvas block */
+}
+
+/* Structural bounding anchor cell wrapping the image graphics and content overlays */
+.imageContainer {
+  position: relative;                     /* Establishes absolute positioning boundary context for child content overlays */
+  display: inline-block;                  /* Shrinks bounds tightly around content dimensions preventing width leakage loops */
+  overflow: hidden;                       /* Clips background photos and scaling animations safely within the border radius */
+  border-radius: 8px;                     /* Modern rounded corner radius geometry matching global card layouts */
+  background-color: var(--ifm-color-black); /* Enforces dark background underlays to boost image opacity blend styles */
+  height: 200px;                          /* Sets hard locked pixel dimensions creating square card geometry grids */
+  width: 200px;
+}
+
+/* Background scouting unit feature presentation card illustration properties */
+.featureJpg {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;                      /* Scales and center-crops photo frames safely without distorting core aspect ratios */
+  transition: transform .4s, opacity .4s; /* Synchronized hardware-accelerated transition curves handling user animations */
+  display: block;                         /* Suppresses inline baseline tracking spaces underneath the image container canvas */
+}
+
+/* Absolute layout container block overlaying typography directly on top of the image canvas */
+.overlayContent {
+  position: absolute;                     /* Unlocks placement tracking values independent of standard document flow schemas */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;                          /* Enforces Flexbox layouts to balance layout layers along centralized paths */
+  flex-direction: column;
+  justify-content: center;                /* Groups layout layers along the primary vertical directory stacking axis */
+  align-items: center;                    /* Centers layout layers along horizontal screen space alignment coordinates */
+  padding: 15px;                          /* Internal boundary spacing buffer preventing typography clips on small screens */
+  z-index: 2;                             /* Lifts core layout layer up above background photos and darkening overlay panels */
+}
+
+/* Shared typography alignment parameters targeting unit headings and descriptions simultaneously */
+.overlayDescription,
+.overlayHeading {
+  color: var(--ifm-color-white);           /* Enforces a pure high-contrast text color palette rule across layout spaces */
+  text-align: center;                     /* Centers multi-line text blocks across screen layouts */
+  z-index: 3;                             /* Keeps text properties explicitly stacked over dynamic asset overlay surfaces */
+  margin: 0;                              /* Clears default paragraph block text boundaries to maintain clean calculation nodes */
+  position: absolute;                     /* Allows individual elements to slide independently during runtime interactions */
+}
+
+/* Unit identity tag heading configuration layout block parameters */
+.overlayHeading {
+  bottom: 5px;                            /* Initial resting anchor placement pinned right against the card baseline edge floor */
+  left: 0;
+  right: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, .8); /* High-density dark text dropshadow ensuring text visibility on bright image surfaces */
+  transition: bottom .4s, transform .4s;  /* Fluid transformation timers monitoring upward positioning drift speeds */
+}
+
+/* Narrative description summary paragraph details typography element block */
+.overlayDescription {
+  top: 50%;                               /* Centers block vertical alignments inside the container grid space */
+  left: 50%;
+  transform: translate(-50%, -50%);       /* Employs precise offset translations to achieve true pixel alignment balance */
+  width: 90%;                             /* Retains thin margins along left/right coordinate walls to protect layout padding */
+  opacity: 0;                             /* Defaults visibility to zero to keep text hidden on initial load states */
+  transition: opacity .4s;                /* Fades paragraph lines in smoothly when interactive hover events occur */
+  font-size: .85rem;
+  line-height: 1.4;                       /* Extends spatial row spacing to optimize small-text readability scores */
+}
+
+/* --- INTERACTIVE HOVER MOTION TRIGGERS --- */
+
+/* Zooms background photos inward and drops opacity values to reveal dark underlays */
+.imageContainer:hover .featureJpg {
+  transform: scale(1.1);                  /* Magnifies illustration scaling dimensions outwards by exactly 10% */
+  opacity: .5;                            /* Dims image density values by 50% to optimize dark backdrop contrast levels */
+}
+
+/* Slides unit title headings cleanly upward from the baseline footer track to make room for descriptions */
+.imageContainer:hover .overlayHeading {
+  bottom: 75%;                            /* Pulls heading title string lines up into the top vertical quadrant block */
+}
+
+/* Transitions summary descriptions from completely hidden fields into fully legible content layouts */
+.imageContainer:hover .overlayDescription {
+  opacity: 1;                             /* Sets text opacity values to absolute visibility standard rules */
+}
+
+/* Dynamic CSS pseudo-element dark glass panel overlay covering background elements */
+.imageContainer::after {
+  content: '';                            /* Injects an empty layout canvas layer block into the document node list */
+  position: absolute;
+  inset: 0;                               /* Sets full-coverage constraints pinning top, bottom, left, and right coordinates to zero */
+  background-color: rgba(0, 0, 0, .2);    /* Soft subtle darkening shading layer to gently dim raw illustration file colors */
+  transition: background-color .4s;       /* Handles smooth color transition pacing during interactions */
+  z-index: 1;                             /* Layered explicitly underneath typography objects to protect visibility tracks */
+}
+
+/* Deepens dark backdrop glass values when users target the card workspace to enforce absolute text readability */
+.imageContainer:hover::after {
+  background-color: rgba(0, 0, 0, .6);    /* Scales mask opacity up to a deep 60% tint layout overlay rule */
+}
