@@ -38,16 +38,16 @@ function Map() {
   // Configures sizing matrices for the dynamic Troop map marker vector pin graphics
   const troopIcon = new L.Icon({
     iconUrl: troop_icon,
-    iconSize:,      // Width and height bounding dimensions of the target icon file in pixels
-    iconAnchor:,    // The specific pixel location node [X, Y] aligned directly over the geographic coordinate point
+    iconSize: [46, 70],      // Width and height bounding dimensions of the target icon file in pixels
+    iconAnchor: [23, 70],    // The specific pixel location node [X, Y] aligned directly over the geographic coordinate point
     popupAnchor: [0, -70],   // Coordinate offset calculation determining where information cards pop open relative to the anchor
   });
 
   // Configures sizing matrices for the dynamic Cub Scout map marker vector pin graphics
   const cubIcon = new L.Icon({
     iconUrl: cub_icon,
-    iconSize:, 
-    iconAnchor:, 
+    iconSize: [46, 70], 
+    iconAnchor: [23, 70], 
     popupAnchor: [0, -70], 
   });
 

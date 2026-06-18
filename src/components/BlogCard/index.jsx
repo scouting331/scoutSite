@@ -112,8 +112,7 @@ function BlogCard({ permalink, title, date, authors, tags }) {
               {authors.map((author, idx) => (
                 <img 
                   key={idx}
-                  {/* Checks for customized user profiles, deploying an internal site favicon fallback if none exist */}
-                  src={author.imageURL || 'img/logos/favicon.png'} 
+                  src={author.imageURL || 'img/logos/favicon.png'} // Checks for customized user profiles, deploying an internal site favicon fallback if none exist
                   alt={author.name} 
                   className={styles.authorAvatar}
                   title={author.name}                       // Native element hover tooltip string showing name metrics

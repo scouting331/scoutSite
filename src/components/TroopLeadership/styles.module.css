@@ -67,13 +67,13 @@
 .nameContainer {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--scouting-america-blue);     # Deep high-contrast theme blue color tag indicating an active profile name assignment
+  color: var(--scouting-america-blue);     /* Deep high-contrast theme blue color tag indicating an active profile name assignment */
   margin: 0 0 2px 0;
 }
 
 /* Open Position Name Text Modifier */
 .nameContainerOpen {
-  color: var(--scouting-america-red);      # Shifts typography colors to a prominent attention-grabbing warning red token
+  color: var(--scouting-america-red);      /* Shifts typography colors to a prominent attention-grabbing warning red token */
 }
 
 /* Role abstract text description paragraph block layout */
@@ -89,7 +89,7 @@
   font-size: 0.8rem;
   color: var(--scouting-america-dark-gray);
   margin: 0;
-  border-top: 1px dashed var(--scouting-america-gray); # Fine divider separating main summary paragraphs from mentor rows
+  border-top: 1px dashed var(--scouting-america-gray); /* Fine divider separating main summary paragraphs from mentor rows */
   padding-top: 8px;                        /* Spacing buffer pushing text below the dashed line axis */
   font-style: italic;                      /* Slanted editorial character typography configuration */
 }

@@ -310,7 +310,7 @@ const config = {
             },
             {
               html: `
-                {/* Clicking this automatically opens a pre-addressed email window on the user's phone or computer */}
+                <!-- Clicking this automatically opens a pre-addressed email window on the user's phone or computer -->
                 <a href="mailto:scoutingunits331@gmail.com?subject=Website%20Inquiry" style="font-style: normal" class="footer__link-item">
                   <div style="display: flex; align-items: flex-start; gap: 8px;">
                     <i class="fa-solid fa-at footer__link-logo" aria-hidden="true"></i>
