@@ -24,6 +24,14 @@
   ],
 
   // ===========================================================================
+  // GLOBAL PRODUCTION ENVIRONMENT SETTINGS
+  // ===========================================================================
+  "vars": {
+    // 🚀 FORCES THE ACCELERATED LIVE MAIN WEBSITE TO COMPILE ON NODE 24
+    "NODE_VERSION": "24"
+  },
+
+  // ===========================================================================
   // ENVIRONMENT OVERRIDES FOR SITES AND PREVIEWS
   // ===========================================================================
   "env": {
@@ -31,6 +39,9 @@
     // They modify our development pipeline so that testing builds compile much faster.
     "preview": {
       "vars": {
+        // 🚀 FORCES SCOUT DRAFT PREVIEW BUILD LINKS TO COMPILE ON NODE 24 TOO
+        "NODE_VERSION": "24",
+
         // Runs Docusaurus in raw developer compilation mode instead of heavy optimization mode
         "NODE_ENV": "development",       
         
