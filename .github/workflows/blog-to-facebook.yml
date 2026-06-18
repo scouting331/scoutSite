@@ -1,0 +1,55 @@
+name: Route Blog Posts to Facebook Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'blog/**'
+
+jobs:
+  facebook-routing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Parse Metadata via Python
+        id: blog_data
+        run: python .github/scripts/fb_router.py
+
+      - name: Set Facebook Credentials Dynamically
+        if: steps.blog_data.outputs.has_new_post == 'true'
+        id: set_tokens
+        run: |
+          TARGET="${{ steps.blog_data.outputs.target_page }}"
+          if [ "$TARGET" = "TECH" ]; then
+            echo "page_id=${{ secrets.FB_PAGE_ID_TECH }}" >> $GITHUB_OUTPUT
+            echo "access_token=${{ secrets.FB_ACCESS_TOKEN_TECH }}" >> $GITHUB_OUTPUT
+          elif [ "$TARGET" = "LIFESTYLE" ]; then
+            echo "page_id=${{ secrets.FB_PAGE_ID_LIFESTYLE }}" >> $GITHUB_OUTPUT
+            echo "access_token=${{ secrets.FB_ACCESS_TOKEN_LIFESTYLE }}" >> $GITHUB_OUTPUT
+          else
+            echo "page_id=${{ secrets.FB_PAGE_ID_DEFAULT }}" >> $GITHUB_OUTPUT
+            echo "access_token=${{ secrets.FB_ACCESS_TOKEN_DEFAULT }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send Link to Selected Facebook Page
+        if: steps.blog_data.outputs.has_new_post == 'true'
+        run: |
+          BLOG_URL="https://brownsburgscouts.org{{ steps.blog_data.outputs.slug }}"
+          MESSAGE="✍️ New Blog Post: ${{ steps.blog_data.outputs.title }}
+
+          Read the full article here: $BLOG_URL"
+          
+          curl -X POST "https://facebook.com{{ steps.set_tokens.outputs.page_id }}/feed" \
+            -d "message=$(echo "$MESSAGE")" \
+            -d "link=$BLOG_URL" \
+            -d "access_token=${{ steps.set_tokens.outputs.access_token }}"

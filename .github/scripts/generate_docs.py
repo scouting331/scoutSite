@@ -245,3 +245,6 @@ def main():
                 doc_file.write(doc_payload)
 
             print(f"[Pipeline Complete] Document successfully written to: {markdown_path}")
+
+if __name__ == "__main__":
+    main()

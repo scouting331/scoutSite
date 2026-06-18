@@ -1,0 +1,221 @@
+name: Content Management Automation
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  # WORKFLOW 1: Generate Blog Post from Issue
+  create-post:
+    if: contains(github.event.issue.labels.*.name, 'blog')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Parse Issue Form
+        id: parse
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: .github/ISSUE_TEMPLATE/01-new-blog-post.yml
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow python-dateutil
+
+      - name: Process Issue Data and Assets (Python Optimizer)
+        id: process
+        env:
+          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
+        run: |
+          python .github/scripts/generate_post.py
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          commit-message: "feat(blog): add new post from issue #${{ github.event.issue.number }}"
+          branch: "automation/issue-${{ github.event.issue.number }}-${{ env.BLOG_FILENAME }}"
+          title: "feat(blog): ${{ github.event.issue.title }}"
+          body: |
+            This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.
+            Closes #${{ github.event.issue.number }}
+          delete-branch: true
+          labels: |
+            blog
+
+      - name: Comment on Issue with PR Link
+        if: steps.cpr.outputs.pull-request-number != ''
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            🎉 Success! A staging branch has been created. 
+
+            Your blog post is ready for review here:👉 ${{ steps.cpr.outputs.pull-request-url }}
+
+  # WORKFLOW 2: Generate Document from Issue
+  create-doc:
+    if: contains(github.event.issue.labels.*.name, 'docs')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Parse Issue Form
+        id: parse
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: ./github/ISSUE_TEMPLATE/02-new-document.yml
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow
+
+      - name: Process Issue Data and Assets (Python Optimizer)
+        id: process
+        env:
+          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
+        run: |
+          python .github/scripts/generate_docs.py
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          commit-message: "feat(docs): add new doc from issue #${{ github.event.issue.number }}"
+          branch: "automation/issue-${{ github.event.issue.number }}-${{ env.DOC_FILENAME }}"
+          title: "feat(docs): ${{ github.event.issue.title }}"
+          body: |
+            This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.
+            Closes #${{ github.event.issue.number }}
+          delete-branch: true
+          labels: |
+            docs
+
+      - name: Comment on Issue with PR Link
+        if: steps.cpr.outputs.pull-request-number != ''
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            🎉 Success! A staging branch has been created. 
+
+            Your document is ready for review here:👉 ${{ steps.cpr.outputs.pull-request-url }}
+
+  # WORKFLOW 3: Process New Author Request
+  add-author-and-pr:
+    if: contains(github.event.issue.labels.*.name, 'new-author')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v6
+
+      - name: Generate Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Parse Issue Form
+        id: parse
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: .github/ISSUE_TEMPLATE/03-new-blog-author.yml
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow PyYAML python-dateutil
+
+      - name: Process Author and Update Files
+        id: process_files
+        env:
+          ISSUE_DATA: ${{ steps.parse.outputs.jsonString }}
+        run: |
+          python .github/scripts/add_author.py
+
+      - name: Create Pull Request
+        if: success()
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          commit-message: "feat: add new blog author via Issue #${{ github.event.issue.number }}"
+          title: "feat: add new author from Issue #${{ github.event.issue.number }}"
+          body: |
+            This PR automatically handles three tasks:
+            1. Downloads, optimizes, and names the avatar image matching the unique author slug.
+            2. Adds the new author data mapping properties into `blog/authors.yml`.
+            3. Re-generates and sorts the author dropdown options inside the issue templates.
+            Closes #${{ github.event.issue.number }}.
+            CODEOWNERS have been automatically assigned to review.
+          branch: "automation/issue-${{ github.event.issue.number }}"
+          delete-branch: true
+          labels: |
+            new-author
+
+      - name: Comment on Success
+        if: success()
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            Hi there! An automated Pull Request has been generated to add you to the blog authors file and update our submission dropdown tools. The project's CODEOWNERS have been notified to review and merge the changes. Once merged, your author profile and dropdown options will be active!
+
+      - name: Handle Duplicate / Failure
+        if: failure()
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = context.issue.number;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: "🛑 **Registration Error:** It looks like an author profile with this name already exists in `blog/authors.yml`. Duplicate entries are not allowed. This issue will now be closed automatically."
+            });
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              state: 'closed',
+              state_reason: 'not_planned'
+            });
