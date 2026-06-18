@@ -2,7 +2,7 @@
  * @file recent-blog-posts.js
  * @description A custom local Docusaurus plugin decorator that extends the core blog plugin.
  * Intercepts the build-time data lifecycle hook (`contentLoaded`), filters out unlisted posts, 
- * truncates the list to the 5 most recent records, and flushes them directly to a local JSON 
+ * truncates the list to the 4 most recent records, and flushes them directly to a local JSON 
  * schema file. This enables client-side components to safely load recent blog metadata without 
  * bundling massive layout trees.
  * 
