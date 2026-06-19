@@ -170,5 +170,5 @@ body:                                  # Begins the list of form UI components/f
     # ----------------------------------------------------------------------------
   - type: markdown                     # Static text block using Markdown formatting
     attributes:                        # Map of properties for this markdown block
-    value: |                           # Final warning text for form submitters
-      **Please don't edit any of the other options!**
+      value: |                           # Final warning text for form submitters
+        **Please don't edit any of the other options!**
