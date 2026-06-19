@@ -23,7 +23,7 @@ from PIL import Image, ImageOps
 
 # Constant definitions for project directories and structural files
 AUTHORS_FILE = 'blog/authors.yml'
-TEMPLATE_FILE = '.github/ISSUE_TEMPLATE/new-blog-post.yml'
+TEMPLATE_FILE = '.github/ISSUE_TEMPLATE/01-new-blog-post.yml'
 AUTHORS_IMG_DIR = 'static/img/blog/authors'
 
 def main():
