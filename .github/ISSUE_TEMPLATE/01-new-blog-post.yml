@@ -67,8 +67,9 @@ body:                                  # Begins the list of form UI components/f
       options:                         # List of selectable choices
         # NOTE: Do not change the line below. It is used by our GitHub Action.
         # AUTHOR_START
-        - Chris Koczan
         - Benjamin Shover
+        - Chris Koczan
+        - Jimmy B
         # AUTHOR_END
     validations:                       # Section for field constraints
       required: true                   # User must choose at least one author
