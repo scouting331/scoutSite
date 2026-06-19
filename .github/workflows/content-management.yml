@@ -100,7 +100,7 @@ jobs:                                  # Contains the operational pipelines/jobs
         id: parse
         uses: stefanbuck/github-issue-parser@v3
         with:
-          template-path: ./github/ISSUE_TEMPLATE/02-new-document.yml # Targeting the document form template
+          template-path: .github/ISSUE_TEMPLATE/02-new-document.yml # Targeting the document form template
 
       - name: Set up Python            # Step 4: Installs runtime environment for processing scripts
         uses: actions/setup-python@v6
