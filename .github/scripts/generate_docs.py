@@ -213,6 +213,10 @@ def main():
     # Regular expression capturing markdown image link variants, isolating raw matching pairs and clean URLs
     inline_matches = re.findall(r'!\[.*?\]\(((https?://[^\s\)]+))\)', doc_content)
 
+    # Fallback: if no markdown links found, look for plain URLs
+    if not inline_matches:
+        inline_matches = [(url, url) for url in re.findall(r'https?://[^\s\)]+', doc_content)]
+
     # Conditional workflow block executing download pipelines if inline graphic links were identified
     if inline_matches:
         tmp_inline_dir = "/tmp/raw_doc_inline"              # Defines isolated local runner workspace scratchpad buffer path
@@ -238,35 +242,35 @@ def main():
             except Exception as e:
                 print(f"Failed downloading inline image {clean_match_url}: {e}") # Non-blocking diagnostic tracker logging
 
-            # Optimize downloads: scales, hashes, saves optimized assets, and removes temporary items from scratch space
-            inline_map = optimize_convert_and_hash_images(tmp_inline_dir, static_folder, keep_original_names=False)
+        # Optimize downloads: scales, hashes, saves optimized assets, and removes temporary items from scratch space
+        inline_map = optimize_convert_and_hash_images(tmp_inline_dir, static_folder, keep_original_names=False)
 
-            # Swap out raw URLs inside text area with local static paths
-            # Step down through calculated mapping dictionary records to update text body markup variables
-            for orig_url, webp_filename in inline_map.items():
-                doc_content = doc_content.replace(orig_url, f"{web_prefix}/{webp_filename}")
-            
-            # --- BUILD FRONT MATTER AND WRITING THE MARKDOWN ---
-            markdown_path = f"{docs_directory}/{slug}.mdx"   # Defines ultimate destination path for the document
+        # Swap out raw URLs inside text area with local static paths
+        # Step down through calculated mapping dictionary records to update text body markup variables
+        for orig_url, webp_filename in inline_map.items():
+            doc_content = doc_content.replace(orig_url, f"{web_prefix}/{webp_filename}")
 
-            # Assemble metadata block required by Docusaurus
-            # Constructs a list array mapping standard key-value headers to fulfill Front Matter criteria
-            front_matter = [
-                "---",
-                f'title: "{safe_title}"',
-                f'description: "{safe_description}"',
-                "---",
-                "",
-            ]
+    # --- BUILD FRONT MATTER AND WRITING THE MARKDOWN ---
+    markdown_path = f"{docs_directory}/{slug}.mdx"   # Defines ultimate destination path for the document
 
-            # Merges compiled header metadata lists with modified markdown text blocks via joining newline strings
-            doc_payload = "\n".join(front_matter) + doc_content
+    # Assemble metadata block required by Docusaurus
+    # Constructs a list array mapping standard key-value headers to fulfill Front Matter criteria
+    front_matter = [
+        "---",
+        f'title: "{safe_title}"',
+        f'description: "{safe_description}"',
+        "---",
+        "",
+    ]
 
-            # Writes operational file contents back down to permanent project storage with universal UTF-8 file layouts
-            with open(markdown_path, "w", encoding="utf-8") as doc_file:
-                doc_file.write(doc_payload)
+    # Merges compiled header metadata lists with modified markdown text blocks via joining newline strings
+    doc_payload = "\n".join(front_matter) + doc_content
 
-            print(f"[Pipeline Complete] Document successfully written to: {markdown_path}")
+    # Writes operational file contents back down to permanent project storage with universal UTF-8 file layouts
+    with open(markdown_path, "w", encoding="utf-8") as doc_file:
+        doc_file.write(doc_payload)
+
+    print(f"[Pipeline Complete] Document successfully written to: {markdown_path}")
 
 if __name__ == "__main__":
     main()                                                  # Executes the core application script runtime routine

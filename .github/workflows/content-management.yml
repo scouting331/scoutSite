@@ -43,7 +43,7 @@ jobs:                                  # Contains the operational pipelines/jobs
       - name: Install Dependencies     # Step 5: Installs mandatory libraries for image/text handling
         run: |
           python -m pip install --upgrade pip
-          pip install Pillow python-dateutil
+          pip install -r requirements.txt
 
       - name: Process Issue Data and Assets (Python Optimizer) # Step 6: Executes data conversion script
         id: process
@@ -110,7 +110,7 @@ jobs:                                  # Contains the operational pipelines/jobs
       - name: Install Dependencies     # Step 5: Installs mandatory libraries for file handling
         run: |
           python -m pip install --upgrade pip
-          pip install Pillow
+          pip install -r requirements.txt
 
       - name: Process Issue Data and Assets (Python Optimizer) # Step 6: Executes file conversion script
         id: process
@@ -177,7 +177,7 @@ jobs:                                  # Contains the operational pipelines/jobs
       - name: Install Dependencies     # Step 5: Installs text/image optimization libraries
         run: |
           python -m pip install --upgrade pip
-          pip install Pillow PyYAML python-dateutil
+          pip install -r requirements.txt
 
       - name: Process Author and Update Files # Step 6: Appends dataset and edits dropdown lists
         id: process_files
