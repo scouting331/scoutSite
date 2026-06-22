@@ -68,31 +68,34 @@ const units = [
  */
 function UnitCard({ title, age, link, bgColor, buttonColor, badgeBg, imgSrc, altText}) {
     return (
+        // Binds inline styling configurations to shape the core layout card footprint layout
         <div style={{
             background: bgColor,
             color: 'var(--scouting-america-white)',
             padding: '2rem',
             borderRadius: '12px',
             boxShadow: 'var(--global-box-shadow)',
-            flex: '1 1 280px',
-            maxWidth: '330px',
+            flex: '1 1 280px',              // Sets responsive shrink parameters with an explicit 280px fluid fallback base
+            maxWidth: '330px',              // Strict upper limit boundary frame preventing cards from expanding abnormally on ultra-wide viewports
             display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
+            flexDirection: 'column',        // Stacks internal properties vertically into top-to-bottom layouts
+            justifyContent: 'space-between', // Pushes call-to-action links to the card floor line uniformly
             alignItems: 'center',
             textAlign: 'center'
         }}>
+            {/* Top Container grouping branding elements together */}
             <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <img src={imgSrc} alt={altText} style={{ width: '55px', height: '55px', objectFit: 'contain', marginBottom: '1rem' }} />
                 <h3 style={{ color: 'var(--scouting-america-white)', fontSize: '1.35rem', margin: '0 0 0.4rem 0', fontWeight: '700', letterSpacing: '-0.025em' }}>
                     {title}
                 </h3>
+                {/* Visual badge element highlighting target age brackets and grade levels */}
                 <span style={{ 
                     display: 'inline-block', 
                     backgroundColor: badgeBg, 
                     color: 'var(--scouting-america-white)',
                     padding: '0.25rem 0.75rem', 
-                    borderRadius: '9999px', 
+                    borderRadius: '9999px', // Standard infinite trick rendering crisp capsule pill edge boundaries
                     fontSize: '0.8rem', 
                     fontWeight: '600', 
                     marginBottom: '1.5rem',
@@ -103,10 +106,11 @@ function UnitCard({ title, age, link, bgColor, buttonColor, badgeBg, imgSrc, alt
                 </span>
             </div>
             
+            {/* External link registration anchor button */}
             <a 
                 href={link}
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_blank"             // Securely spawns target link windows within unlinked clean tabs
+                rel="noopener noreferrer"   // Eliminates cross-origin resource leakage footprints entirely
                 style={{
                     width: '100%',
                     display: 'block',
@@ -118,17 +122,19 @@ function UnitCard({ title, age, link, bgColor, buttonColor, badgeBg, imgSrc, alt
                     textDecoration: 'none',
                     fontSize: '0.95rem',
                     boxShadow: 'var(--global-box-shadow)',
-                    transition: 'transform 0.15s ease, filter 0.15s ease',
+                    transition: 'transform 0.15s ease, filter 0.15s ease', // Hardware accelerated runtime smoothing settings
                 }}
+                // Custom event listeners handling interactive micro-animations on mouse interactions
                 onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.filter = 'brightness(1.08)';
+                    e.currentTarget.style.transform = 'translateY(-2px)'; // Gives card button a floating lift look
+                    e.currentTarget.style.filter = 'brightness(1.08)';  // Gently brightens button color highlights
                 }}
                 onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.filter = 'brightness(1)';
+                    e.currentTarget.style.transform = 'translateY(0)';   // Restores default translation points
+                    e.currentTarget.style.filter = 'brightness(1)';     // Re-establishes base canvas brightness limits
                 }}
             >
+                {/* Programmatic string parsing splitting text strings to slice unit names dynamically */}
                 Join {title.includes('Pack') ? 'Pack 303' : title.split(' ').slice(1).join(' ')}
             </a>
         </div>
@@ -145,44 +151,54 @@ function UnitCard({ title, age, link, bgColor, buttonColor, badgeBg, imgSrc, alt
  */
 export default function SignUpCards({ youtubeId }) {
     return (
-        
+        // Main centering section component limits max workspace boundary width to a clean 1100px grid path
         <div style={{ margin: '2.5rem auto', maxWidth: '1100px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-            {/* 1. Video Player Container */}
+            
+            {/* 1. Video Player Framing Canvas Container */}
             <div style={{
                 width: '100%',
                 maxWidth: '850px',
                 margin: '0 auto 2.5rem auto',
                 borderRadius: '16px',
-                overflow: 'hidden',
+                overflow: 'hidden',         // Clips background video items cleanly to hide frame edge bleed lines
                 boxShadow: 'var(--global-box-shadow)',
                 backgroundColor: 'var(--ifm-color-black)',
                 border: '1px solid rgba(0, 0, 0, 0.05)'
             }}>
+                {/* Universal aspect ratio hack ensuring frames scaling calculations preserve an absolute 16:9 box matrix format */}
                 <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
                     <iframe
-                        src= {`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&rel=0`}
+                        // Employs youtube-nocookie.com to block automated tracking cookies from scraping user profile data paths
+                        src={`https://youtube-nocookie.com{youtubeId}?autoplay=1&mute=1&controls=0&rel=0`}
                         title="Scouting America Recruitment Video" 
                         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin" 
-                        allowfullscreen>
+                        referrerPolicy="strict-origin-when-cross-origin" 
+                        allowFullScreen>
                     </iframe>
                 </div>
             </div>
 
-            {/* 2. Unified Grid Header */}
+            {/* 2. Unified Text Sub-Header Info Container */}
             <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                 <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 0.5rem 0' }}>Ready to Register?</h2>
                 <p style={{ color: 'var(--ifm-color-emphasis-600)', margin: 0 }}>Select your unit below to sign up online today.</p>
             </div>
 
-            {/* 3. Three-Card Flexbox Grid */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center', width: '100%' }}>
-                {units.map((unit, idx) => (
-                    <UnitCard key={idx} {...unit} />
+            {/* 3. Three-Card Alignment Layout Grid flex-row workspace element */}
+            <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',           // Enables column item stacking on mobile breakpoints
+                gap: '1.5rem',              // Generates consistent column spacing matrices across cells out of margins bounds
+                justifyContent: 'center',   // Aligns lingering columns cleanly to horizontal lines if a row fractures
+                width: '100%',
+                padding: '0 1rem'           // Edge margin padding parameters protecting text nodes on phone displays
+            }}>
+                {/* Steps across the units dataset map to automatically build and append cards onto the page DOM */}
+                {units.map((unit, index) => (
+                    <UnitCard key={index} {...unit} /> // Spreads configuration attributes and binds index numbers for React diff engine tracking
                 ))}
             </div>
-
         </div>
     );
 }

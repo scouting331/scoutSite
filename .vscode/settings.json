@@ -1,3 +1,4 @@
+// .vscode/settings.json
 {
     "[markdown]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -18,5 +19,7 @@
             "enabled": false
         }
     },
-    "cSpell.enabled": true
+    "cSpell.enabled": true,
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false
 }

@@ -1,0 +1,96 @@
+# ==============================================================================
+# GitHub Issue Form Template Configuration
+# This file defines a structured form for submitting new site documentation.
+# ==============================================================================
+
+# Core metadata for the GitHub Issue Form template
+name: New Document                     # Name of the template displayed in the GitHub UI
+description: "Add a new document"      # Subtext explaining the purpose of this form
+labels: ["docs"]                       # Automatically applies this label to the created issue
+title: "[New Document]"               # Pre-fills the issue title with this prefix
+body:                                  # Begins the list of form UI components/fields
+
+  # ----------------------------------------------------------------------------
+  # FIELD 1: Introductory Instructions (Markdown Notice)
+  # ----------------------------------------------------------------------------
+  - type: markdown                     # Static text block using Markdown formatting
+    attributes:                        # Map of properties for this markdown block
+      value: |                         # Literal block scalar to preserve line breaks
+        **The title above is just for internal use. Please don't change it**
+
+        # Adding a new document to the site
+
+        Fill out this form and click "Create" below to submit a new document.
+        After submitting your document, it will be reviewed by the webmaster before
+        being added to the website.
+
+  # ----------------------------------------------------------------------------
+  # FIELD 2: Document Title Input
+  # ----------------------------------------------------------------------------
+  - type: input                        # Single-line text input field
+    id: title                          # Unique identifier used by automated scripts
+    attributes:                        # Map of properties for this text input
+      label: "Document Title"          # Heading text displayed above the text box
+      description: |                   # Subtext providing user instructions
+        Title of the proposed document
+
+        This will be displayed at the top of the document. Make sure it is descriptive of what the document is!
+      placeholder: "New Document"      # Temporary ghost text inside the empty box
+    validations:                       # Section for field constraints
+      required: true                   # User must fill this out to submit the form
+
+  # ----------------------------------------------------------------------------
+  # FIELD 3: Document Description Input
+  # ----------------------------------------------------------------------------
+  - type: input                        # Single-line text input field
+    id: description                    # Unique identifier for the description field
+    attributes:                        # Map of properties for this text input
+      label: "Document Description"    # Heading text displayed above the text box
+      description: |                   # Instruction subtext
+        Please provide a single sentence description of what this document is.
+      placeholder: "This is the packing list/rules/etc..." # Ghost text showing an example description
+    validations:                       # Section for field constraints
+      required: true                   # User must provide a description to submit
+
+  # ----------------------------------------------------------------------------
+  # FIELD 4: Unit Selection Dropdown
+  # ----------------------------------------------------------------------------
+  - type: dropdown                     # Selectable list component
+    id: tags                           # Unique identifier for the associated unit/tags
+    attributes:                        # Map of properties for this dropdown
+      label: "Unit"                    # Heading text displayed above the dropdown
+      description: |                   # Instruction subtext explaining general option
+        Select the unit(s) to associate this post with.
+
+        If this document applies to multiple units, select **General**
+      multiple: false                  # Restricts the user to choosing exactly one option
+      options:                         # List of available scouting units and categories
+        - Troop 303                    
+        - Troop 331                    
+        - Crew 303                     
+        - Pack 303                     
+        - General                      # (Fallback for cross-unit files)
+    validations:                       # Section for field constraints
+      required: true                   # User must choose a unit to submit the form
+
+  # ----------------------------------------------------------------------------
+  # FIELD 5: Main Body Content Textarea
+  # ----------------------------------------------------------------------------
+  - type: textarea                     # Large multi-line text input block
+    id: doc-content                    # Unique identifier for the document content
+    attributes:                        # Map of properties for this textarea
+      label: "Document Text"           # Heading text displayed above the textarea
+      description: |                   # Subtext noting that files/images can be attached
+        Add the content of your document here. You can include inline
+        images/files if needed.
+      placeholder: "Document text here..." # Default ghost text inside the text editor box
+    validations:                       # Section for field constraints
+      required: true                   # User must enter text content to submit
+
+  # ----------------------------------------------------------------------------
+  # FIELD 6: Closing Instructions (Markdown Footer)
+  # ----------------------------------------------------------------------------
+  - type: markdown                     # Static text block using Markdown formatting
+    attributes:                        # Map of properties for this markdown block
+      value: |                         # Final warning text for form submitters
+        **Please don't edit any of the other options!**

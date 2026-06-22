@@ -1,9 +1,9 @@
 /**
  * @file docusaurus.config.js
  * @description Master Node.js configuration schema engine for the American Legion Post 331 Scouting website.
- * Declares localized metadata paths, custom theme configurations, multi-instance plugin documentation paths 
+ * Declares localized metadata paths, custom theme configurations, multi-instance plugin documentation paths
  * (Standard Docs + Cookbooks), custom localized sitemap filtration schemes, and third-party tracking scripts.
- * 
+ *
  * @environment Node.js (Build-time compilation script)
  * @see {@link https://docusaurus.io/docs/api/docusaurus-config | Docusaurus Configuration API Documentation}
  */
@@ -12,90 +12,104 @@ import { themes as prismThemes } from "prism-react-renderer";
 
 /**
  * Global configuration data schema structure for Docusaurus system operations.
- * 
+ *
  * @type {import('@docusaurus/types').Config}
- * @property {string} title - Primary core website branding text headline.
- * @property {string} tagline - SEO and card fallback metadata summary description block.
- * @property {Object} future - Flag registry optimizing compatibility properties with modern up-stream tools.
- * @property {Object} customFields - Storage object injecting custom corporate legal copyright labels into the runtime environment.
- * @property {Array<Array<string|Object>>} presets - Classic Docusaurus preset bundle setups handling theme layouts and core document paths.
- * @property {Array<Array<string|Object>>} plugins - Custom multi-instance document routes and isolated post processors parsing recent content folders.
- * @property {import('@docusaurus/types').ThemeConfig} themeConfig - The master styling architecture setting default light-modes, banners, nav bars, and HTML social links.
  */
+
+// 🔔 ANNOUNCEMENT BANNER TOGGLE: Set this to true to turn on an alert bar at the top of every page.
+const SHOW_ANNOUNCEMENT = false;
+
 const config = {
+  // --- CORE WEBSITE IDENTITY ---
   title: "The Scouting Units of American Legion Post 331",
   tagline:
-    "Scouting America Units Troop 303, Troop 331, Crew 303, and Pack 303 of Brownsburg, Indiana",
+    "Discover character, leadership, and outdoor adventure for youth ages 5-20 with the Brownsburg, IN Scouting America units at Post 331.",
   favicon: "img/logos/favicon.png",
 
-  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
+  // Future flags ensure our code remains compatible with upcoming major versions of Docusaurus.
+  // See https://docusaurus.io#future
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
   },
 
-  // Set the production url of your site here
+  // The live public web address where parents and the community access the site.
   url: "https://brownsburgscouts.org",
-  baseUrl: "/",
+  baseUrl: "/", // Tells the server that the website is installed at the root directory level
 
-  onBrokenLinks: "throw",
-  onBrokenAnchors: "ignore",
+  // Guardrails to prevent broken links from going live.
+  onBrokenLinks: "throw", // ❌ STOPS the build process immediately if a Scout links to a page or image that does not exist.
+  onBrokenAnchors: "ignore", // 🟡 Ignores minor section-header anchor tag mistakes so they don't break the build pipeline.
 
+  // Internationalization settings (Language control).
   i18n: {
     defaultLocale: "en",
     locales: ["en"],
   },
 
-  trailingSlash: false,
+  trailingSlash: false, // Ensures consistent URL structures across the site for better search visibility.
 
+  // Reusable custom text values that can be dropped into page footers or layouts dynamically.
   customFields: {
     copyright1: `© ${new Date().getFullYear()} The Scouting Units of American Legion Post 331, Scouting America`,
     copyright2: `All Rights Reserved`,
   },
 
+  // --- CORE WEBSITE PRESETS ---
   presets: [
     [
       "classic",
       {
+        // We set core blog/docs to false here because we manage them manually below using multi-instance settings.
         blog: false,
         docs: false,
         theme: {
-          customCss: "./src/css/custom.css",
+          customCss: "./src/css/custom.css", // The central styling file for changing fonts and brand colors.
         },
-        sitemap: {
-          lastmod: "date",
-          changefreq: "weekly",
-          priority: 0.5,
-          ignorePatterns: ["/tags/**"],
-          filename: "sitemap.xml",
-          createSitemapItems: async (params) => {
-            const { defaultCreateSitemapItems, ...rest } = params;
-            const items = await defaultCreateSitemapItems(rest);
-            return items.filter((item) => !item.url.includes("/page/"));
-          },
-        },
+        // --- SEARCH ENGINE SITEMAP ENGINE ---
+        // Dynamically turns off sitemap generation during Cloudflare Preview builds to save build time for the Scouts.
+        sitemap:
+          process.env.SKIP_SITEMAP == "true"
+            ? false
+            : {
+                lastmod: "date",
+                changefreq: "weekly",
+                priority: 0.5,
+                ignorePatterns: ["/tags/**"], // Bypasses internal organization tags to keep search results clean.
+                filename: "sitemap.xml",
+                // Custom filter that strips out pagination pages (like /page/2) from search engine results.
+                createSitemapItems: async (params) => {
+                  const { defaultCreateSitemapItems, ...rest } = params;
+                  const items = await defaultCreateSitemapItems(rest);
+                  return items.filter((item) => !item.url.includes("/page/"));
+                },
+              },
       },
     ],
   ],
 
+  // --- CUSTOM WEBSITE PLUGINS & EXTENSIONS ---
   plugins: [
+    // 📖 MULTI-INSTANCE DOCS #1: The Camping Cookbook section.
     [
       "@docusaurus/plugin-content-docs",
       {
         id: "cookbook",
-        path: "cookbook",
-        routeBasePath: "cookbook",
-        sidebarPath: "./sidebarCookbook.js",
+        path: "cookbook", // Looks for folder named 'cookbook' in the root of the project.
+        routeBasePath: "cookbook", // Makes the website URL point to brownsburgscouts.org/cookbook.
+        sidebarPath: "./sidebarCookbook.js", // The control panel file managing the cookbook's left-hand menu tree.
       },
     ],
+    // 📖 MULTI-INSTANCE DOCS #2: Core unit documents and shared files.
     [
       "@docusaurus/plugin-content-docs",
       {
         id: "docs",
-        path: "docs",
-        routeBasePath: "docs",
-        sidebarPath: "./sidebarDocs.js",
+        path: "docs", // Looks for folder named 'docs' in the root of the project.
+        routeBasePath: "docs", // Makes the website URL point to brownsburgscouts.org/docs.
+        sidebarPath: "./sidebarDocs.js", // The control panel file managing the core documentation menu tree.
       },
     ],
+    // ✍️ CUSTOM EXTENSION: Automated recent adventure post processor.
     [
       "./plugins/recent-blog-posts",
       {
@@ -106,30 +120,70 @@ const config = {
         onInlineTags: "warn",
         onInlineAuthors: "warn",
         onUntruncatedBlogPosts: "warn",
-      }
+        // 💡 SAFETY OVERRIDE: Automatically assigns a default Scouting logo if a Scout forgets to add an author profile photo.
+        processBlogPosts: async ({ blogPosts }) => {
+          const DEFAULT_IMAGE = "/img/logos/favicon.png";
+
+          return blogPosts.map((post) => {
+            if (post.metadata && post.metadata.authors) {
+              post.metadata.authors = post.metadata.authors.map((author) => ({
+                ...author,
+                imageURL: author.imageURL || DEFAULT_IMAGE, // Fallback safety catch
+              }));
+            }
+            return post;
+          });
+        },
+      },
+    ],
+    // 🍪 PRIVACY COMPLIANCE: Optional cookie consent pop-up banner.
+    // Set 'enabled: true' if you decide to activate tracking analytics in the future.
+    [
+      "docusaurus-plugin-cookie-consent",
+      {
+        title: "Cookie Consent",
+        description:
+          "We use cookies to enhance your browsing experience and analyze our traffic.",
+        links: [
+          { label: "Privacy Policy", href: "/privacy" },
+          { label: "Cookie Policy", href: "/cookies" },
+        ],
+        enabled: false,
+        acceptAllText: "Accept All Cookies",
+        rejectOptionalText: "Essential Only",
+        rejectAllText: "Reject All",
+        toastMode: true,
+      },
     ],
   ],
 
+  // --- VISUAL THEME ARCHITECTURE & UI LAYOUTS ---
   themeConfig: {
-    image: "img/logos/favicon.png",
+    image: "img/logos/favicon.png", // Default image used when links are shared on text messages or social cards.
     colorMode: {
       respectPrefersColorScheme: true,
-      disableSwitch: true,
+      disableSwitch: true, // Forces light mode across the site to guarantee crisp visibility of unit layouts.
       defaultMode: "light",
     },
-    // announcementBar: {
-    //   id: "new_website",
-    //   content: "Welcome to our new website! Please poke around and if something could be improved, contact the webmaster.",
-    //   backgroundColor: "var(--announcement-bar)",
-    //   textColor: "var(--scouting-america-white)",
-    //   isCloseable: true,
-    // },
+    // Configures the header banner alert when active. Controlled by the SHOW_ANNOUNCEMENT toggle at the top of this file.
+    announcementBar: SHOW_ANNOUNCEMENT
+      ? {
+          id: "announcement-bar",
+          content: "This is an announcement",
+          backgroundColor: "var(--announcement-bar)", // Links to a color variable set in src/css/custom.css
+          textColor: "var(--scouting-america-white)",
+          isCloseable: true,
+        }
+      : undefined,
+
+    // --- NAVIGATION BAR CONFIGURATION ---
     navbar: {
       title: "Scouting America",
       logo: {
         alt: "Scouting America Units",
         src: "img/logos/all-units-logo.png",
       },
+      // Left and right aligned items sitting at the top of the webpage.
       items: [
         {
           type: "dropdown",
@@ -151,20 +205,22 @@ const config = {
           to: "/join-us",
           label: "Join Us",
           position: "right",
-          className: "button button--secondary",
+          className: "button button--secondary", // Applies a standalone decorative theme button styling.
         },
       ],
-      hideOnScroll: false,
+      hideOnScroll: false, // Keeps navigation links immediately accessible at the top while reading down pages.
     },
+
+    // --- FOOTER SECTION ---
     footer: {
-      style: "dark",
+      style: "dark", // Employs the charcoal/black theme layout block at the bottom of the page.
       links: [
         {
           title: "Quick Links",
           items: [
             {
               label: "Documents",
-              to: "/docs/general-docs",
+              to: "/docs/general",
             },
             {
               label: "Blog",
@@ -172,7 +228,7 @@ const config = {
             },
             {
               label: "Helpful Links",
-              to: "/docs/general-docs/helpful-links"
+              to: "/docs/general/helpful-links",
             },
           ],
         },
@@ -188,7 +244,7 @@ const config = {
                   <i class="fa-brands fa-youtube footer__link-logo" aria-hidden="true"></i>
                   YouTube Channel
                 </a>
-                `
+                `,
             },
             {
               html: `
@@ -199,7 +255,7 @@ const config = {
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
                   Troop 303
                 </a>
-                `
+                `,
             },
             {
               html: `
@@ -210,7 +266,7 @@ const config = {
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
                   Troop 331
                 </a>
-                `
+                `,
             },
             {
               html: `
@@ -221,7 +277,7 @@ const config = {
                   <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
                   Pack 303
                 </a>
-                `
+                `,
             },
             {
               html: `
@@ -232,10 +288,11 @@ const config = {
                   <i class="fa-brands fa-instagram footer__link-logo" aria-hidden="true"></i>
                   Crew 303
                 </a>
-                `
+                `,
             },
           ],
         },
+        // --- CONTACT US FOOTER COLUMN ---
         {
           title: "Contact Us",
           items: [
@@ -249,47 +306,58 @@ const config = {
                     Brownsburg, IN 46112
                   </address>
                 </div>
-                `
+                `,
             },
             {
               html: `
+                <!-- Clicking this automatically opens a pre-addressed email window on the user's phone or computer -->
                 <a href="mailto:scoutingunits331@gmail.com?subject=Website%20Inquiry" style="font-style: normal" class="footer__link-item">
                   <div style="display: flex; align-items: flex-start; gap: 8px;">
                     <i class="fa-solid fa-at footer__link-logo" aria-hidden="true"></i>
                     Email Us
                   </div>
                 </a>
-                `
+                `,
             },
           ],
         },
       ],
     },
+    // --- CODE BLOCKS SYNTAX HIGHLIGHTING ---
+    // Controls how programming snippets look when displayed in documentation tutorials or cookbook instructions.
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
+      theme: prismThemes.github, // Uses clean light colors matching general GitHub documentation layouts.
+      darkTheme: prismThemes.dracula, // Fallback dark color block theme format.
     },
+    // --- MERMAID DIAGRAM OPERATOR ---
+    // Configures flowchart layout trees so we can build unit organization maps using text commands.
     mermaid: {
       options: {
-        securityLevel: "loose",
+        securityLevel: "loose", // Necessary to allow custom CSS styling tags to color our flow charts properly.
       },
     },
+    // --- GLOBAL SEO GOOGLE KEYWORDS ---
+    // These hidden search tokens help parents in Brownsburg, Indiana find our Scouting units when searching on Google.
     metadata: [
       {
         name: "keywords",
         content:
-          "eagle scout, webelos, scouts bsa, boy scouts near me, sea scouts, scoutbook, Venture, bsa, Boy Scouts of America, cub scouts, scouts, kids events near me, kid friendly activities near me, fun places for kids near me, scout, boy scouts, Scouting America, Things to do with kids near me, Kids activities near me, kids activities, child development, kids fun near me, trails near me, crafts for kids, Tent camping near me, science experiments for kids, science projects for kids, stem for kids, Canoe, trails near me, hiking trails near me, all trails, campsites, walking trails near me, Camping, Campground, Hiking near me, Camping near me, campgrounds near me, hiking trails near me, Fishing, Swimming, Brownsburg scout troops, Brownsburg kids, find cub scouts near me, find boy scouts near me, find girl scouts near me",
+          "scouts bsa brownsburg, cub scouts near me, brownsburg scout troops, troop 303 brownsburg, troop 331 indiana, pack 303 indiana, crew 303, scouting america indiana, boy scouts brownsburg indiana, girl scouts bsa hendricks county, youth groups brownsburg in, kids activities brownsburg indiana, kid friendly clubs near me, youth leadership programs, eagle scout rank, cub scout advancement, kids outdoor activities hendricks county, family camping brownsburg, stem activities for kids indiana, youth community service brownsburg, child development groups, scouts bsa girls troop, cub scouts avon indiana, boy scouts pittsboro in, youth sports and adventure brownsburg, child character building programs, community youth organizations indiana",
       },
     ],
   },
-  themes: ["@docusaurus/theme-mermaid"],
+
+  // --- MARKDOWN & PARSING ENGINES ---
+  themes: ["@docusaurus/theme-mermaid"], // Extends theme engine capabilities to natively render Mermaid charts.
   markdown: {
-    format: "mdx",
-    mermaid: true,
-    emoji: true,
+    format: "mdx", // Enforces rich MDX format so we can embed custom interactive buttons inside text files.
+    mermaid: true, // Turns on graph generation tools within standard markdown documents.
+    emoji: true, // Allows Scouts to write basic shortcuts like :tent: or :fire: to automatically show visual emojis.
+
+    // --- SAFETY HOOKS & COMPILATION GUARDRAILS ---
     hooks: {
-      onBrokenMarkdownLinks: "warn",
-      onBrokenMarkdownImages: "throw",
+      onBrokenMarkdownLinks: "warn", // 🟡 Warns us in the terminal if a text link points to an invalid section header anchor.
+      onBrokenMarkdownImages: "throw", // ❌ CRASHES the local builder instantly if a Scout tries to link a photo that is missing.
     },
   },
 };

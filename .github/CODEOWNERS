@@ -1,1 +1,17 @@
-*       @shoverbj
+# ==============================================================================
+# GitHub Code Owners Configuration File
+# This file automatically assigns reviewers to Pull Requests based on the paths 
+# of the files being modified. 
+#
+# Rules to remember:
+# 1. Order matters: Later rules override earlier ones for the same file paths.
+# 2. Users can be specified by @username or by an email address linked to their account.
+# 3. Teams can be assigned using @org/team-name (requires GitHub Organization).
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# GLOBAL FALLBACK OWNERS
+# ------------------------------------------------------------------------------
+# The asterisk (*) matches every file in the repository. 
+# These users will be requested to review a PR if no more specific rule below matches.
+* @shoverbj

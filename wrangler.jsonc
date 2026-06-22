@@ -1,14 +1,56 @@
 {
+  // Links the file to an auto-validation schema so your code editor can catch typos
   "$schema": "node_modules/wrangler/config-schema.json",
+  
+  // The official unique identifying name for this Cloudflare Pages project deployment
   "name": "scouting331site",
+  
+  // Locked date ensuring Cloudflare preserves exact software feature behaviors from this day onward
   "compatibility_date": "2026-05-21",
+  
+  // Enables real-time server tracking logs to trace system performance and catch runtime errors
   "observability": {
     "enabled": true
   },
+  
+  // Informs the Cloudflare engine where your compiled production website files live
   "assets": {
     "directory": "build"
   },
+  
+  // Compatibility switches allowing our frontend server engine to run native Node.js commands
   "compatibility_flags": [
     "nodejs_compat"
-  ]
+  ],
+
+  // ===========================================================================
+  // GLOBAL PRODUCTION ENVIRONMENT SETTINGS
+  // ===========================================================================
+  "vars": {
+    // 🚀 FORCES THE ACCELERATED LIVE MAIN WEBSITE TO COMPILE ON NODE 24
+    "NODE_VERSION": "24"
+  },
+
+  // ===========================================================================
+  // ENVIRONMENT OVERRIDES FOR SITES AND PREVIEWS
+  // ===========================================================================
+  "env": {
+    // 💡 IMPORTANT FOR SCOUTS: These rules run ONLY on pull requests and branch preview drafts.
+    // They modify our development pipeline so that testing builds compile much faster.
+    "preview": {
+      "vars": {
+        // 🚀 FORCES SCOUT DRAFT PREVIEW BUILD LINKS TO COMPILE ON NODE 24 TOO
+        "NODE_VERSION": "24",
+
+        // Runs Docusaurus in raw developer compilation mode instead of heavy optimization mode
+        "NODE_ENV": "development",       
+        
+        // Stops heavy Javascript compression and squeezing to save valuable build minutes
+        "DISABLE_MINIFICATION": "true", 
+        
+        // Tells Docusaurus to skip making giant search engine maps for temporary test urls
+        "SKIP_SITEMAP": "true"           
+      }
+    }
+  }
 }

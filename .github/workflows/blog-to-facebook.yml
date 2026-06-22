@@ -1,0 +1,92 @@
+# ==============================================================================
+# GitHub Actions Automation Workflow: Multi-Target Blog Post Router to Facebook
+# Automatically triggers when code commits are pushed into main containing blog modifications.
+# Leverages an external Python tracking script to build a dynamic target matrix array, 
+# then spawns parallel posting steps targeting Troop 303, Troop 331, Pack 303, or Crew 303 pages.
+# ==============================================================================
+
+name: Route Blog Posts to Facebook Pages # Friendly workflow tracking name shown in Actions panel
+
+on:                                    # Defines the system event trigger hooks
+  push:                                # Listens to push event blocks across the ecosystem
+    branches:
+      - main                           # Restricts execution to the master production code trunk line branch
+    paths:
+      - 'blog/**'                      # Limits trigger conditions to file modifications inside the blog directory tree
+
+jobs:                                  # Begins structural job step pipeline workflows
+  # ----------------------------------------------------------------------------
+  # JOB 1: Discover modification targets and serialize metadata values
+  # ----------------------------------------------------------------------------
+  parse-blog:
+    runs-on: ubuntu-latest             # Provisions a fresh virtual machine Linux runner workspace environment
+    outputs:                           # Maps global outputs from local tracking steps to make them accessible across jobs
+      has_new_post: ${{ steps.blog_data.outputs.has_new_post }}
+      title: ${{ steps.blog_data.outputs.title }}
+      slug: ${{ steps.blog_data.outputs.slug }}
+      targets: ${{ steps.blog_data.outputs.targets }} # Contains the stringified JSON target array e.g., ["TROOP_303", "PACK_303"]
+    steps:
+      - name: Checkout repository        # Step 1: Fetches repository source documentation onto the runner platform
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2               # Forces checking history depths of 2 commits so git diff can track HEAD~1 shifts
+
+      - name: Set up Python            # Step 2: provisions Python interpreter infrastructure binaries
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'        # Always downloads the latest functional patch build iteration of Python 3
+
+      - name: Parse Metadata via Python # Step 3: Run router script to identify targeting parameters
+        id: blog_data                  # Step identifier token used by outputs map fields to find variables
+        run: python .github/scripts/fb_router.py
+
+  # ----------------------------------------------------------------------------
+  # JOB 2: Run dynamic multi-process loops to dispatch entries onto Facebook Pages
+  # ----------------------------------------------------------------------------
+  facebook-routing:
+    needs: parse-blog                  # Inter-job dependency lock: halts execution until data collection completes
+    # Execution gate: only runs if a post was successfully identified and targets list array contains entries
+    if: needs.parse-blog.outputs.has_new_post == 'true' && needs.parse-blog.outputs.targets != '[]'
+    runs-on: ubuntu-latest             # Provisions an independent parallel system container node
+    strategy:
+      fail-fast: false                 # Prevent crash dependencies: keeps other unit operations processing if one page token fails
+      matrix:
+        # Converts the Python string output back into a live GitHub Actions looping engine array schema
+        target: ${{ fromJson(needs.parse-blog.outputs.targets) }}
+    steps:
+      - name: Set Facebook Credentials Dynamically # Step 1: Conditional evaluation mapping loop tokens to secure Vault entries
+        id: set_tokens                 # ID marker allowing the cURL step to fetch the selected dynamic parameters
+        run: |
+          TARGET="${{ matrix.target }}" # Extract current matrix iteration string item token value
+          if [ "$TARGET" = "TROOP_331" ]; then
+            echo "page_id=${{ secrets.FB_PAGE_ID_TROOP_331 }}" >> $GITHUB_OUTPUT # Maps the unique identification numbers
+            echo "access_token=${{ secrets.FB_ACCESS_TOKEN_TROOP_331 }}" >> $GITHUB_OUTPUT # Maps the specific system token
+          elif [ "$TARGET" = "PACK_303" ]; then
+            echo "page_id=${{ secrets.FB_PAGE_ID_PACK_303 }}" >> $GITHUB_OUTPUT
+            echo "access_token=${{ secrets.FB_ACCESS_TOKEN_PACK_303 }}" >> $GITHUB_OUTPUT
+          elif [ "$TARGET" = "CREW_303" ]; then
+            echo "page_id=${{ secrets.FB_PAGE_ID_CREW_303 }}" >> $GITHUB_OUTPUT
+            echo "access_token=${{ secrets.FB_ACCESS_TOKEN_CREW_303 }}" >> $GITHUB_OUTPUT
+          elif [ "$TARGET" = "TROOP_303" ]; then
+            echo "page_id=${{ secrets.FB_PAGE_ID_TROOP_303 }}" >> $GITHUB_OUTPUT
+            echo "access_token=${{ secrets.FB_ACCESS_TOKEN_TROOP_303 }}" >> $GITHUB_OUTPUT
+          else
+            echo "page_id=${{ secrets.FB_PAGE_ID_DEFAULT }}" >> $GITHUB_OUTPUT # Fallback mappings if special exceptions occur
+            echo "access_token=${{ secrets.FB_ACCESS_TOKEN_DEFAULT }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send Link to Selected Facebook Page # Step 2: Dispatches feed payload securely onto the Facebook Graph API endpoints
+        run: |
+          # Formulates absolute permalink layout references ensuring the /blog directory prefix matches your structure
+          BLOG_URL="https://brownsburgscouts.org{{ needs.parse-blog.outputs.slug }}"
+          
+          # Sets up text message string template payloads using emoticons and line skip variables
+          MESSAGE="✍️ New Blog Post: ${{ needs.parse-blog.outputs.title }}
+
+          Read the full article here: $BLOG_URL"
+          
+          # Fires cURL POST web request arguments hitting Meta Graph API servers, routing items onto dynamic destinations
+          curl -X POST "https://facebook.com{{ steps.set_tokens.outputs.page_id }}/feed" \
+            -d "message=$MESSAGE" \
+            -d "link=$BLOG_URL" \
+            -d "access_token=${{ secrets.FB_ACCESS_TOKEN_DEFAULT }}" # Authorizes operations utilizing isolated access tokens

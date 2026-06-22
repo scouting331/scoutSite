@@ -1,0 +1,12 @@
+// .vscode/extensions.json
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
+    "DavidAnson.vscode-markdownlint",
+    "ms-python.python",
+    "redhat.vscode-yaml",
+    "github.vscode-github-actions",
+    "GitHub.vscode-pull-request-github"
+  ]
+}

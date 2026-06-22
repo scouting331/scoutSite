@@ -1,1 +1,175 @@
-.blogCard{display:flex;flex-direction:column;height:100%;background:var(--ifm-card-background-color);border:1px solid var(--ifm-color-emphasis-200);border-radius:12px;overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s;text-decoration:none!important;color:inherit}.cardMeta,.date{display:flex;margin-bottom:10px;font-size:.85rem;color:var(--ifm-color-emphasis-600)}.blogCard:hover{transform:translateY(-5px);box-shadow:var(--global-box-shadow);border-color:var(--ifm-color-primary)}.cardHeader{height:160px;overflow:hidden}.cardImage{width:100%;height:100%;object-fit:cover;transition:transform .5s}.blogCard:hover .cardImage{transform:scale(1.05)}.cardBody{padding:1.5rem;display:flex;flex-direction:column;flex-grow:1}.date{justify-content:space-between;align-items:center}.cardMeta{gap:8px;align-items:center}.tagPill{background-color:var(--ifm-color-primary-lightest);color:var(--ifm-color-primary-dark);padding:2px 8px;border-radius:12px;font-size:.75rem;font-weight:700}.cardTitle{font-size:1.25rem;font-weight:700;margin-bottom:.5rem;line-height:1.3}.cardDescription{font-size:.9rem;color:var(--ifm-color-emphasis-700);margin-bottom:1.5rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.cardFooter{margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--ifm-color-emphasis-200)}.authorStack{display:flex;align-items:center}.authorAvatar{width:28px;height:28px;border-radius:50%;border:2px solid var(--ifm-card-background-color);margin-right:-8px;object-fit:cover}.authorAvatar:last-of-type{margin-right:8px}.authorName{font-size:.85rem;font-weight:600;margin-left:5px}.readMore{color:var(--ifm-color-primary);font-weight:700;font-size:.9rem}.newBadge{position:absolute;top:12px;right:12px;background-color:var(--ifm-color-primary);color:var(--ifm-color-white);padding:4px 10px;border-radius:20px;font-size:.7rem;font-weight:700;letter-spacing:1px;z-index:10;box-shadow:var(--global-box-shadow);pointer-events:none;animation:2s infinite pulse}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+/* ==============================================================================
+   CSS Module Stylesheet: Blog Post Display Grid Cards
+   Structures responsive grid blocks integrating with Docusaurus Infima variables.
+   ============================================================================== */
+
+/* Main overarching container component card link frame wrapper */
+.blogCard {
+  display: flex;
+  flex-direction: column;                  /* Arranges child items inside a vertical top-to-bottom stack layout */
+  height: 100%;                           /* Spans full height of grid cell blocks ensuring equal rows layout grid matching */
+  background: var(--ifm-card-background-color); /* Extracts Docusaurus central light/dark UI design mode layout backdrop colors */
+  border: 1px solid var(--ifm-color-emphasis-200); /* Thin subtle bounding frame line outline */
+  border-radius: 12px;                    /* Soft modern curved structural card corner geometry edges */
+  overflow: hidden;                       /* Clips inside assets like header photos so they do not bleed past the corner curve framework */
+  transition: transform .2s, box-shadow .2s, border-color .2s; /* Clean hardware-accelerated transformation frame timings */
+  text-decoration: none !important;       /* Suppresses native browser text underline styling decorations across content child blocks */
+  color: inherit;                         /* Absorbs upstream site font palette color configurations */
+}
+
+/* Collective mapping grouping mutual visual metadata font sizing attributes together */
+.cardMeta,
+.date {
+  display: flex;
+  margin-bottom: 10px;
+  font-size: .85rem;                       /* Clean readable text typography size downscale properties */
+  color: var(--ifm-color-emphasis-600);    /* Secondary accent text gray typography palette rule */
+}
+
+/* Hover tracking transition rules modifying layout variables when a cursor glides over the card */
+.blogCard:hover {
+  transform: translateY(-5px);            /* Slightly lifts the card upward along the vertical viewport coordinate mapping nodes */
+  box-shadow: var(--global-box-shadow);   /* Projects deep backdrop shadow values for three-dimensional visual depth look */
+  border-color: var(--ifm-color-primary);  /* Switches border strokes to match the core branding primary color scheme configuration */
+}
+
+/* Framing boundary cell holding the background blog post illustration cover image asset */
+.cardHeader {
+  height: 160px;                          /* Fast locked boundary height line limiting initial graphic dimension allocations */
+  overflow: hidden;                       /* Conceals structural scaling animations extending past outer boundaries */
+}
+
+/* Core background cover image presentation property class layout values */
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                      /* Scales and centers illustration frames without warping aspect ratio parameters */
+  transition: transform .5s;              /* Smooth, slow duration rule handling image growth zoom calculations */
+}
+
+/* Cinematic zoom animation rule scaling the header illustration inward when user handles hover items */
+.blogCard:hover .cardImage {
+  transform: scale(1.05);                  /* Extends file image asset tracking dimensions outwards by exactly 5% scale margins */
+}
+
+/* Inner content typography compartment box boundary container */
+.cardBody {
+  padding: 1.5rem;                        /* Generates equal, deep margins formatting readable inside cell spacing padding bounds */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;                           /* Forces internal cell block spaces to inflate outward to fill lingering empty footer fields */
+}
+
+/* Arranges content structures horizontally across endpoints inside the date tracking row block */
+.date {
+  justify-content: space-between;         /* Separates child parameters uniformly across opposite ends of the container */
+  align-items: center;                    /* Locks target items along centralized vertical coordinate balancing nodes */
+}
+
+/* Taxonomy tags row structural configuration layout wrapper */
+.cardMeta {
+  gap: 8px;                               /* Enforces static gaps separating neighboring category items without margins overrides */
+  align-items: center;
+}
+
+/* Customized visual badge pills displaying classification tags (e.g., Troop 303) */
+.tagPill {
+  background-color: var(--ifm-color-primary-lightest); /* Light branding tone backdrop fill */
+  color: var(--ifm-color-primary-dark);    /* Dark contrasting text color scheme ensuring accessibility visibility rules */
+  padding: 2px 8px;                       /* Compact spacing frames enclosing text values */
+  border-radius: 12px;                    /* Capsule layout rounded side curves styling profile */
+  font-size: .75rem;
+  font-weight: 700;                       /* Strong dense text formatting parameters */
+}
+
+/* Article headline title text layout configuration parameters */
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: .5rem;
+  line-height: 1.3;                       /* Tightens spatial line stacks preventing multi-line headers from drifting apart */
+}
+
+/* Summary paragraph excerpt text box formatting framework boundaries */
+.cardDescription {
+  font-size: .9rem;
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 1.5rem;
+  display: -webkit-box;                   /* Invokes legacy multi-line truncation support properties across Webkit rendering frameworks */
+  -webkit-line-clamp: 3;                  /* Hard limits narrative paragraphs from extending past a maximum boundary count of 3 text rows */
+  -webkit-box-orient: vertical;           /* Dictates alignment truncation axis direction processing parameters */
+  overflow: hidden;                       /* Truncates trailing overflows and appends native ellipsis points (...) automatically */
+}
+
+/* Bottom status panel component block anchoring authors metrics and read buttons */
+.cardFooter {
+  margin-top: auto;                       /* Leverages flex push tracking fields to pin footer arrays exactly to the card floor line */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200); /* Separation accent line divider dividing body from foot contents */
+}
+
+/* Collates multiple profile faces closely together using overlapping configurations */
+.authorStack {
+  display: flex;
+  align-items: center;
+}
+
+/* Multi-author portrait avatar rendering styling rules */
+.authorAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;                     /* Forces standard source square images to resolve as perfect circular layout graphics */
+  border: 2px solid var(--ifm-card-background-color); /* Clean structural border matching card backing to mask overlaps cleanly */
+  margin-right: -8px;                     /* Negative horizontal alignment margins shifting portraits leftwards into tight stack arrangements */
+  object-fit: cover;
+}
+
+/* Reset rules targeting terminal profile items inside the stacked face array layers */
+.authorAvatar:last-of-type {
+  margin-right: 8px;                      /* Negates negative margins for final elements to prevent profile name strings from overlapping faces */
+}
+
+/* Post creator description name details layout block text string elements */
+.authorName {
+  font-size: .85rem;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+/* Read more action call text label link components */
+.readMore {
+  color: var(--ifm-color-primary);
+  font-weight: 700;
+  font-size: .9rem;
+}
+
+/* Announcement tag badge overlaying the card workspace boundaries for urgent new items entries */
+.newBadge {
+  position: absolute;                     /* Breaks element away from baseline DOM document flows to place relative to coordinate points */
+  top: 12px;                              /* Spacing offset position from card roof ceiling line */
+  right: 12px;                            /* Spacing offset position from card right margin boundary wall */
+  background-color: var(--ifm-color-primary);
+  color: var(--ifm-color-white);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: 1px;                    /* Extends characters outwards to boost overall visual tracking legibility features */
+  z-index: 10;                            /* Forces tag to lift above baseline card contents to avoid image rendering occlusions */
+  box-shadow: var(--global-box-shadow);
+  pointer-events: none;                   /* Disables click tracking intercept rules so click requests fall directly through to card link triggers */
+  animation: 2s infinite pulse;           /* Maps cyclical infinite engine loop running the custom scale transformation timing array */
+}
+
+/* Core keyframe math array configurations establishing tracking boundaries for pulsing notifications */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);                  /* Neutral resting scale dimensions benchmark configuration */
+  }
+  50% {
+    transform: scale(1.05);               /* Scales badge canvas layout slightly outwards by 5% at exactly the halfway runtime cycle node */
+  }
+}
