@@ -37,6 +37,10 @@ from io import BytesIO
 from datetime import datetime
 from dateutil import parser
 from PIL import Image, ImageOps
+from validation import validate_image_download
+from logging_config import setup_logging
+
+logger = setup_logging(__name__)
 
 # --- Helper functions ---
 def generate_clean_description(blog_content):
@@ -230,6 +234,7 @@ def main():
     # Get safe_title and raw_title from 'title'
     raw_title = data.get("title", "Untitled Post").strip()
     safe_title = raw_title.replace('"', '\\"')
+    logger.info(f"Processing blog post: {raw_title}")
 
     # Get date_str from 'date' (convert whatever format was entered to YYYY-MM-DD)
     form_date = data.get("date", "").strip()
@@ -247,6 +252,7 @@ def main():
     # Get blogfilename from date_str and slugified raw_title
     slug = to_kebab(raw_title)
     blogfilename = f"{date_str}-{slug}"
+    logger.debug(f"Blog filename: {blogfilename}")
 
     # Get list of raw_authors from 'authors'
     raw_authors = data.get("authors", "")
@@ -275,17 +281,19 @@ def main():
     if cover_url and cover_url != "null" and cover_url != "_No response_":
         tmp_cover_dir = "/tmp/raw_cover"
         os.makedirs(tmp_cover_dir, exist_ok=True)
-        clean_url = cover_url.split("?")
-        _, ext = os.path.splitext(clean_url[0])
+        clean_url = cover_url.split("?")[0]
+        _, ext = os.path.splitext(clean_url)
         if not ext:
             ext = ".jpg"
         raw_cover_path = os.path.join(tmp_cover_dir, f"cover{ext}")
         try:
-            urllib.request.urlretrieve(cover_url, raw_cover_path)
-            with open(f"{raw_cover_path}.ref", "w") as ref_f:
-                ref_f.write("cover")
-            optimize_convert_and_hash_images(tmp_cover_dir, static_folder, keep_original_names=True)
-            cover_line = f"![Cover Picture]({web_prefix}/cover.webp)"
+            if validate_image_download(cover_url, raw_cover_path):
+                with open(f"{raw_cover_path}.ref", "w") as ref_f:
+                    ref_f.write("cover")
+                optimize_convert_and_hash_images(tmp_cover_dir, static_folder, keep_original_names=True)
+                cover_line = f"![Cover Picture]({web_prefix}/cover.webp)"
+            else:
+                print(f"Skipping cover photo due to validation failure")
         except Exception as e:
             print(f"Skipping cover photo download. Error: {e}")
 
@@ -319,11 +327,12 @@ def main():
             album_filepath = os.path.join(tmp_slides_dir, album_filename)
 
             try:
-                urllib.request.urlretrieve(clean_match_url, album_filepath)
-
-                # Create the required sidecar reference file for tracking
-                with open(f"{album_filepath}.ref", "w") as ref_f:
-                    ref_f.write(clean_match_url)
+                if validate_image_download(clean_match_url, album_filepath):
+                    # Create the required sidecar reference file for tracking
+                    with open(f"{album_filepath}.ref", "w") as ref_f:
+                        ref_f.write(clean_match_url)
+                else:
+                    print(f"Skipping album image due to validation failure: {clean_match_url}")
             except Exception as e:
                 print(f"Failed downloading album image {clean_match_url}: {e}")
         
@@ -345,17 +354,19 @@ def main():
         os.makedirs(tmp_inline_dir, exist_ok=True)
         
         for index, (full_match_url, clean_match_url) in enumerate(inline_matches):
-            clean_url = clean_match_url.split("?")
-            _, ext = os.path.splitext(clean_url[0])
+            clean_url = clean_match_url.split("?")[0]
+            _, ext = os.path.splitext(clean_url)
             if not ext:
                 ext = ".png"
             inline_filename = f"inline_{index}{ext}"
             inline_filepath = os.path.join(tmp_inline_dir, inline_filename)
-            
+
             try:
-                urllib.request.urlretrieve(clean_match_url, inline_filepath)
-                with open(f"{inline_filepath}.ref", "w") as ref_f:
-                    ref_f.write(clean_match_url)
+                if validate_image_download(clean_match_url, inline_filepath):
+                    with open(f"{inline_filepath}.ref", "w") as ref_f:
+                        ref_f.write(clean_match_url)
+                else:
+                    print(f"Skipping inline image due to validation failure: {clean_match_url}")
             except Exception as e:
                 print(f"Failed downloading inline image {clean_match_url}: {e}")
                 
@@ -460,7 +471,7 @@ def main():
         mdx_file.write(f"{blog_content}")
         mdx_file.write(album_component_markdown)
 
-    print(f"Successfully generated blog file at: {mdx_filepath}")
+    logger.info(f"Successfully generated blog file at: {mdx_filepath}")
 
 if __name__ == "__main__":
     main()

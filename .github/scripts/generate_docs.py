@@ -27,9 +27,13 @@ import os
 import json
 import re
 import hashlib
-import urllib.request 
+import urllib.request
 from io import BytesIO
 from PIL import Image, ImageOps
+from validation import validate_image_download
+from logging_config import setup_logging
+
+logger = setup_logging(__name__)
 
 # --- Helper functions ---
 def optimize_convert_and_hash_images(input_dir, output_dir, max_size=(1920, 1080), quality=80, keep_original_names=False):
@@ -187,7 +191,8 @@ def main():
     # Get safe_title and raw_title from 'title'
     raw_title = data.get("title", "Untitled Document").strip() # Pulls the document heading text from form mappings
     description = data.get("description", "").strip() # Pulls the descriptive subtext metadata parameter string
-    
+    logger.info(f"Processing documentation: {raw_title}")
+
     # Extract structural form input parameters from the loaded configuration map
     selected_unit = data.get("unit", "General").strip()     # Fetches target sorting classification group
     doc_content = data.get("doc-content", "")               # Extracts core multi-line markdown narrative layout text
@@ -234,11 +239,13 @@ def main():
             inline_filepath = os.path.join(tmp_inline_dir, inline_filename) # Builds absolute path context link
 
             try:
-                # Dispatches server download request stream fetching remote assets directly onto the local drive
-                urllib.request.urlretrieve(clean_match_url, inline_filepath)
-                # Writes `.ref` sidecar files containing original absolute URL references to assist optimization mapping steps
-                with open(f"{inline_filepath}.ref", "w") as ref_f:
-                    ref_f.write(clean_match_url)
+                # Validate and download the image file
+                if validate_image_download(clean_match_url, inline_filepath):
+                    # Writes `.ref` sidecar files containing original absolute URL references to assist optimization mapping steps
+                    with open(f"{inline_filepath}.ref", "w") as ref_f:
+                        ref_f.write(clean_match_url)
+                else:
+                    print(f"Skipping inline image due to validation failure: {clean_match_url}")
             except Exception as e:
                 print(f"Failed downloading inline image {clean_match_url}: {e}") # Non-blocking diagnostic tracker logging
 
@@ -270,7 +277,7 @@ def main():
     with open(markdown_path, "w", encoding="utf-8") as doc_file:
         doc_file.write(doc_payload)
 
-    print(f"[Pipeline Complete] Document successfully written to: {markdown_path}")
+    logger.info(f"Document successfully written to: {markdown_path}")
 
 if __name__ == "__main__":
     main()                                                  # Executes the core application script runtime routine

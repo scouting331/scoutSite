@@ -20,6 +20,10 @@ import os
 import sys
 import urllib.request
 from PIL import Image, ImageOps
+from validation import validate_image_download
+from logging_config import setup_logging
+
+logger = setup_logging(__name__)
 
 # Constant definitions for project directories and structural files
 AUTHORS_FILE = 'blog/authors.yml'
@@ -47,6 +51,7 @@ def main():
     author_name = data.get("name", "").strip()
     author_title = data.get("title", "").strip()
     raw_image_url = data.get("image_url", "").strip()
+    logger.info(f"Processing new author: {author_name}")
 
     # Isolate image URL using regex if it is wrapped inside Markdown syntax e.g., (https://url.com)
     image_url = ""
@@ -94,31 +99,32 @@ def main():
         _, ext = os.path.splitext(clean_url[0])
         if not ext:
             ext = ".jpg" # Fall back to JPG extension if undetected
-        
+
         # Stash download payload in server /tmp space
         tmp_avatar_path = f"/tmp/raw_avatar{ext}"
         try:
-            urllib.request.urlretrieve(image_url, tmp_avatar_path)
-            
-            # Setup image configuration names and location paths
-            target_file_name = f"{final_slug}.webp"
-            target_full_path = os.path.join(AUTHORS_IMG_DIR, target_file_name)
-            
-            # Execute image processing pipeline via Pillow (PIL)
-            with Image.open(tmp_avatar_path) as img:
-                img = ImageOps.exif_transpose(img) # Re-orient image according to metadata tags
-                if img.mode in ("P", "CMYK"):      # Convert non-standard modes to preserve transparencies
-                    img = img.convert("RGBA")
-                img.thumbnail((500, 500), Image.Resampling.LANCZOS) # High-fidelity scale reduction
-                img.save(target_full_path, format="WEBP", quality=85) # Save and optimize file space
-            
-            # Save the final relative public path to be referenced on the blog front-end
-            final_image_path = f"/img/blog/authors/{target_file_name}"
-            print(f"Successfully processed and saved avatar to {target_full_path}")
-            
-            # Clean up server system storage by removing the raw downloaded asset
-            if os.path.exists(tmp_avatar_path):
-                os.remove(tmp_avatar_path)
+            if validate_image_download(image_url, tmp_avatar_path):
+                # Setup image configuration names and location paths
+                target_file_name = f"{final_slug}.webp"
+                target_full_path = os.path.join(AUTHORS_IMG_DIR, target_file_name)
+
+                # Execute image processing pipeline via Pillow (PIL)
+                with Image.open(tmp_avatar_path) as img:
+                    img = ImageOps.exif_transpose(img) # Re-orient image according to metadata tags
+                    if img.mode in ("P", "CMYK"):      # Convert non-standard modes to preserve transparencies
+                        img = img.convert("RGBA")
+                    img.thumbnail((500, 500), Image.Resampling.LANCZOS) # High-fidelity scale reduction
+                    img.save(target_full_path, format="WEBP", quality=85) # Save and optimize file space
+
+                # Save the final relative public path to be referenced on the blog front-end
+                final_image_path = f"/img/blog/authors/{target_file_name}"
+                print(f"Successfully processed and saved avatar to {target_full_path}")
+
+                # Clean up server system storage by removing the raw downloaded asset
+                if os.path.exists(tmp_avatar_path):
+                    os.remove(tmp_avatar_path)
+            else:
+                print(f"Warning: Avatar image validation failed. Continuing without avatar.")
         except Exception as e:
             print(f"Warning: Failed to download or process avatar image. Error: {e}")
 
@@ -140,7 +146,7 @@ def main():
     os.makedirs(os.path.dirname(AUTHORS_FILE), exist_ok=True)
     with open(AUTHORS_FILE, 'w', encoding='utf-8') as f:
         yaml.dump(existing_authors, f, allow_unicode=True, sort_keys=False)
-    print(f"Successfully added new author to {AUTHORS_FILE}")
+    logger.info(f"Successfully added new author '{author_name}' to {AUTHORS_FILE}")
 
     # --- PART 2: Extract author names and rebuild dropdown options ---
     # Parse the updated YAML file to extract all author names
