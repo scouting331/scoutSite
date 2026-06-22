@@ -293,6 +293,11 @@ def main():
     album_input = data.get("photo-album", "")
     # Extract all markdown image links from the multi-file upload field
     album_matches = re.findall(r'!\[.*?\]\(((https?://[^\s\)]+))\)', album_input)
+
+    # Fallback: if no markdown links found, look for plain URLs
+    if not album_matches:
+        album_matches = [(url, url) for url in re.findall(r'https?://[^\s\)]+', album_input)]
+
     has_album = False
 
     if album_matches:
@@ -330,6 +335,10 @@ def main():
     blog_content = data.get("blog-content", "")
     # Find all markdown image URLs inside the text editor field
     inline_matches = re.findall(r'!\[.*?\]\(((https?://[^\s\)]+))\)', blog_content)
+
+    # Fallback: if no markdown links found, look for plain URLs
+    if not inline_matches:
+        inline_matches = [(url, url) for url in re.findall(r'https?://[^\s\)]+', blog_content)]
 
     if inline_matches:
         tmp_inline_dir = "/tmp/raw_inline"
