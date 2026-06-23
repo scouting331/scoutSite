@@ -31,3 +31,6 @@ scripts/.venv/
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# Local Files
+local_notes.md
