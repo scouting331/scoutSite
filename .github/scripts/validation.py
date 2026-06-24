@@ -107,6 +107,6 @@ def validate_image_download(url, dest_path, max_size_mb=25):
         if os.path.exists(dest_path):
             try:
                 os.remove(dest_path)
-            except:
-                pass
+            except OSError as cleanup_error:
+                logger.warning(f"Failed to remove invalid download '{dest_path}': {cleanup_error}")
         return False
