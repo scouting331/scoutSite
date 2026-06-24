@@ -20,6 +20,10 @@ import os
 import sys
 import urllib.request
 from PIL import Image, ImageOps
+from validation import validate_image_download
+from logging_config import setup_logging
+
+logger = setup_logging(__name__)
 
 # Constant definitions for project directories and structural files
 AUTHORS_FILE = 'blog/authors.yml'
@@ -47,6 +51,7 @@ def main():
     author_name = data.get("name", "").strip()
     author_title = data.get("title", "").strip()
     raw_image_url = data.get("image_url", "").strip()
+    logger.info(f"Processing new author: {author_name}")
 
     # Isolate image URL using regex if it is wrapped inside Markdown syntax e.g., (https://url.com)
     image_url = ""
@@ -59,14 +64,15 @@ def main():
         print("Missing required fields. Exiting.")
         sys.exit(1)
 
-    # Read the existing document text to safely scan for duplicate profiles
-    raw_content = ""
+    # Read and parse existing authors to check for duplicates
+    existing_authors = {}
     if os.path.exists(AUTHORS_FILE):
         with open(AUTHORS_FILE, 'r', encoding='utf-8') as f:
-            raw_content = f.read()
-        
-        # Guard clause preventing duplicate submissions of existing author names
-        if f"name: {author_name}" in raw_content or f'name: "{author_name}"' in raw_content:
+            existing_authors = yaml.safe_load(f) or {}
+
+    # Guard clause preventing duplicate submissions of existing author names
+    for author_key, author_data in existing_authors.items():
+        if author_data and author_data.get('name', '').lower() == author_name.lower():
             print(f"::error::The author name '{author_name}' already exists.")
             sys.exit(1)
 
@@ -74,12 +80,12 @@ def main():
     slug = author_name.lower()
     slug = re.sub(r'[^a-z0-9\s-]', '', slug)
     slug = re.sub(r'[\s-]+', '-', slug).strip('-')
-    
+
     final_slug = slug
     counter = 1
-    
+
     # Loop and append incremental numerical suffixes if slug collisions exist
-    while f"{final_slug}:" in raw_content:
+    while final_slug in existing_authors:
         final_slug = f"{slug}-{counter}"
         counter += 1
 
@@ -93,69 +99,73 @@ def main():
         _, ext = os.path.splitext(clean_url[0])
         if not ext:
             ext = ".jpg" # Fall back to JPG extension if undetected
-        
+
         # Stash download payload in server /tmp space
         tmp_avatar_path = f"/tmp/raw_avatar{ext}"
         try:
-            urllib.request.urlretrieve(image_url, tmp_avatar_path)
-            
-            # Setup image configuration names and location paths
-            target_file_name = f"{final_slug}.webp"
-            target_full_path = os.path.join(AUTHORS_IMG_DIR, target_file_name)
-            
-            # Execute image processing pipeline via Pillow (PIL)
-            with Image.open(tmp_avatar_path) as img:
-                img = ImageOps.exif_transpose(img) # Re-orient image according to metadata tags
-                if img.mode in ("P", "CMYK"):      # Convert non-standard modes to preserve transparencies
-                    img = img.convert("RGBA")
-                img.thumbnail((500, 500), Image.Resampling.LANCZOS) # High-fidelity scale reduction
-                img.save(target_full_path, format="WEBP", quality=85) # Save and optimize file space
-            
-            # Save the final relative public path to be referenced on the blog front-end
-            final_image_path = f"/img/blog/authors/{target_file_name}"
-            print(f"Successfully processed and saved avatar to {target_full_path}")
-            
-            # Clean up server system storage by removing the raw downloaded asset
-            if os.path.exists(tmp_avatar_path):
-                os.remove(tmp_avatar_path)
+            if validate_image_download(image_url, tmp_avatar_path):
+                # Setup image configuration names and location paths
+                target_file_name = f"{final_slug}.webp"
+                target_full_path = os.path.join(AUTHORS_IMG_DIR, target_file_name)
+
+                # Execute image processing pipeline via Pillow (PIL)
+                with Image.open(tmp_avatar_path) as img:
+                    img = ImageOps.exif_transpose(img) # Re-orient image according to metadata tags
+                    if img.mode in ("P", "CMYK"):      # Convert non-standard modes to preserve transparencies
+                        img = img.convert("RGBA")
+                    img.thumbnail((500, 500), Image.Resampling.LANCZOS) # High-fidelity scale reduction
+                    img.save(target_full_path, format="WEBP", quality=85) # Save and optimize file space
+
+                # Save the final relative public path to be referenced on the blog front-end
+                final_image_path = f"/img/blog/authors/{target_file_name}"
+                print(f"Successfully processed and saved avatar to {target_full_path}")
+
+                # Clean up server system storage by removing the raw downloaded asset
+                if os.path.exists(tmp_avatar_path):
+                    os.remove(tmp_avatar_path)
+            else:
+                print(f"Warning: Avatar image validation failed. Continuing without avatar.")
         except Exception as e:
             print(f"Warning: Failed to download or process avatar image. Error: {e}")
 
-    # Build the textual YAML data mapping block to safely maintain standard docstrings
-    entry_lines = [
-        f"{final_slug}:",
-        f"  name: {author_name}",
-        f"  title: {author_title}",
-        "  page: true"
-    ]
+    # Build new author entry using safe YAML data structures
+    author_entry = {
+        final_slug: {
+            'name': author_name,
+            'title': author_title,
+            'page': True
+        }
+    }
     if final_image_path:
-        entry_lines.append(f"  image_url: {final_image_path}")
-        
-    raw_append_block = "\n" + "\n".join(entry_lines) + "\n"
+        author_entry[final_slug]['image_url'] = final_image_path
 
-    # Append structural string configurations to the bottom of the files document map
-    with open(AUTHORS_FILE, 'a', encoding='utf-8') as f:
-        f.write(raw_append_block)
-    print(f"Successfully appended new profile block to {AUTHORS_FILE}")
+    # Update existing authors dictionary with new entry
+    existing_authors.update(author_entry)
 
-    # --- PART 2: REGEX SEARCH EXTRAC NAME ATTRIBUTES TO BUILD DROPDOWNS ---
+    # Write updated authors back to file using YAML library (safely handles special characters)
+    os.makedirs(os.path.dirname(AUTHORS_FILE), exist_ok=True)
+    with open(AUTHORS_FILE, 'w', encoding='utf-8') as f:
+        yaml.dump(existing_authors, f, allow_unicode=True, sort_keys=False)
+    logger.info(f"Successfully added new author '{author_name}' to {AUTHORS_FILE}")
+
+    # --- PART 2: Extract author names and rebuild dropdown options ---
+    # Parse the updated YAML file to extract all author names
     with open(AUTHORS_FILE, 'r', encoding='utf-8') as f:
-        updated_raw_content = f.read()
-        
-    # Isolate individual text strings matching metadata properties
-    all_names = re.findall(r'^\s*name:\s*["\']?(.*?)["\']?\s*$', updated_raw_content, re.MULTILINE)
-    all_names = [n.strip() for n in all_names if n.strip()]
-    all_names.sort() # Arrange elements in alphanumeric order
+        all_authors = yaml.safe_load(f) or {}
 
-    # Format items to valid list elements matching template indent spaces
+    # Extract names and sort alphabetically
+    all_names = [author_data.get('name', '') for author_data in all_authors.values() if author_data and author_data.get('name')]
+    all_names.sort()
+
+    # Format as YAML list items matching template indentation
     yaml_lines = [f"        - {name}" for name in all_names]
     replacement_string = "\n".join(yaml_lines)
 
-    # Perform regular expression lookup and insert the list inside the anchor tags
+    # Update the issue template with the regenerated dropdown
     if os.path.exists(TEMPLATE_FILE):
         with open(TEMPLATE_FILE, 'r') as f:
             template_content = f.read()
-        
+
         # Regex anchor block logic tracking target replacement parameters
         pattern = r'(# AUTHOR_START\n)(.*?)(\n\s*# AUTHOR_END)'
         updated_content = re.sub(
@@ -164,8 +174,8 @@ def main():
             template_content,
             flags=re.DOTALL
         )
-        
-        # Commit updated structured listings back to local document storage files
+
+        # Write updated template back to file
         with open(TEMPLATE_FILE, 'w') as f:
             f.write(updated_content)
         print(f"Successfully updated dropdown in {TEMPLATE_FILE}")

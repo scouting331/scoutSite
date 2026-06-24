@@ -1,0 +1,88 @@
+name: Process Content Automation
+
+on:
+  workflow_call:
+    inputs:
+      script-name:
+        required: true
+        type: string
+        description: Name of the Python script to run (e.g., generate_post.py)
+      template-path:
+        required: true
+        type: string
+        description: Path to the issue template
+      content-type:
+        required: true
+        type: string
+        description: Type of content (blog, docs, new-author)
+      pr-title-prefix:
+        required: true
+        type: string
+        description: PR title prefix (e.g., feat(blog):)
+    secrets:
+      APP_ID:
+        required: true
+      APP_PRIVATE_KEY:
+        required: true
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Parse Issue Form
+        id: parse
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: ${{ inputs.template-path }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Process Content
+        id: process
+        env:
+          ISSUE_JSON: ${{ steps.parse.outputs.jsonString }}
+        run: |
+          python .github/scripts/${{ inputs.script-name }}
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          commit-message: "${{ inputs.pr-title-prefix }} from issue #${{ github.event.issue.number }}"
+          branch: "automation/issue-${{ github.event.issue.number }}"
+          title: "${{ inputs.pr-title-prefix }} ${{ github.event.issue.title }}"
+          body: |
+            This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.
+            Closes #${{ github.event.issue.number }}
+          delete-branch: true
+          labels: ${{ inputs.content-type }}
+
+      - name: Comment on Issue with PR Link
+        if: steps.cpr.outputs.pull-request-number != ''
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            🎉 Success! A staging branch has been created.
+
+            Your submission is ready for review here: 👉 ${{ steps.cpr.outputs.pull-request-url }}

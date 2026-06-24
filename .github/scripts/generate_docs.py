@@ -27,9 +27,13 @@ import os
 import json
 import re
 import hashlib
-import urllib.request 
+import urllib.request
 from io import BytesIO
 from PIL import Image, ImageOps
+from validation import validate_image_download
+from logging_config import setup_logging
+
+logger = setup_logging(__name__)
 
 # --- Helper functions ---
 def optimize_convert_and_hash_images(input_dir, output_dir, max_size=(1920, 1080), quality=80, keep_original_names=False):
@@ -187,7 +191,8 @@ def main():
     # Get safe_title and raw_title from 'title'
     raw_title = data.get("title", "Untitled Document").strip() # Pulls the document heading text from form mappings
     description = data.get("description", "").strip() # Pulls the descriptive subtext metadata parameter string
-    
+    logger.info(f"Processing documentation: {raw_title}")
+
     # Extract structural form input parameters from the loaded configuration map
     selected_unit = data.get("unit", "General").strip()     # Fetches target sorting classification group
     doc_content = data.get("doc-content", "")               # Extracts core multi-line markdown narrative layout text
@@ -213,6 +218,10 @@ def main():
     # Regular expression capturing markdown image link variants, isolating raw matching pairs and clean URLs
     inline_matches = re.findall(r'!\[.*?\]\(((https?://[^\s\)]+))\)', doc_content)
 
+    # Fallback: if no markdown links found, look for plain URLs
+    if not inline_matches:
+        inline_matches = [(url, url) for url in re.findall(r'https?://[^\s\)]+', doc_content)]
+
     # Conditional workflow block executing download pipelines if inline graphic links were identified
     if inline_matches:
         tmp_inline_dir = "/tmp/raw_doc_inline"              # Defines isolated local runner workspace scratchpad buffer path
@@ -230,43 +239,45 @@ def main():
             inline_filepath = os.path.join(tmp_inline_dir, inline_filename) # Builds absolute path context link
 
             try:
-                # Dispatches server download request stream fetching remote assets directly onto the local drive
-                urllib.request.urlretrieve(clean_match_url, inline_filepath)
-                # Writes `.ref` sidecar files containing original absolute URL references to assist optimization mapping steps
-                with open(f"{inline_filepath}.ref", "w") as ref_f:
-                    ref_f.write(clean_match_url)
+                # Validate and download the image file
+                if validate_image_download(clean_match_url, inline_filepath):
+                    # Writes `.ref` sidecar files containing original absolute URL references to assist optimization mapping steps
+                    with open(f"{inline_filepath}.ref", "w") as ref_f:
+                        ref_f.write(clean_match_url)
+                else:
+                    print(f"Skipping inline image due to validation failure: {clean_match_url}")
             except Exception as e:
                 print(f"Failed downloading inline image {clean_match_url}: {e}") # Non-blocking diagnostic tracker logging
 
-            # Optimize downloads: scales, hashes, saves optimized assets, and removes temporary items from scratch space
-            inline_map = optimize_convert_and_hash_images(tmp_inline_dir, static_folder, keep_original_names=False)
+        # Optimize downloads: scales, hashes, saves optimized assets, and removes temporary items from scratch space
+        inline_map = optimize_convert_and_hash_images(tmp_inline_dir, static_folder, keep_original_names=False)
 
-            # Swap out raw URLs inside text area with local static paths
-            # Step down through calculated mapping dictionary records to update text body markup variables
-            for orig_url, webp_filename in inline_map.items():
-                doc_content = doc_content.replace(orig_url, f"{web_prefix}/{webp_filename}")
-            
-            # --- BUILD FRONT MATTER AND WRITING THE MARKDOWN ---
-            markdown_path = f"{docs_directory}/{slug}.mdx"   # Defines ultimate destination path for the document
+        # Swap out raw URLs inside text area with local static paths
+        # Step down through calculated mapping dictionary records to update text body markup variables
+        for orig_url, webp_filename in inline_map.items():
+            doc_content = doc_content.replace(orig_url, f"{web_prefix}/{webp_filename}")
 
-            # Assemble metadata block required by Docusaurus
-            # Constructs a list array mapping standard key-value headers to fulfill Front Matter criteria
-            front_matter = [
-                "---",
-                f'title: "{safe_title}"',
-                f'description: "{safe_description}"',
-                "---",
-                "",
-            ]
+    # --- BUILD FRONT MATTER AND WRITING THE MARKDOWN ---
+    markdown_path = f"{docs_directory}/{slug}.mdx"   # Defines ultimate destination path for the document
 
-            # Merges compiled header metadata lists with modified markdown text blocks via joining newline strings
-            doc_payload = "\n".join(front_matter) + doc_content
+    # Assemble metadata block required by Docusaurus
+    # Constructs a list array mapping standard key-value headers to fulfill Front Matter criteria
+    front_matter = [
+        "---",
+        f'title: "{safe_title}"',
+        f'description: "{safe_description}"',
+        "---",
+        "",
+    ]
 
-            # Writes operational file contents back down to permanent project storage with universal UTF-8 file layouts
-            with open(markdown_path, "w", encoding="utf-8") as doc_file:
-                doc_file.write(doc_payload)
+    # Merges compiled header metadata lists with modified markdown text blocks via joining newline strings
+    doc_payload = "\n".join(front_matter) + doc_content
 
-            print(f"[Pipeline Complete] Document successfully written to: {markdown_path}")
+    # Writes operational file contents back down to permanent project storage with universal UTF-8 file layouts
+    with open(markdown_path, "w", encoding="utf-8") as doc_file:
+        doc_file.write(doc_payload)
+
+    logger.info(f"Document successfully written to: {markdown_path}")
 
 if __name__ == "__main__":
     main()                                                  # Executes the core application script runtime routine

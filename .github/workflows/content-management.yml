@@ -38,12 +38,12 @@ jobs:                                  # Contains the operational pipelines/jobs
       - name: Set up Python            # Step 4: Installs runtime environment for processing scripts
         uses: actions/setup-python@v6
         with:
-          python-version: "3.x"        # Always provisions the latest minor build variation of Python 3
+          python-version: "3.11"       # Pin to 3.11 for reproducible builds
 
       - name: Install Dependencies     # Step 5: Installs mandatory libraries for image/text handling
         run: |
           python -m pip install --upgrade pip
-          pip install Pillow python-dateutil
+          pip install -r requirements.txt
 
       - name: Process Issue Data and Assets (Python Optimizer) # Step 6: Executes data conversion script
         id: process
@@ -105,12 +105,12 @@ jobs:                                  # Contains the operational pipelines/jobs
       - name: Set up Python            # Step 4: Installs runtime environment for processing scripts
         uses: actions/setup-python@v6
         with:
-          python-version: "3.x"
+          python-version: "3.11"
 
       - name: Install Dependencies     # Step 5: Installs mandatory libraries for file handling
         run: |
           python -m pip install --upgrade pip
-          pip install Pillow
+          pip install -r requirements.txt
 
       - name: Process Issue Data and Assets (Python Optimizer) # Step 6: Executes file conversion script
         id: process
@@ -172,19 +172,25 @@ jobs:                                  # Contains the operational pipelines/jobs
       - name: Set up Python            # Step 4: Installs runtime environment for onboarding script
         uses: actions/setup-python@v6
         with:
-          python-version: "3.x"
+          python-version: "3.11"
 
       - name: Install Dependencies     # Step 5: Installs text/image optimization libraries
         run: |
           python -m pip install --upgrade pip
-          pip install Pillow PyYAML python-dateutil
+          pip install -r requirements.txt
 
       - name: Process Author and Update Files # Step 6: Appends dataset and edits dropdown lists
         id: process_files
         env:
           ISSUE_DATA: ${{ steps.parse.outputs.jsonString }} # Context identifier variable name target
         run: |
-          python .github/scripts/add_author.py
+          python .github/scripts/add_author.py 2>&1 | tee /tmp/author_output.txt
+          exit_code=${PIPESTATUS[0]}
+          echo "exit_code=$exit_code" >> $GITHUB_OUTPUT
+          if [ $exit_code -ne 0 ]; then
+            echo "script_output=$(cat /tmp/author_output.txt | tr '\n' ' ')" >> $GITHUB_OUTPUT
+            exit $exit_code
+          fi
 
       - name: Create Pull Request      # Step 7: Opens a staging PR updating configuration maps
         if: success()                  # Condition check: ensures data steps finished with exit code 0
@@ -225,20 +231,40 @@ jobs:                                  # Contains the operational pipelines/jobs
           github-token: ${{ secrets.GITHUB_TOKEN }} # Standard repo token is fine for closure actions
           script: |                    # Runs inline Javascript logic against Github API layers
             const issueNumber = context.issue.number;
+            const scriptOutput = `${{ steps.process_files.outputs.script_output || '' }}`;
+
+            // Check if this is a duplicate author error
+            const isDuplicate = scriptOutput.includes('already exists');
+
+            let errorMessage = '';
+            let shouldClose = false;
+
+            if (isDuplicate) {
+              errorMessage = "🛑 Registration Error: It looks like an author profile with this name already exists in blog/authors.yml. Duplicate entries are not allowed. This issue will now be closed automatically.";
+              shouldClose = true;
+            } else if (scriptOutput) {
+              errorMessage = `🛑 Automation Error: The author registration script failed. Error details:\n\n\`\`\`\n${scriptOutput}\n\`\`\`\n\nPlease review the error message above and reopen this issue after making corrections.`;
+              shouldClose = false;
+            } else {
+              errorMessage = "🛑 Automation Error: The author registration script failed. Please check the workflow logs for more details and reopen this issue after making corrections.";
+              shouldClose = false;
+            }
+
             // Post notification error explanation comment to issue chat log
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber,
-              body: "🛑 Registration Error: It looks like an author profile with
-              this name already exists in blog/authors.yml. Duplicate entries are
-              not allowed. This issue will now be closed automatically."
+              body: errorMessage
             });
-            // Immediately close out the issue and label it as uncompleted
-            await github.rest.issues.update({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issueNumber,
-              state: 'closed',
-              state_reason: 'not_planned'
-            });
+
+            // Only close if it's a duplicate error
+            if (shouldClose) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                state: 'closed',
+                state_reason: 'not_planned'
+              });
+            }
