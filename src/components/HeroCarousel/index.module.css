@@ -16,3 +16,13 @@
   align-items: center;                    /* Centers button elements perfectly along vertical coordinate balancing nodes */
   justify-content: center;                 /* Centers button elements perfectly along the horizontal alignment tracking grid */
 }
+
+.buttons a {
+  text-decoration: none;
+}
+
+.buttons a:focus-visible,
+.heroBanner :focus-visible {
+  outline: 3px solid var(--scouting-america-white);
+  outline-offset: 4px;
+}

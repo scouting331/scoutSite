@@ -12,7 +12,7 @@
  * @requires @theme/Heading
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";                            // Import the core react-slick sliding carousel framework layout component
 import clsx from "clsx";                                    // Utility engine used for conditionally joining dynamic string classes together
 import Link from "@docusaurus/Link";                        // Docusaurus optimized router link component to prevent full-page reloads
@@ -20,6 +20,7 @@ import useDocusaurusContext from "@docusaurus/useDocusaurusContext"; // React ho
 
 import Heading from "@theme/Heading";                        // Swappable theme heading component supporting semantic HTML structures
 import styles from "./index.module.css";                  // Scoped CSS Modules styling sheet for this specific layout component
+import { homepageHeroSlides } from "@site/src/data/homepageContent";
 
 /**
  * Renders the text overlay for the hero section, including the site title, 
@@ -35,8 +36,8 @@ function HeroText() {
   return (
     // Inner typography container absolute-positioned over the active visual image layer
     <div className="overlay-text">
-      {/* Renders a semantic h1 block using the official site title from docusaurus.config.js */}
-      <Heading as="h1" className="hero__title">
+      {/* Renders a semantic h2 block using the official site title from docusaurus.config.js */}
+      <Heading as="h2" className="hero__title">
         {siteConfig.title}
       </Heading>
       {/* Renders the official site subtitle/tagline text from docusaurus.config.js */}
@@ -44,7 +45,11 @@ function HeroText() {
       {/* Action button grouping container wrapper */}
       <div className={styles.buttons}>
         {/* Large, high-contrast call-to-action button routing users directly to the recruitment form page */}
-        <Link className="button button--secondary button--lg" to="/join-us">
+        <Link
+          className="button button--secondary button--lg"
+          to="/join-us"
+          aria-label="Learn how to join our Scouting units"
+        >
           Join Us
         </Link>
       </div>
@@ -60,39 +65,57 @@ function HeroText() {
  * @returns {React.JSX.Element} An autoplaying slideshow with interactive navigation overlays.
  */
 export default function HeroCarousel() {
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return undefined;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setReduceMotion(mediaQuery.matches);
+
+    updatePreference();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updatePreference);
+      return () => mediaQuery.removeEventListener("change", updatePreference);
+    }
+
+    mediaQuery.addListener(updatePreference);
+    return () => mediaQuery.removeListener(updatePreference);
+  }, []);
+
   // Configuration options object passed to configure the underlying react-slick engine
   const settings = {
     dots: true,                           // Enables the navigation dots tracker buttons at the bottom of the card frame
     infinite: true,                       // Loops the carousel slides infinitely back to slide 1 upon reaching the terminal item
     fade: true,                           // Deploys a smooth opacity cross-fade transition instead of a horizontal slide swipe action
-    speed: 1000,                          // Setting tracking animation cross-fade layout transition durations (1000ms = 1 second)
+    speed: reduceMotion ? 0 : 1000,       // Uses a direct transition when reduced motion is preferred
     slidesToShow: 1,                      // Dictates the volume of slides exposed on screen simultaneously within the viewpoint window
     slidesToScroll: 1,                    // Dictates the index increment stepping count value advanced on every progression trigger
-    autoplay: true,                       // Automates background image cycling processes without demanding user interaction clicks
+    autoplay: !reduceMotion,              // Automates background image cycling unless motion is reduced
+    autoplaySpeed: 5000,                  // Sets the timing between automatic slide changes
     waitForAnimate: false,                // Disables animation queues to allow immediate navigation interactions during active fades
     arrows: false,                        // Suppresses the native left/right side navigation arrow buttons to clean up visual clutter
+    accessibility: true,                  // Supports keyboard navigation and screen-reader semantics
+    pauseOnHover: true,                   // Pauses autoplay when visitors hover over the carousel
+    pauseOnFocus: true,                   // Pauses autoplay when the carousel is focused
   };
+
   return (
     // Mounts the Slider wrapper, spreading configuration rules and infusing standard Infima hero layout classes
     <Slider
       {...settings}
+      aria-label="Featured Scouting photos"
       className={clsx("hero hero--primary", styles.heroBanner)}
     >
-      {/* --- CAROUSEL SLIDE ITEM 1 --- */}
-      <div>
-        <HeroText />                      {/* Re-injects the dynamic text overlay structure directly over the active slide index */}
-        <img src="img/carousel/hero1.jpg" alt="Hero slide showing Scouts in action"/>
-      </div>
-      {/* --- CAROUSEL SLIDE ITEM 2 --- */}
-      <div>
-        <HeroText />
-        <img src="img/carousel/hero2.jpg" alt="Hero slide showing Scouts in action"/>
-      </div>
-      {/* --- CAROUSEL SLIDE ITEM 3 --- */}
-      <div>
-        <HeroText />
-        <img src="img/carousel/hero3.jpg" alt="Hero slide showing Scouts in action"/>
-      </div>
+      {homepageHeroSlides.map((slide) => (
+        <div key={slide.id}>
+          <HeroText />
+          <img src={slide.image} alt={slide.alt} loading="lazy" decoding="async" />
+        </div>
+      ))}
     </Slider>
   );
 }

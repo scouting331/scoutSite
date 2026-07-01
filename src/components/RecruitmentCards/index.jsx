@@ -11,6 +11,7 @@
 import PackPng from '@site/static/img/logos/pack-icon.png'; 
 import GirlsPng from '@site/static/img/logos/troop-icon.png';
 import BoysPng from '@site/static/img/logos/troop-icon.png';
+import styles from './index.module.css';
 
 /**
  * Static schema mapping thematic branding variables and registration links for local Scouting units.
@@ -111,27 +112,11 @@ function UnitCard({ title, age, link, bgColor, buttonColor, badgeBg, imgSrc, alt
                 href={link}
                 target="_blank"             // Securely spawns target link windows within unlinked clean tabs
                 rel="noopener noreferrer"   // Eliminates cross-origin resource leakage footprints entirely
+                className={styles.buttonLink}
                 style={{
-                    width: '100%',
-                    display: 'block',
                     backgroundColor: buttonColor,
                     color: 'var(--scouting-america-dark-gray)',
-                    fontWeight: '700',
-                    padding: '0.8rem',
-                    borderRadius: '6px',
-                    textDecoration: 'none',
-                    fontSize: '0.95rem',
                     boxShadow: 'var(--global-box-shadow)',
-                    transition: 'transform 0.15s ease, filter 0.15s ease', // Hardware accelerated runtime smoothing settings
-                }}
-                // Custom event listeners handling interactive micro-animations on mouse interactions
-                onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)'; // Gives card button a floating lift look
-                    e.currentTarget.style.filter = 'brightness(1.08)';  // Gently brightens button color highlights
-                }}
-                onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';   // Restores default translation points
-                    e.currentTarget.style.filter = 'brightness(1)';     // Re-establishes base canvas brightness limits
                 }}
             >
                 {/* Programmatic string parsing splitting text strings to slice unit names dynamically */}
@@ -169,11 +154,12 @@ export default function SignUpCards({ youtubeId }) {
                 <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
                     <iframe
                         // Employs youtube-nocookie.com to block automated tracking cookies from scraping user profile data paths
-                        src={`https://youtube-nocookie.com{youtubeId}?autoplay=1&mute=1&controls=0&rel=0`}
+                        src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&rel=0`}
                         title="Scouting America Recruitment Video" 
                         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin" 
+                        loading="lazy"
                         allowFullScreen>
                     </iframe>
                 </div>

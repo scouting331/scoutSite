@@ -105,6 +105,12 @@ hide_table_of_contents: true
 
 - **Local Dev:** `npm run start`
 
+## Performance & Copy Guidance
+
+- **Quick-loading pages:** Prioritize fast page rendering and avoid large client-side bundles on landing pages.
+- **Concise messaging:** Keep homepage copy short and direct so visitors immediately understand our units and how to join.
+- **Image loading:** Use `loading="lazy"` and `decoding="async"` for non-critical images to improve page speed.
+
 ## AI Commenting & Documentation Standards
 
 All generated code (JavaScript, JSX, Python, Bash) must be heavily commented and

@@ -10,21 +10,6 @@
  */
 import React from "react";
 import Footer from "@theme-original/Footer";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
-
-/**
-/**
- * @file index.js
- * @description A custom wrapper that extends the default Docusaurus footer layout via swizzling.
- * Appends a secondary custom copyright split-section utilizing global site configuration fields.
- * 
- * @module FooterWrapper
- * @requires React
- * @requires @theme-original/Footer
- * @requires @docusaurus/useDocusaurusContext
- */
-import React from "react";
-import Footer from "@theme-original/Footer";              // Imports the unswizzled core Docusaurus original theme footer blueprint
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext"; // React context hook to fetch metadata arrays out of docusaurus.config.js
 
 /**

@@ -26,15 +26,14 @@ const defaultBlogPlugin = blogPluginExports.default;
  */
 async function blogPluginEnhanced(...pluginArgs) {
   const blogPluginInstance = await defaultBlogPlugin(...pluginArgs);
-  // This is the hidden background folder where Docusaurus builds temporary files
-  const dir = ".docusaurus";
 
   return {
     ...blogPluginInstance,
+    name: "recent-blog-posts",
     
     /**
      * Intercepts compiled blog data structures, extracts public post metadata nodes,
-     * writes them synchronously to disk, and runs the upstream plugin lifecycle handler.
+     * stores them as plugin global data, and runs the upstream plugin lifecycle handler.
      * 
      * @async
      * @method contentLoaded
@@ -44,33 +43,17 @@ async function blogPluginEnhanced(...pluginArgs) {
      * @returns {Promise<void>} Resolves when downstream base core operations complete execution.
      */
     contentLoaded: async function (data) {
-      // Step 1: Create a safe copy of all existing blog posts
       let recentPosts = [...data.content.blogPosts]
-        // Step 2: Remove any posts marked as hidden or unlisted
         .filter((p) => !p.metadata.unlisted)
-        // Step 3: Cut the list down to only keep the 4 most recent adventures
-        .slice(0, 4);
-
-      // Step 4: Clean up the data layout to keep the file size incredibly tiny
-      recentPosts = recentPosts.map((p) => {
-        return {
+        .slice(0, 4)
+        .map((p) => ({
           id: p.id,
           metadata: {
-            // Safely import title, date, permalink, description, tags, and processed author arrays
             ...p.metadata,
           },
-        };
-      });
+        }));
 
-      // Step 5: Make sure the hidden tracking folder exists so the computer doesn't crash
-      fs.mkdirSync(dir, {
-        recursive: true, // If the folder already exists, safely skip creating a new one
-      });
-
-      // Step 6: Convert the post list into a plain-text file so front-end widgets can load it quickly
-      fs.writeFileSync(`${dir}/recent-posts.json`, JSON.stringify(recentPosts, null, 2));
-
-      // Step 7: Tell Docusaurus to finish setting up the rest of the website normally
+      data.actions.setGlobalData(recentPosts);
       return blogPluginInstance.contentLoaded(data);
     },
   };

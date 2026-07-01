@@ -9,6 +9,11 @@
  */
 
 import { themes as prismThemes } from "prism-react-renderer";
+import {
+  navbarItems,
+  footerLinks,
+  siteMetadata,
+} from "./src/data/siteContent";
 
 /**
  * Global configuration data schema structure for Docusaurus system operations.
@@ -21,9 +26,8 @@ const SHOW_ANNOUNCEMENT = false;
 
 const config = {
   // --- CORE WEBSITE IDENTITY ---
-  title: "The Scouting Units of American Legion Post 331",
-  tagline:
-    "Discover character, leadership, and outdoor adventure for youth ages 5-20 with the Brownsburg, IN Scouting America units at Post 331.",
+  title: siteMetadata.title,
+  tagline: siteMetadata.tagline,
   favicon: "img/logos/favicon.png",
 
   // Future flags ensure our code remains compatible with upcoming major versions of Docusaurus.
@@ -184,144 +188,14 @@ const config = {
         src: "img/logos/all-units-logo.png",
       },
       // Left and right aligned items sitting at the top of the webpage.
-      items: [
-        {
-          type: "dropdown",
-          label: "Unit Sites",
-          position: "right",
-          items: [
-            { label: "Troop 303", to: "/troop-303" },
-            { label: "Troop 331", to: "/troop-331" },
-            { label: "Crew 303", to: "/crew-303" },
-            { label: "Pack 303", to: "/pack-303" },
-          ],
-        },
-        {
-          to: "/blog",
-          label: "Blog",
-          position: "right",
-        },
-        {
-          to: "/join-us",
-          label: "Join Us",
-          position: "right",
-          className: "button button--secondary", // Applies a standalone decorative theme button styling.
-        },
-      ],
+      items: navbarItems,
       hideOnScroll: false, // Keeps navigation links immediately accessible at the top while reading down pages.
     },
 
     // --- FOOTER SECTION ---
     footer: {
       style: "dark", // Employs the charcoal/black theme layout block at the bottom of the page.
-      links: [
-        {
-          title: "Quick Links",
-          items: [
-            {
-              label: "Documents",
-              to: "/docs/general",
-            },
-            {
-              label: "Blog",
-              to: "/blog",
-            },
-            {
-              label: "Helpful Links",
-              to: "/docs/general/helpful-links",
-            },
-          ],
-        },
-        {
-          title: "Social Media",
-          items: [
-            {
-              html: `
-                <a href="https://www.youtube.com/@Scouting331" 
-                  target="_blank" rel="noreferrer noopener" 
-                  aria-label="YouTube Channel"
-                  class="footer__link-item">
-                  <i class="fa-brands fa-youtube footer__link-logo" aria-hidden="true"></i>
-                  YouTube Channel
-                </a>
-                `,
-            },
-            {
-              html: `
-                <a href="https://www.facebook.com/groups/114681931900039" 
-                  target="_blank" rel="noreferrer noopener" 
-                  aria-label="Troop 303 Facebook Page"
-                  class="footer__link-item">
-                  <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
-                  Troop 303
-                </a>
-                `,
-            },
-            {
-              html: `
-                <a href="https://www.facebook.com/groups/177465650239377" 
-                  target="_blank" rel="noreferrer noopener" 
-                  aria-label="Troop 331 Facebook Page"
-                  class="footer__link-item">
-                  <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
-                  Troop 331
-                </a>
-                `,
-            },
-            {
-              html: `
-                <a href="https://www.facebook.com/groups/441282630057267" 
-                  target="_blank" rel="noreferrer noopener" 
-                  aria-label="Pack 303 Facebook Page"
-                  class="footer__link-item">
-                  <i class="fa-brands fa-facebook footer__link-logo" aria-hidden="true"></i>
-                  Pack 303
-                </a>
-                `,
-            },
-            {
-              html: `
-                <a href="https://www.instagram.com/venturecrew.303" 
-                  target="_blank" rel="noreferrer noopener" 
-                  aria-label="Venture Crew 303 Instagram Page"
-                  class="footer__link-item">
-                  <i class="fa-brands fa-instagram footer__link-logo" aria-hidden="true"></i>
-                  Crew 303
-                </a>
-                `,
-            },
-          ],
-        },
-        // --- CONTACT US FOOTER COLUMN ---
-        {
-          title: "Contact Us",
-          items: [
-            {
-              html: `
-                <div style="display: flex; align-items: flex-start; gap: 8px;">
-                  <i class="fa-solid fa-location-dot footer__logo" aria-hidden="true"></i>
-                  <address style="font-style: normal" class="footer__item">
-                    American Legion Post 331<br />
-                    636 E Main St<br />
-                    Brownsburg, IN 46112
-                  </address>
-                </div>
-                `,
-            },
-            {
-              html: `
-                <!-- Clicking this automatically opens a pre-addressed email window on the user's phone or computer -->
-                <a href="mailto:scoutingunits331@gmail.com?subject=Website%20Inquiry" style="font-style: normal" class="footer__link-item">
-                  <div style="display: flex; align-items: flex-start; gap: 8px;">
-                    <i class="fa-solid fa-at footer__link-logo" aria-hidden="true"></i>
-                    Email Us
-                  </div>
-                </a>
-                `,
-            },
-          ],
-        },
-      ],
+      links: footerLinks,
     },
     // --- CODE BLOCKS SYNTAX HIGHLIGHTING ---
     // Controls how programming snippets look when displayed in documentation tutorials or cookbook instructions.
@@ -341,8 +215,7 @@ const config = {
     metadata: [
       {
         name: "keywords",
-        content:
-          "scouts bsa brownsburg, cub scouts near me, brownsburg scout troops, troop 303 brownsburg, troop 331 indiana, pack 303 indiana, crew 303, scouting america indiana, boy scouts brownsburg indiana, girl scouts bsa hendricks county, youth groups brownsburg in, kids activities brownsburg indiana, kid friendly clubs near me, youth leadership programs, eagle scout rank, cub scout advancement, kids outdoor activities hendricks county, family camping brownsburg, stem activities for kids indiana, youth community service brownsburg, child development groups, scouts bsa girls troop, cub scouts avon indiana, boy scouts pittsboro in, youth sports and adventure brownsburg, child character building programs, community youth organizations indiana",
+        content: siteMetadata.keywords,
       },
     ],
   },
