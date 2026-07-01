@@ -1,0 +1,6 @@
+Contact: mailto:scoutingunits331@gmail.com
+Expires: 2027-07-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://brownsburgscouts.org/.well-known/security.txt
+Policy: https://brownsburgscouts.org/privacy
+Acknowledgments: https://brownsburgscouts.org/privacy
