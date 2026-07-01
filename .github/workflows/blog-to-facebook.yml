@@ -7,6 +7,9 @@
 
 name: Route Blog Posts to Facebook Pages # Friendly workflow tracking name shown in Actions panel
 
+permissions:
+  contents: read
+
 on:                                    # Defines the system event trigger hooks
   push:                                # Listens to push event blocks across the ecosystem
     branches:

@@ -1,5 +1,10 @@
 name: Process Content Automation
 
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
 on:
   workflow_call:
     inputs:
