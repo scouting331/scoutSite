@@ -84,7 +84,7 @@ function Map() {
           <Heading as="h4">Eagle Elementary School</Heading>
           <a 
             href="https://www.google.com/maps/dir/?api=1&destination=Eagle+Elementary+School+555+Sycamore+St,+Brownsburg,+IN+46112-1879,+United+States"
-            target="_blank: text"
+            target="_blank"
             rel="noopener noreferrer">
               Get Directions
           </a>
