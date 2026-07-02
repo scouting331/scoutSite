@@ -1,2 +1,2 @@
 # scripts/requirements.txt
-pillow>=10.0     # Useful for image processing utilities
+pillow>=12.3.0     # Useful for image processing utilities
