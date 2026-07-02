@@ -16,6 +16,7 @@
 import React, { useState, useEffect } from 'react';
 import PhotoAlbum from 'react-photo-album';
 import Lightbox from 'yet-another-react-lightbox';
+import { useColorMode } from '@docusaurus/theme-common';
 import Counter from "yet-another-react-lightbox/plugins/counter";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
@@ -42,12 +43,16 @@ export default function PhotoAlbumGallery({ context }) {
   // --- React State Hook Definitions ---
   const [index, setIndex] = useState(-1); // Active slider slide tracking pointer (-1 indicates the lightbox is currently closed)
   const [photos, setPhotos] = useState([]); // Storage matrix holding array objects of image data (src, width, height, alt)
+  const [isLoading, setIsLoading] = useState(true);
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
+    setIsLoading(true);
+
     // 1. Map out raw files from the passed Webpack require.context asset bundle map
     const files = context.keys().map((key) => ({
       src: context(key).default,            // Extracts compiled production-ready hashed public asset URL strings
-      alt: key.replace('./', ''),           // Normalizes filenames by clearing baseline relative path markers
+      alt: key.replace('./', '').replace(/\.[^.]+$/, ''), // Normalizes filenames into cleaner alt text
     }));
 
     // 2. Wrap each image loader process inside an async Promise block to calculate dimensions safely
@@ -76,12 +81,17 @@ export default function PhotoAlbumGallery({ context }) {
     // 3. Complete all concurrent dimension calculations before updating the state hook matrix data layout
     Promise.all(loadDimensions).then((resolvedPhotos) => {
       setPhotos(resolvedPhotos);             // Overrides local state array data, driving visual layout updates
+      setIsLoading(false);
     });
   }, [context]);                             // Triggers execution pass adjustments if context directory paths change
 
   // --- Conditional UI Render Guard ---
+  if (isLoading) {
+    return <p style={{ color: 'var(--ifm-color-gray-500)' }}>Loading gallery…</p>;
+  }
+
   if (photos.length === 0) {
-    return <p style={{ color: 'var(--ifm-color-gray-500)' }}>Scanning folder assets...</p>;
+    return <p style={{ color: 'var(--ifm-color-gray-500)' }}>No gallery images were found.</p>;
   }
 
   return (
@@ -90,6 +100,7 @@ export default function PhotoAlbumGallery({ context }) {
       <PhotoAlbum
         layout="masonry"                    // Packs images into columns side-by-side using variable heights
         photos={photos}                     // Injects the fully computed metadata asset registry grid
+        spacing={12}
         columns={(containerWidth) => {
           // Dynamic layout calculation tracking screen grid widths to adjust responsive columns scaling maps
           if (containerWidth < 400) return 4; // Tiny screen layouts / mobile panels
@@ -106,9 +117,16 @@ export default function PhotoAlbumGallery({ context }) {
         index={index}                       // Set core presentation frame view index focus node
         close={() => setIndex(-1)}          // Deactivates visibility flags completely on close event execution triggers
         plugins={[Thumbnails, Counter, Fullscreen]} // Mounts secondary core navigation plugin utilities modules layers
+        carousel={{
+          finite: true,
+          preload: 2,
+        }}
         thumbnails={{
           position: "bottom",               // Places the carousel row under the main picture frame container workspace
           showToggle: false,                // Disables and removes the user hide/show icon button layout elements entirely
+        }}
+        styles={{
+          container: { backgroundColor: colorMode === 'dark' ? 'rgba(0, 0, 0, 0.95)' : 'rgba(16, 16, 16, 0.92)' },
         }}
       />
     </>

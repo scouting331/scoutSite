@@ -1,0 +1,87 @@
+# robots.txt for https://brownsburgscouts.org
+# Public content may be crawled for search and AI learning, while private and administrative paths remain off limits.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /members/
+Disallow: /account/
+Disallow: /login/
+Disallow: /wp-admin/
+Disallow: /wp-login.php
+Disallow: /cgi-bin/
+Disallow: /_next/
+Disallow: /tmp/
+Disallow: /.env
+Crawl-delay: 10
+
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /members/
+Disallow: /account/
+Disallow: /login/
+Crawl-delay: 10
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /members/
+Disallow: /account/
+Disallow: /login/
+Crawl-delay: 10
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /members/
+Disallow: /account/
+Disallow: /login/
+Crawl-delay: 10
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /members/
+Disallow: /account/
+Disallow: /login/
+Crawl-delay: 10
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: dotbot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+Sitemap: https://brownsburgscouts.org/sitemap.xml

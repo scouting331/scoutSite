@@ -23,7 +23,7 @@ export default function UpcomingEvents({}) {
     // Outer responsive grid framework container centering the layout section block horizontally
     <div className="container">
       {/* Centered primary header title using the swappable Infima alignment utility class */}
-      <Heading as="h1" className="text--center">
+      <Heading as="h2" className="text--center">
         Upcoming Events
       </Heading>
       
@@ -57,6 +57,7 @@ export default function UpcomingEvents({}) {
         height="600" 
         frameBorder="0"                                     // Legacy layout attribute compatibility lock for older browsers
         scrolling="no"                                      // Suppresses double scrolling bars to preserve parent page scrolling flows
+        loading="lazy"                                      // Defers iframe loading until the user scrolls it into view for performance optimization
       ></iframe>
     </div>
   );

@@ -8,7 +8,7 @@
  * @requires @docusaurus/Link
  * @requires @docusaurus/useBaseUrl
  * @requires @theme/Heading
- * @requires @site/.docusaurus/recent-posts.json
+ * @requires @docusaurus/useGlobalData
  * 
  * @see {@link https://docusaurus.io | Docusaurus Blog Features}
  */
@@ -18,7 +18,7 @@ import Link from '@docusaurus/Link';                        // Docusaurus optimi
 import clsx from "clsx";                                    // Utility for conditionally joining CSS class names together cleanly
 import styles from './styles.module.css';                  // Scoped CSS Modules styling sheet for this specific layout component
 import Heading from '@theme/Heading';                        // Swappable theme heading component supporting semantic HTML structures
-import recentPosts from '@site/.docusaurus/recent-posts.json'; // Pre-built local JSON database payload containing recent post metadata
+import { usePluginData } from '@docusaurus/useGlobalData';    // Consumes plugin-provided build data in React components
 import useBaseUrl from "@docusaurus/useBaseUrl";            // Appends the site's configured baseUrl configuration prefix to static paths
 
 /**
@@ -48,34 +48,20 @@ const formatDate = (isoString) => {
  * @param {Array<Object>} props.tags - List of metadata tag categories with text labels.
  * @param {Object} props.frontmatter - Unprocessed raw frontmatter fields containing configuration like custom cover images.
  */
-function BlogCard({ permalink, title, date, authors, tags }) {
-  // Pre-caches the global server asset path prefixing mapping rule for the default background
-  const fallbackDefaultImage = useBaseUrl('img/blog/default-blog-cover.webp');
-  
+function BlogCard({ permalink, title, date, authors, tags, frontmatter }) {
+  const postImage = frontmatter?.image;
+  const resolvedCoverUrl = postImage
+    ? postImage.startsWith('http')
+      ? postImage
+      : useBaseUrl(postImage.replace(/^\/+/, ''))
+    : useBaseUrl('img/blog/default-blog-cover.webp');
+
   // 1. Isolate the base slug name by stripping the leading "/blog" and trailing slashes
   const cleanUrl = permalink.replace(/^\/|\/$/g, '').replace(/^blog\//, '');
 
   // 2. Isolate ONLY the final trailing title string
   const slugName = cleanUrl.split('/').pop();
   
-  // 3. Extract the exact YYYY-MM-DD prefix from the raw ISO string directly without date manipulation
-  // An ISO timestamp starts with "YYYY-MM-DD", so we slice the first 10 characters
-  const datePrefix = date.slice(0, 10);
-
-  // 4. Combine them into the exact format requested: YYYY-MM-DD-blogtitle
-  const folderName = `${datePrefix}-${slugName}`;
-  
-  let resolvedCoverUrl;
-  try {
-    // 2. Webpack looks inside the static folder during compile time
-    // Dynamically checks for the presence of an optimized webp illustration file asset block at compilation time
-    resolvedCoverUrl = require(`@site/static/img/blog/${folderName}/cover.webp`).default;
-  } catch (err) {
-    // 3. If file doesn't exist, it instantly uses the fallback at build time
-    // Fallback error-handling catching missing directory trees to seamlessly inject standard cards instead
-    resolvedCoverUrl = fallbackDefaultImage;
-  }
-
   return (
     // Infuses standard Infima CSS grid infrastructure properties (allocating 3 out of 12 columns per entry)
     <div className={clsx("col col--3 margin-bottom--lg")}>
@@ -87,6 +73,8 @@ function BlogCard({ permalink, title, date, authors, tags }) {
             src={resolvedCoverUrl} 
             alt={title} 
             className={styles.cardImage}
+            loading="lazy"
+            decoding="async"
           />
         </div>
 
@@ -139,15 +127,27 @@ function BlogCard({ permalink, title, date, authors, tags }) {
  * @returns {JSX.Element} Structural framework rendering recent post items.
  */
 export default function HomepageBlogCards() {
+    const recentPosts = usePluginData('recent-blog-posts') || [];
+
     return (
         <>
         {/* Layout container aligning content cleanly along central layout coordinate nodes */}
         <div style={{ textAlign: "center", marginTop: "2rem" }}>
-            <Heading as="h1">Recent Adventures</Heading>
+            <Heading as="h2">Recent Adventures</Heading>
         </div>
         {/* Standard center-aligned responsive Infima CSS grid structural layout row box wrapper */}
         <div className="container">
-            <div className="row">
+            {recentPosts.length === 0 ? (
+              <div className="row">
+                <div className="col col--12 text--center">
+                  <p>
+                    No recent adventures are available yet. Check back soon for new
+                    stories from Pack 303, Troop 303, Troop 331, and Crew 303.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="row">
                 {/* Dynamically steps down through the collection items data payload to inject the components grid */}
                 {recentPosts.map((post) => (
                     <BlogCard
@@ -160,7 +160,8 @@ export default function HomepageBlogCards() {
                         frontmatter={post.metadata.frontMatter} // Access parameter tracking optional variables custom set inside posts
                     />
                 ))}
-            </div>
+              </div>
+            )}
         </div>
         </>
     );

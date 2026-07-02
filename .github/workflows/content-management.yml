@@ -6,6 +6,11 @@
 
 name: Content Management Automation    # Friendly name displayed in the GitHub Actions tab
 
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
 on:                                    # Defines the event hook that triggers this workflow
   issues:                              # Listens to issue activity
     types: [opened]                    # Restricts execution to run only when an issue is newly created
