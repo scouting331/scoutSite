@@ -119,11 +119,8 @@ Help document guides, resources, and procedures for our community.
   ````
   ```markdown
   code here
+  ```
   ````
-
-  ```
-
-  ```
 
 - Add inline images if needed
 - Keep content organized and easy to scan
