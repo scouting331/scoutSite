@@ -63,7 +63,7 @@ jobs:                                  # Contains the operational pipelines/jobs
         with:
           token: ${{ steps.app-token.outputs.token }} # Grants PR permissions via the generated App token
           commit-message: "feat(blog): add new post from issue #${{ github.event.issue.number }}"
-          branch: "automation/issue-${{ github.event.issue.number }}-${{ env.BLOG_FILENAME }}" # Isolated branch path
+          branch: "automation/issue-${{ github.event.issue.number }}-${{ github.event.issue.title }}" # Isolated branch path
           title: "feat(blog): ${{ github.event.issue.title }}" # Sets the issue title as the PR title
           body: |                      # Description text posted within the generated PR body description
             This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.
@@ -130,7 +130,7 @@ jobs:                                  # Contains the operational pipelines/jobs
         with:
           token: ${{ steps.app-token.outputs.token }}
           commit-message: "feat(docs): add new doc from issue #${{ github.event.issue.number }}"
-          branch: "automation/issue-${{ github.event.issue.number }}-${{ env.DOC_FILENAME }}"
+          branch: "automation/issue-${{ github.event.issue.number }}-${{ github.event.issue.title }}"
           title: "feat(docs): ${{ github.event.issue.title }}"
           body: |
             This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.

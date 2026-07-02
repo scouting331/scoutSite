@@ -5,10 +5,8 @@ to prevent malicious uploads and disk exhaustion attacks.
 """
 import urllib.request
 import urllib.error
-import mimetypes
 import logging
 import os
-from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
