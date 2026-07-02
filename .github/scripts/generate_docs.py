@@ -27,7 +27,6 @@ import os
 import json
 import re
 import hashlib
-import urllib.request
 from io import BytesIO
 from PIL import Image, ImageOps
 from validation import validate_image_download

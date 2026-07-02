@@ -18,7 +18,6 @@ import yaml
 import re
 import os
 import sys
-import urllib.request
 from PIL import Image, ImageOps
 from validation import validate_image_download
 from logging_config import setup_logging

@@ -32,7 +32,6 @@ import os
 import json
 import re
 import hashlib
-import urllib.request
 from io import BytesIO
 from datetime import datetime
 from dateutil import parser

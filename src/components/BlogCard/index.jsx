@@ -56,12 +56,6 @@ function BlogCard({ permalink, title, date, authors, tags, frontmatter }) {
       : useBaseUrl(postImage.replace(/^\/+/, ''))
     : useBaseUrl('img/blog/default-blog-cover.webp');
 
-  // 1. Isolate the base slug name by stripping the leading "/blog" and trailing slashes
-  const cleanUrl = permalink.replace(/^\/|\/$/g, '').replace(/^blog\//, '');
-
-  // 2. Isolate ONLY the final trailing title string
-  const slugName = cleanUrl.split('/').pop();
-  
   return (
     // Infuses standard Infima CSS grid infrastructure properties (allocating 3 out of 12 columns per entry)
     <div className={clsx("col col--3 margin-bottom--lg")}>

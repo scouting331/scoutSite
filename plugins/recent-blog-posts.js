@@ -12,7 +12,6 @@
  * @environment Node.js (Build-time compilation middleware)
  */
 
-const fs = require("node:fs");
 const blogPluginExports = require("@docusaurus/plugin-content-blog");
 const defaultBlogPlugin = blogPluginExports.default;
 
