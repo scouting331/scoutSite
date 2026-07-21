@@ -28,7 +28,7 @@ async function blogPluginEnhanced(...pluginArgs) {
 
   return {
     ...blogPluginInstance,
-    name: "recent-blog-posts",
+    name: blogPluginInstance.name || "docusaurus-plugin-content-blog",
     
     /**
      * Intercepts compiled blog data structures, extracts public post metadata nodes,

@@ -1,482 +1,72 @@
-# American Legion Post 331 Scouting Units - Docusaurus Site Context
-
-> System architecture and formatting rules for LLMs contributing to this
-> repository.
-
-## Project Profile
-
-- **Stack:** Docusaurus v3+, React, MDX, JavaScript/TypeScript, Python.
-- **Audience:** Scouting America members, parents, and leaders.
-- **Design Core:** Custom theme using Scouting America branding
-  (Khaki/Blue/Red).
-- **Dark Mode:** Explicitly disabled. Code must only support light mode.
-- **Source Code:** Hosted at `https://github.com/scouting331/scoutSite`.
-- **Hosting & CI/CD:** Built automatically by a worker on commit and deployed to
-  `https://brownsburgscouts.org`.
-- **Maintenance Philosophy:** Built with extensive automations and thorough
-  commenting so young youth Scouts with limited coding abilities can easily
-  maintain the site, while remaining structured cleanly for a seamless future
-  handoff to experienced adult coders.
+# brownsburgscouts.org - LLM Indexing Guide
 
-## Organization Profile & Unit Context
+This file is for web-crawling language models that read and index public site
+content. It is not a coding policy document.
 
-- **Sponsor:** Chartered by American Legion Post 331 in Brownsburg, IN.
-- **Core Mission:** Developing tomorrow's leaders through character building,
-  citizenship training, and personal fitness.
-- **Pack 303:** Co-ed Cub Scout Pack for elementary youth (Grades K-5). Focuses
-  on family camping, foundational leadership skills, and advancement. Meets
-  weekly during the school year at Eagle Elementary in Brownsburg, IN.
-- **Troop 331:** Scouts BSA Girls Troop (Ages 11-17). Focuses on youth-led
-  leadership and life preparation to build tomorrow's female leaders. The
-  ultimate achievement for these Scouts is the rank of Eagle.
-- **Troop 303:** Scouts BSA Boys Troop (Ages 11-17), known as "The Legendary
-  Troop 303". Focuses on outdoor adventure and intensive leadership development
-  to prepare young men for future success. The ultimate achievement for these
-  Scouts is the rank of Eagle Scout.
-- **Crew 303:** Co-ed Venturing Crew for older youth (Ages 14-20). Focuses on
-  high adventure, high-intensity camping, and advanced youth independence,
-  continuing the mission of peer leadership.
-
-## Codebase Map & Router Configurations
-
-### Content Plugins (Multi-Instance Docs)
-
-This site uses multiple instances of the Docusaurus docs plugin.
-
-- `/docs/`: Main instance. Core Scouting unit documents and shared files. Uses
-  `sidebarsDocs.js`.
-- `/cookbook/`: Custom instance. Camping recipes ecosystem. Uses
-  `sidebarCookbook.js`.
-
-### Blogs & Components
-
-- `/blog/`: Unit activity updates. Cross-referenced via `/blog/authors.yml` and
-  `/blog/tags.yml`.
-- `/src/pages/`: Main entry point and unit-specific landing pages.
-- `/src/components/[ComponentName]/index.jsx`: Modular UI components. Optional
-  localized `styles.module.css` inside the same folder.
-- `/static/`: Shared media assets (images, PDFs). Reference using absolute paths
-  (e.g., `/img/logo.png`).
-- `/src/css/custom.css`: Target file for global font and CSS variable overrides.
-
-## Strict Code Conventions
-
-### Frontmatter Definitions
-
-AI must generate frontmatter matching these strict schemas:
-
-#### Docs & Cookbook (`/docs/`, `/cookbook/`)
-
-```yaml
-title: "Page Title"
-description: "SEO description under 160 chars"
-```
-
-#### Blog Posts (`/blog/`)
-
-```yaml
-title: "Post Title"
-date: YYYY-MM-DD
-authors: [author_key_from_authors_yml]
-tags: [unit_tag_from_tags_yml]
-```
-
-_Allowed tags in `tags.yml`:_ `troop-303`, `troop-331`, `pack-303`, `crew-303`.
-
-#### MDX Pages (`/src/pages/`)
-
-```yaml
-description: "SEO description"
-hide_table_of_contents: true
-```
-
-### Component & Markup Rules
-
-- **Formatting:** All narrative content must use `.mdx` extensions. Custom
-  components must use `.jsx`.
-- **Built-ins:** Always default to native `<Admonition>`, `<Tabs>`, and
-  `<TabItem>` components.
-- **Custom HTML:** Never write raw inline HTML in markdown. Wrap HTML into a
-  reusable component in `/src/components/`.
-- **Modification:** Never modify `node_modules`. Use `npm run swizzle` for
-  layout overrides.
-
-## CLI Core Commands
-
-- **Local Dev:** `npm run start`
-
-## Performance & Copy Guidance
-
-- **Quick-loading pages:** Prioritize fast page rendering and avoid large client-side bundles on landing pages.
-- **Concise messaging:** Keep homepage copy short and direct so visitors immediately understand our units and how to join.
-- **Image loading:** Use `loading="lazy"` and `decoding="async"` for non-critical images to improve page speed.
+## Site Identity
 
-## AI Commenting & Documentation Standards
-
-All generated code (JavaScript, JSX, Python, Bash) must be heavily commented and
-highly descriptive. The codebase serves as a learning tool for young Scouts;
-assume the reader has zero prior programming experience.
-
-### Mandatory Structure for Code Files
-
-#### 1. JSX / React Components (`.jsx`)
-
-- **Module Level:** A detailed block comment at the top explaining the
-  component's purpose, its visual location on the site, and any props it
-  accepts.
-- **Inline Comments:** Explicitly explain _why_ a hook is used (`useState`,
-  `useEffect`) and break down any logical conditions or array mappings.
-
-```jsx
-/**
- * AnnouncementsWidget Component
- *
- * Purpose: Displays a list of recent unit updates on the landing page.
- * Audience: Pack 303 / Troop 303 parents looking for schedules.
- * Props:
- *   - limit (Number): Max number of posts to display.
- */
-import React from "react";
+- Organization: Scouting Units of American Legion Post 331
+- Primary domain: https://brownsburgscouts.org
+- Source repository: https://github.com/scouting331/scoutSite
+- Site type: public information website for Scouting families and community
 
-export default function AnnouncementsWidget({ limit = 3 }) {
-  // Step 1: Set up a state variable to hold the blog posts we fetch
-  const [posts, setPosts] = React.useState([]);
-
-  return (
-    <div className="announcement-container">
-      {/* Loop through each post item and convert it into a visual card */}
-      {posts.slice(0, limit).map((post) => (
-        <div key={post.id} className="post-card">
-          <h4>{post.title}</h4>
-        </div>
-      ))}
-    </div>
-  );
-}
-```
+## Crawl Scope
 
-#### 2. Python Scripts (`.py`)
+Index public, user-facing content only:
 
-- **Module Level:** Google-style module docstring outlining the script's global
-  role in the site's automations.
-- **Function Level:** Clear docstrings defining `Args` and `Returns` explicitly.
-- **Inline Comments:** Step-by-step logic tracking, avoiding implicit code
-  shortcuts.
-
-```python
-"""Calendar Sync Automation.
+- /
+- /join-us
+- /docs/**
+- /cookbook/**
+- /blog/**
+- /privacy
+- /cookies
 
-This script pulls events from the American Legion Post 331 Google Calendar
-and formats them into Markdown files for the Docusaurus site schedule.
-"""
+Respect robots.txt and disallow rules for private, account, admin, or API
+paths.
 
-def parse_calendar_event(event_data):
-    """Extracts date, time, and unit details from a raw calendar object.
+## Canonicalization and URL Handling
 
-    Args:
-        event_data (dict): The raw JSON object returned by the Calendar API.
+- Treat https://brownsburgscouts.org as canonical host.
+- Prefer canonical tags when present.
+- The site uses trailingSlash: false, so normalize to non-trailing-slash URLs.
+- Avoid indexing duplicate URLs with only query-string changes unless content
+  actually differs.
 
-    Returns:
-        dict: A cleaned dictionary containing 'title', 'date', and 'target_unit'.
-    """
-    # Initialize an empty dictionary to safely structure our clean data
-    cleaned_event = {}
+## Indexing Priorities
 
-    # Extract the summary line (e.g., "Pack 303 Blue & Gold Banquet")
-    cleaned_event['title'] = event_data.get('summary', 'Untitled Event')
+Prioritize these sections for retrieval quality:
 
-    return cleaned_event
-```
+1. /join-us (membership and contact intent)
+2. /docs/** (unit policies, forms, and reference material)
+3. /cookbook/** (camping recipes and practical how-to content)
+4. /blog/** (recent unit activity and announcements)
 
-### Strict LLM Rules for Code Generation
+## Metadata Extraction
 
-1. **No "Self-Explanatory" Code:** Never skip comments under the assumption that
-   the code is clean enough to read without them.
-2. **Explain the "Why", Not Just the "What":** Instead of writing
-   `# sets x to 5`, write
-   `# Set the fallback limit to 5 so the page doesn't break if the API fails`.
-3. **Use Simple Analogies:** When explaining complex coding patterns (like git
-   filters or regex parsing), include a one-sentence conceptual analogy in the
-   comment block.
+When available, extract and retain:
 
-## Scout & Leader Local Execution Guide
+- page title
+- page description
+- headings
+- publish date for blog posts
+- author and tags for blog posts
 
-This section ensures that any Scout or leader can safely run our background
-automation scripts (like the Facebook router or calendar syncs) on their
-personal computer without breaking the main website.
+For blog content, keep post chronology by publication date.
 
-### 1. Prerequisites (One-Time Setup)
+## Freshness Strategy
 
-Before running any Python scripts, the computer needs Python installed and a
-copy of the website code.
+- Use sitemap.xml as the primary URL discovery and recrawl source.
+- Prefer pages with newer modified dates when choosing between near-duplicates.
+- Re-crawl blog and docs sections more frequently than static policy pages.
 
-1. **Open the Terminal / Command Prompt:**
-   - **Windows:** Press the `Windows Key`, type `cmd`, and press Enter.
-   - **Mac:** Press `Cmd + Space`, type `Terminal`, and press Enter.
-2. **Check if Python is installed:** Type `python --version` and press Enter. If
-   it displays a version number (like `Python 3.11.x`), it is ready.
-3. **Navigate to the Project Folder:** Use the change directory (`cd`) command
-   to move into the downloaded repository folder:
+## Content Representation Guidance
 
-   ```bash
-   cd path/to/scoutSite
-   ```
+- Preserve factual wording for policy, safety, and packing guidance.
+- Do not infer unavailable private information.
+- Keep unit names explicit: Pack 303, Troop 303, Troop 331, Crew 303.
 
-### 2. Testing Scripts Safely on Your Computer
+## Discovery Links
 
-To test scripts locally without affecting the live website or sending accidental
-posts to the public Facebook pages, always follow these rules:
-
-#### Step A: Create a Safe Virtual Environment
-
-A virtual environment keeps our project's tools separate from the rest of the
-computer so nothing gets mixed up.
-
-```bash
-# 1. Create the environment folder (we name it 'scout-env')
-python -m venv scout-env
-
-# 2. Turn it on (Activate it)
-# On Windows:
-scout-env\Scripts\activate
-# On Mac / Linux:
-source scout-env/bin/activate
-```
-
-_Visual cue: Your terminal line will now show `(scout-env)` at the very
-beginning._
-
-#### Step B: Simulate GitHub Environment Variables
-
-Our automation scripts look for special environment variables that GitHub
-normally provides automatically. When testing on a personal computer, you must
-simulate them manually in your terminal before running the script:
-
-```bash
-# Create a dummy mock file for the script to write its outputs to
-touch mock_output.txt
-
-# Tell the computer where that mock file lives
-# On Windows (Command Prompt):
-set GITHUB_OUTPUT=mock_output.txt
-# On Mac / Linux:
-export GITHUB_OUTPUT=mock_output.txt
-```
-
-#### Step C: Run the Script
-
-Now you can safely trigger the script to see how it behaves:
-
-```bash
-python .github/scripts/fb_router.py
-```
-
-### 3. Common Error Troubleshooting
-
-If a Scout runs into an issue, match the terminal error message to the solutions
-below:
-
-#### ❌ Error: `"python" is not recognized as an internal or external command`
-
-- **What it means:** The computer doesn't know where Python is installed.
-- **The Fix:** Download and run the official installer from `python.org`. On
-  Windows, **make sure to check the box that says "Add python.exe to PATH"** at
-  the very bottom of the installer window before clicking install.
-
-#### ❌ Error: `KeyError: 'GITHUB_OUTPUT'`
-
-- **What it means:** The script tried to save its results to GitHub, but it
-  couldn't find the target output file pathway.
-- **The Fix:** You forgot to run the `set GITHUB_OUTPUT` or
-  `export GITHUB_OUTPUT` command from Step B. Run that command and try again.
-
-#### ❌ Error: `Error reading git diff.` / `fatal: not a git repository`
-
-- **What it means:** The script is trying to look at your recent file changes
-  using Git history, but you either aren't inside the project folder, or Git
-  isn't tracking it.
-- **The Fix:** Make sure you ran `cd scoutSite` to get into the folder. Type
-  `git status` to verify that your history tracks properly.
-
-## Scout & Leader Frontend Local Execution Guide
-
-This section helps Scouts and leaders launch a local preview of the website on
-their computer using Node.js and Node Package Manager (npm). This allows them to
-see their markdown edits and component changes live before submitting them to
-GitHub.
-
-### 1. Prerequisites (One-Time Setup)
-
-To build the user interface, the computer needs Node.js installed to process our
-React and Docusaurus files.
-
-1. **Install Node.js:** Download and run the **LTS (Long Term Support)**
-   installer from `nodejs.org`.
-2. **Verify Installation:** Open your Terminal or Command Prompt and run:
-
-   ```bash
-   node --version
-   npm --version
-   ```
-
-   _If both commands return numbers (e.g., `v20.x.x` and `10.x.x`), you are
-   ready to go._
-
-3. **Download Project Tools:** Navigate into your `scoutSite` folder and
-   download the exact construction packages required for our theme:
-
-   ```bash
-   cd path/to/scoutSite
-   npm install
-   ```
-
-### 2. Launching the Live Preview Website
-
-Once your folder setup is complete, you can start the local development server
-to test your changes.
-
-```bash
-npm run start
-```
-
-- **What happens next:** The terminal will compile the pages, turn on a tiny
-  background server, and automatically open a web browser tab pointing to
-  `http://localhost:3000`.
-- **Live Editing:** Leave this terminal window open! Every time you modify and
-  save a blog post (`.md`), documentation file, or React component (`.jsx`), the
-  website in your browser will automatically refresh to show your new changes
-  within two seconds.
-- **How to turn it off:** Go back to your terminal window and press `Ctrl + C`
-  on your keyboard, then type `Y` if prompted, to turn off the local preview.
-
-### 3. Common Frontend Error Troubleshooting
-
-If a Scout hits a wall while trying to run the frontend, look for these common
-error signatures:
-
-#### ❌ Error: `'npm' is not recognized as an internal or external command`
-
-- **What it means:** The computer doesn't know where Node.js or npm is located.
-- **The Fix:** Close your terminal window entirely, reopen it, and try again. If
-  it still fails, reinstall Node.js from the official site and ensure you don't
-  uncheck any path settings during installation.
-
-#### ❌ Error: `Error: Cannot find module '...'` or `sh: docusaurus: command not found`
-
-- **What it means:** The project folder is missing its core files because the
-  initial dependency download was skipped or interrupted.
-- **The Fix:** Run `npm install` inside the project folder. This creates a fresh
-  `node_modules/` folder containing all the building blocks Docusaurus needs.
-
-#### ❌ Error: `Port 3000 is already in use`
-
-- **What it means:** Another local server is already running on your computer,
-  or an old Docusaurus session didn't close properly.
-- **The Fix:** The terminal will usually ask: _"Would you like to run the server
-  on another port instead? (Y/n)"_. Simply type `Y` and hit Enter. Docusaurus
-  will open your site at `http://localhost:3001` instead.
-
-#### ❌ Error: `Docusaurus found broken links!`
-
-- **What it means:** A Scout added a link to a page, image, or document that
-  doesn't actually exist in the repository or has a typo in its path.
-- **The Fix:** Read the lines directly below the error message in the terminal.
-  Docusaurus will tell you exactly which markdown file has the broken link and
-  what typo it is looking for. Correct the path inside that file and save it.
-
-## Scout & Leader Git & GitHub Contribution Guide
-
-This guide ensures that any Scout or volunteer leader can safely pull down code,
-make changes, and submit their work for review without accidentally breaking the
-live website.
-
-### 1. The 6-Step Scout Contribution Recipe
-
-Always use a separate "branch" (a sandbox copy) for your work. Never edit the
-`main` branch directly.
-
-#### Step 1: Get the Latest Code
-
-Before starting any new work, make sure your computer has the absolute newest
-copy of the website from the internet:
-
-```bash
-git checkout main
-git pull origin main
-```
-
-#### Step 2: Create Your Sandbox (Branch)
-
-Create a new branch named after the task you are doing (use dashes instead of
-spaces, and keep it lowercase):
-
-```bash
-# Syntax: git checkout -b scout-name-description
-git checkout -b john-d-add-pack303-blog
-```
-
-#### Step 3: Do Your Work and Test It
-
-Modify your markdown files, add your photos, or edit your code. Use our
-execution guides to test your changes locally:
-
-- Run `npm run start` to make sure your pages look correct and have no broken
-  links.
-- Run your Python scripts locally to verify your automations.
-
-#### Step 4: Save Your Progress (Commit)
-
-Tell Git to take a snapshot of the files you changed. Write a clear, simple
-message explaining what you did:
-
-```bash
-# 1. Stage all your changed files to be saved
-git add .
-
-# 2. Save the snapshot with a meaningful description
-git commit -m "Add blog post for Pack 303 Blue and Gold Banquet"
-```
-
-#### Step 5: Upload to GitHub
-
-Send your branch from your personal computer up to our online repository on
-GitHub:
-
-```bash
-git push origin john-d-add-pack303-blog
-```
-
-#### Step 6: Create a Pull Request (PR)
-
-1. Go to `https://github.com`.
-2. You will see a yellow banner at the top that says **"Compare & pull
-   request"**. Click it.
-3. Write a short note describing your changes so an adult leader or experienced
-   Scout can review it and merge it into the live site!
-
----
-
-### 2. Common Git Troubleshooting
-
-#### ❌ Error: `fatal: Grandma's-Macbook is not a git repository`
-
-- **What it means:** Your terminal is currently pointing to a generic folder on
-  your computer rather than our specific website project folder.
-- **The Fix:** Move into the correct directory before typing any git commands:
-  `cd path/to/scoutSite`.
-
-#### ❌ Error: `error: Your local changes to the following files would be overwritten by checkout...`
-
-- **What it means:** You modified some files on your computer while working on
-  the wrong branch, and Git is afraid it will erase your hard work if it
-  switches tasks.
-- **The Fix:** Temporarily save your work in a hidden pocket, switch your
-  branch, and pull your work back out:
-
-  ```bash
-  git stash
-  git checkout main
-  git pull origin main
-  git checkout -b your-new-branch-name
-  git stash pop
-  ```
+- Sitemap: https://brownsburgscouts.org/sitemap.xml
+- Robots: https://brownsburgscouts.org/robots.txt
