@@ -121,7 +121,7 @@ function BlogCard({ permalink, title, date, authors, tags, frontmatter }) {
  * @returns {JSX.Element} Structural framework rendering recent post items.
  */
 export default function HomepageBlogCards() {
-    const recentPosts = usePluginData('recent-blog-posts') || [];
+  const recentPosts = usePluginData('docusaurus-plugin-content-blog') || [];
 
     return (
         <>
