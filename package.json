@@ -46,7 +46,7 @@
     "@docusaurus/module-type-aliases": "^3.10.0",
     "@docusaurus/types": "^3.10.0",
     "cspell": "^10.0.1",
-    "prettier": "^3.9.4",
+    "prettier": "^3.9.6",
     "wrangler": "^4.106.0"
   },
   "browserslist": {
