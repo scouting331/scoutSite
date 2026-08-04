@@ -56,6 +56,10 @@ const config = {
   customFields: {
     copyright1: `© ${new Date().getFullYear()} The Scouting Units of American Legion Post 331, Scouting America`,
     copyright2: `All Rights Reserved`,
+    // These values are embedded at build time so browser code can access public EmailJS settings safely.
+    emailjsServiceId: "service_9yecrvg",
+    emailjsTemplateId: "template_f2zp4wd",
+    emailjsPublicKey: "2uYMIC5zjnhftg4E5",
   },
 
   // --- CORE WEBSITE PRESETS ---

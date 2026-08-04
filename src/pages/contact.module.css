@@ -1,0 +1,125 @@
+.heroPanel {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0 auto 2rem;
+  max-width: 860px;
+}
+
+.heroCopy,
+.detailsCard,
+.sidePanel {
+  background: var(--scouting-america-white);
+  border: 1px solid rgba(0, 63, 135, 0.12);
+  border-radius: 18px;
+  box-shadow: var(--global-box-shadow);
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+.heroCopy {
+  background:
+    linear-gradient(135deg, rgba(210, 219, 234, 0.55), rgba(255, 255, 255, 0.95)),
+    var(--scouting-america-white);
+}
+
+.heroEyebrow {
+  color: var(--scouting-america-red);
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.heroCopy h1 {
+  color: var(--scouting-america-dark-blue);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.05;
+  margin: 0 0 0.75rem;
+  max-width: 12ch;
+}
+
+.heroCopy p,
+.sidePanel p,
+.detailsCard li,
+.noteCard li,
+.noteCardAccent p {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.detailsCard h2,
+.sidePanel h2 {
+  color: var(--scouting-america-dark-blue);
+  font-size: 1.35rem;
+  margin: 0 0 0.85rem;
+}
+
+.detailsCard ul,
+.noteCard ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.detailsCard li + li,
+.noteCard li + li {
+  margin-top: 0.65rem;
+}
+
+.detailsCard a {
+  color: var(--scouting-america-blue);
+  font-weight: 700;
+}
+
+.contentGrid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  align-items: start;
+}
+
+.sidePanel {
+  position: sticky;
+  top: 92px;
+}
+
+.noteCard,
+.noteCardAccent {
+  border-radius: 16px;
+  margin-top: 1rem;
+  padding: 1rem 1rem 0.9rem;
+}
+
+.noteCard {
+  background: rgba(210, 219, 234, 0.22);
+  border: 1px solid rgba(0, 63, 135, 0.12);
+}
+
+.noteCardAccent {
+  background: rgba(214, 206, 189, 0.4);
+  border: 1px solid rgba(173, 157, 123, 0.28);
+}
+
+.noteCard h3,
+.noteCardAccent h3 {
+  color: var(--scouting-america-dark-blue);
+  font-size: 1.05rem;
+  margin: 0 0 0.65rem;
+}
+
+.noteCardAccent p {
+  margin: 0;
+}
+
+@media (max-width: 996px) {
+  .heroPanel,
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sidePanel {
+    position: static;
+  }
+}

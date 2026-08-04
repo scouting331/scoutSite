@@ -1,0 +1,32 @@
+[
+  {
+    "name": "scoutmaster_t303",
+    "email": "scoutmaster303@brownsburgscouts.org",
+    "position": "Scoutmaster: Troop 303"
+  },
+  {
+    "name": "scoutmaster_t331",
+    "email": "scoutmaster331@brownsburgscouts.org",
+    "position": "Scoutmaster: Troop 331"
+  },
+  {
+    "name": "advisor_c303",
+    "email": "advisor303@brownsburgscouts.org",
+    "position": "Advisor: Crew 303"
+  },
+  {
+    "name": "committeeChair",
+    "email": "committeechair@brownsburgscouts.org",
+    "position": "Committee Chair: Troops 303, 331, and Crew 303"
+  },
+  {
+    "name": "cubmaster_p303",
+    "email": "cubmaster303@brownsburgscouts.org",
+    "position": "Cubmaster: Pack 303"
+  },
+  {
+    "name": "packCommitteeChair",
+    "email": "packcommitteechair@brownsburgscouts.org",
+    "position": "Committee Chair: Pack 303"
+  }
+]
