@@ -115,7 +115,7 @@
         "seniorPatrolLeader": {
             "title": "Senior Patrol Leader",
             "scout": {
-                "name": "Everett Z",
+                "name": "Caleb W",
                 "rank": "Life"
             },
             "description": "The top youth leader of the troop. Appoints youth staff, runs troop meetings, chairs the Patrol Leaders' Council (PLC), and coordinates the yearly program calendar.",
@@ -126,12 +126,12 @@
             "title": "Assistant Senior Patrol Leader",
             "scout": [
                 {
-                    "name": "Aiden D",
+                    "name": "Jackson G",
                     "rank": "Life"
                 },
                 {
-                    "name": "Caleb W",
-                    "rank": "Life"
+                    "name": "",
+                    "rank": ""
                 }
             ],
             "description": "Lends operational assistance to the SPL and acts as troop leader when the SPL is absent. Directly oversees appointed support staff and patrol coordination.",
