@@ -57,13 +57,25 @@ jobs:                                  # Contains the operational pipelines/jobs
         run: |
           python .github/scripts/generate_post.py # Script execution target file
 
+      - name: Create Safe Branch Slug # Step 6.5: Converts issue title to a git-safe branch fragment
+        id: branch_slug
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          slug=$(echo "$ISSUE_TITLE" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g')
+          # Fallback ensures branch creation still works if title has no letters/numbers.
+          if [ -z "$slug" ]; then
+            slug="untitled-issue-${{ github.event.issue.number }}"
+          fi
+          echo "value=$slug" >> $GITHUB_OUTPUT
+
       - name: Create Pull Request      # Step 7: Opens a staging PR with the new post files
         id: cpr                        # ID mapping used to fetch the PR URL for issue commenting
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ steps.app-token.outputs.token }} # Grants PR permissions via the generated App token
           commit-message: "feat(blog): add new post from issue #${{ github.event.issue.number }}"
-          branch: "automation/issue-${{ github.event.issue.number }}-${{ github.event.issue.title }}" # Isolated branch path
+          branch: "automation/issue-${{ github.event.issue.number }}-${{ steps.branch_slug.outputs.value }}" # Isolated branch path
           title: "feat(blog): ${{ github.event.issue.title }}" # Sets the issue title as the PR title
           body: |                      # Description text posted within the generated PR body description
             This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.
@@ -124,13 +136,25 @@ jobs:                                  # Contains the operational pipelines/jobs
         run: |
           python .github/scripts/generate_docs.py
 
+      - name: Create Safe Branch Slug # Step 6.5: Converts issue title to a git-safe branch fragment
+        id: branch_slug
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          slug=$(echo "$ISSUE_TITLE" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g')
+          # Fallback ensures branch creation still works if title has no letters/numbers.
+          if [ -z "$slug" ]; then
+            slug="untitled-issue-${{ github.event.issue.number }}"
+          fi
+          echo "value=$slug" >> $GITHUB_OUTPUT
+
       - name: Create Pull Request      # Step 7: Opens a staging PR with the new documentation files
         id: cpr
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ steps.app-token.outputs.token }}
           commit-message: "feat(docs): add new doc from issue #${{ github.event.issue.number }}"
-          branch: "automation/issue-${{ github.event.issue.number }}-${{ github.event.issue.title }}"
+          branch: "automation/issue-${{ github.event.issue.number }}-${{ steps.branch_slug.outputs.value }}"
           title: "feat(docs): ${{ github.event.issue.title }}"
           body: |
             This Pull Request was automatically generated from Issue #${{ github.event.issue.number }}.
