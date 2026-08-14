@@ -47,7 +47,7 @@
     "@docusaurus/types": "^3.10.0",
     "cspell": "^10.0.1",
     "prettier": "^3.9.4",
-    "wrangler": "^4.106.0"
+    "wrangler": "^4.123.0"
   },
   "browserslist": {
     "production": [
