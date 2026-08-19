@@ -11,6 +11,10 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
 
   # 2. Configuration for Node.js (npm/yarn/pnpm) dependencies
   - package-ecosystem: "npm"
@@ -18,4 +22,8 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-minor"
 
