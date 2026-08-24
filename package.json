@@ -37,7 +37,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-leaflet": "^5.0.0",
-    "react-photo-album": "^3.6.0",
+    "react-photo-album": "^3.6.1",
     "react-slick": "^0.31.0",
     "slick-carousel": "^1.8.1",
     "yet-another-react-lightbox": "^3.32.0"
