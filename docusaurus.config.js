@@ -165,7 +165,7 @@ const config = {
   themeConfig: {
     image: "img/logos/favicon.png", // Default image used when links are shared on text messages or social cards.
     colorMode: {
-      respectPrefersColorScheme: true,
+      respectPrefersColorScheme: false,
       disableSwitch: true, // Forces light mode across the site to guarantee crisp visibility of unit layouts.
       defaultMode: "light",
     },
