@@ -21,6 +21,7 @@ import HeroCarousel from "@site/src/components/HeroCarousel";         // Autopla
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext"; // System configuration context hook fetching variables from docusaurus.config.js
 import HomepageBlogCards from "@site/src/components/BlogCard";       // Grid section displaying the most recent adventure posts on the site
 import { homepageSectionCopy } from "@site/src/data/siteContent";
+import Heading from "@theme/Heading"; // Imports the Docusaurus heading component for semantic HTML headings
 
 /**
  * Renders the master homepage structure wrapped within the global Docusaurus layout framework.
@@ -45,7 +46,7 @@ export default function Home() {
       <main>
         <section className="container margin-vert--lg">
           <div style={{ maxWidth: 780, margin: "0 auto", textAlign: "center" }}>
-            <h2>{homepageSectionCopy.introHeading}</h2>
+            <Heading as="h2">{homepageSectionCopy.introHeading}</Heading>
             <p style={{ fontSize: "1.1rem", lineHeight: 1.8, color: "var(--ifm-color-emphasis-700)" }}>
               {homepageSectionCopy.introText}
             </p>

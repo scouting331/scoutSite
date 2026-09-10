@@ -12,6 +12,7 @@ import PackPng from '@site/static/img/logos/pack-icon.png';
 import GirlsPng from '@site/static/img/logos/troop-icon.png';
 import BoysPng from '@site/static/img/logos/troop-icon.png';
 import styles from './index.module.css';
+import Heading from '@theme/Heading'; // Imports the Docusaurus heading component for semantic HTML headings
 
 /**
  * Static schema mapping thematic branding variables and registration links for local Scouting units.
@@ -87,9 +88,9 @@ function UnitCard({ title, age, link, bgColor, buttonColor, badgeBg, imgSrc, alt
             {/* Top Container grouping branding elements together */}
             <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <img src={imgSrc} alt={altText} style={{ width: '55px', height: '55px', objectFit: 'contain', marginBottom: '1rem' }} />
-                <h3 style={{ color: 'var(--scouting-america-white)', fontSize: '1.35rem', margin: '0 0 0.4rem 0', fontWeight: '700', letterSpacing: '-0.025em' }}>
+                <Heading as="h3" style={{ color: 'var(--scouting-america-white)', fontSize: '1.35rem', margin: '0 0 0.4rem 0', fontWeight: '700', letterSpacing: '-0.025em' }}>
                     {title}
-                </h3>
+                </Heading>
                 {/* Visual badge element highlighting target age brackets and grade levels */}
                 <span style={{ 
                     display: 'inline-block', 
@@ -167,7 +168,7 @@ export default function SignUpCards({ youtubeId }) {
 
             {/* 2. Unified Text Sub-Header Info Container */}
             <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-                <h2 style={{ fontSize: '1.75rem', fontWeight: '800', margin: '0 0 0.5rem 0' }}>Ready to Register?</h2>
+                <Heading as="h2">Ready to Register?</Heading>
                 <p style={{ color: 'var(--ifm-color-emphasis-600)', margin: 0 }}>Select your unit below to sign up online today.</p>
             </div>
 

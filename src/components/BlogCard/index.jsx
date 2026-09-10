@@ -76,7 +76,9 @@ function BlogCard({ permalink, title, date, authors, tags, frontmatter }) {
         <div className={styles.cardBody}>
           {/* Converts structural timestamps into beautiful localized textual outputs */}
           <span className={styles.date}>{formatDate(date)}</span>
-          <h3 className={styles.cardTitle}>{title}</h3>
+          <Heading as="h3" className={styles.cardTitle}>
+            {title}
+          </Heading>
 
           {/* Iterates through a limited section slice of taxonomies to layout classification labels */}
           <div className={styles.cardMeta}>

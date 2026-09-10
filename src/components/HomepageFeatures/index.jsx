@@ -64,7 +64,7 @@ export default function HomepageFeatures() {
       {" "}
       {/* Centered layout row segment initializing section text header indicators */}
       <div style={{ textAlign: "center", marginTop: "2rem" }}>
-        <Heading as="h2" id="scouting-units-heading">
+        <Heading as="h2">
           {homepageSectionCopy.scoutingUnitsHeading}
         </Heading>
       </div>
