@@ -10,6 +10,7 @@
  */
 import React from 'react';
 import styles from './styles.module.css';                  // Scoped CSS Modules stylesheet managing grid properties, highlights, and fallback filters
+import Heading from '@theme/Heading'; // Imports the Docusaurus heading component for semantic HTML headings
 
 /**
  * Structural definition representing data shapes for individual youth Scouts.
@@ -124,7 +125,9 @@ export const RoleCard = ({ title, name, description, img, mentoredBy }) => {
       />
       {/* Information text layout compartment box container */}
       <div className={styles.cardContent}>
-        <h4 className={styles.titleText}>{title}</h4>
+        <Heading as="h4" className={styles.titleText}>
+          {title}
+        </Heading>
         {renderNameContent()}                             {/* Dynamically computes name layout text structures via helper loops */}
         <p className={styles.descText}>{description}</p>
         {/* Conditional rendering block overlaying youth leadership-to-adult mentoring tracking trails */}
@@ -186,7 +189,9 @@ export const PatrolCard = ({ patrol }) => {
       />
       {/* Inner profile text tracking compartment container wrapper */}
       <div className={styles.cardContent}>
-        <h4 className={styles.patrolHeader}>{patrol.patrolName} Patrol</h4>
+        <Heading as="h4" className={styles.patrolHeader}>
+          {patrol.patrolName} Patrol
+        </Heading>
         
         {/* Patrol Leader Display Field: Dynamic text switch highlighting open vacancies in red */}
         <p className={styles.patrolMetaText}>
